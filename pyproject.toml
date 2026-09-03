@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "statefuzz-ssm"
+version = "0.1.0"
+description = "面向状态空间语言模型的可执行长上下文压力测试"
+requires-python = ">=3.10,<3.11"
+dependencies = ["pydantic==2.13.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+pythonpath = ["src"]

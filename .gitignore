@@ -1,0 +1,13 @@
+.worktrees/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+runs/
+models/
+checkpoints/
+*.pt
+*.pth
+*.safetensors
