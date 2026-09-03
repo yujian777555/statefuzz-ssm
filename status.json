@@ -1,0 +1,7 @@
+{
+  "round": 1,
+  "previous_actor": "planner",
+  "next": "codex",
+  "last_plan": "plans/plan_001.md",
+  "last_result": null
+}
