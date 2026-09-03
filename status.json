@@ -1,7 +1,2 @@
-{
-  "round": 1,
-  "previous_actor": "planner",
-  "next": "codex",
-  "last_plan": "plans/plan_001.md",
-  "last_result": null
-}
+{"last_plan":"plans/latest_plan.md","last_result":"results/result_round_001.json","next":"gpt","previous_actor":"codex","round":1}
+

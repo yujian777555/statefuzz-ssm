@@ -33,14 +33,18 @@ def atomic_write_json(path: Path, payload: Any) -> None:
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(tmp_name, path)
-        directory_fd = os.open(path.parent, os.O_RDONLY)
-        try:
-            os.fsync(directory_fd)
-        finally:
-            os.close(directory_fd)
+        # POSIX目录可显式刷盘；Windows不支持以相同方式打开目录，
+        # 但os.replace本身仍提供原子替换语义。
+        if os.name != "nt":
+            directory_fd = os.open(path.parent, os.O_RDONLY)
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
     except BaseException:
         try:
             os.unlink(tmp_name)
         except FileNotFoundError:
             pass
         raise
+

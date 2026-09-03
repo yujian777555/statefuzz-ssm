@@ -63,3 +63,4 @@ Round 001 succeeds when:
 - Codex produces `results/result_001.json`.
 - `status.json.next` is returned to `planner` after execution.
 - All modified functions have tests or verification commands.
+
