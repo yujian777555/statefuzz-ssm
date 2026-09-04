@@ -1,42 +1,39 @@
 # Latest Plan
 
-See `plans/plan_006.md`.
+See `plans/plan_007.md`.
 
-# Round 005 Review
+# Round 006 Review
 
-Codex successfully moved the project into the research prototype stage.
+Codex successfully moved StateFuzz toward a capability analysis system.
 
 Completed:
-- generator modules for memory decay, collision, and pollution patterns
-- runner abstraction for model execution
-- analyzer modules for hidden-state and failure classification
-- 62 tests passing
+- capability measurement (`src/statefuzz/analyzer/capability.py`)
+- improved hidden-state evidence handling
+- expanded stress pattern coverage
+- 71 tests passing
 
-However, the current implementation is still a prototype framework.
+Current limitation:
+The system can measure boundaries from observations, but it does not yet automatically discover the boundary.
 
 # Research Direction
 
-StateFuzz is now defined as:
+StateFuzz remains focused on:
 
 **Automatically discovering and diagnosing long-context capability boundaries of State Space Models.**
 
-The goal is not only detecting failures, but discovering:
+The next step is moving from measurement to automated scientific discovery.
 
-1. Effective memory boundaries.
-2. Input patterns that trigger degradation.
-3. Hidden-state mechanisms causing failure.
-4. Evidence that can guide future model improvement.
+# Round 007 Priority
 
-# Round 006 Priority
+Prioritize:
 
-Focus on scientific discovery rather than infrastructure:
-
-- parameterized stress generation
-- capability boundary measurement
-- evidence-based hidden-state diagnosis
+- capability search engine
+- automatic boundary discovery
+- evidence-based failure explanation
+- paper-quality experiment artifacts
 
 Avoid:
-- adding only more generic tests
-- expanding protocol infrastructure without research value
+- generic infrastructure expansion
+- tests without research contribution
 
 Next executor: codex
