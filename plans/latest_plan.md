@@ -1,46 +1,49 @@
 # Latest Plan
 
-See `plans/plan_009.md`.
+See `plans/plan_010.md`.
 
-# Round 008 Review
+# Round 009 Review
 
-Codex successfully connected StateFuzz to real Mamba execution.
+Codex successfully fixed the most important scientific issue: separating invalid task failure from actual capability degradation.
 
 Completed:
-- real model loading
-- hidden-state capture
-- runner integration
-- real execution artifacts
-- 77 tests passing
+- calibrated short-context baseline
+- real-model next-token evaluation
+- valid capability reporting
+- confidence-aware lower-bound estimation
+- 82 tests passing
 
-Important research finding:
-The first real-model experiment failed at the minimum tested context. This does not prove a memory boundary of zero; it indicates the current evaluation task is not calibrated for the pretrained checkpoint.
-
-The system must separate:
-- task/prompt failure
-- model capability failure
-- true long-context degradation
+Evidence:
+- baseline validity confirmed
+- target token remained stable through tested 512 token context
+- report correctly avoided claiming a false zero boundary
 
 # Research Direction
 
-StateFuzz remains:
+StateFuzz goal:
 
 **Automatically discovering and diagnosing long-context capability boundaries of State Space Models.**
 
-The next priority is not more infrastructure. It is producing scientifically valid measurements.
+The system must produce scientifically valid evidence:
 
-# Round 009 Priority
+1. where capability degrades
+2. which stress pattern causes degradation
+3. what hidden-state dynamics explain it
+4. how findings can guide model improvement
+
+# Round 010 Priority
 
 Focus on:
 
-- calibrated short-context baselines
-- valid real-model capability curves
-- confidence-aware boundary estimation
-- mechanism-based failure reports
+- larger calibrated experiments
+- true failure boundary search
+- confidence intervals
+- mechanism-level evidence
 
 Avoid:
 
-- reporting invalid zero boundaries
-- synthetic-only conclusions
+- claiming boundaries without observed degradation
+- single-example conclusions
+- infrastructure-only expansion
 
 Next executor: codex
