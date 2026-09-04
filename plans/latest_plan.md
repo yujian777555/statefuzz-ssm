@@ -1,49 +1,46 @@
 # Latest Plan
 
-See `plans/plan_008.md`.
+See `plans/plan_009.md`.
 
-# Round 007 Review
+# Round 008 Review
 
-Codex successfully added the first automated capability search prototype.
+Codex successfully connected StateFuzz to real Mamba execution.
 
 Completed:
-- capability search engine (`src/statefuzz/search/engine.py`)
-- boundary discovery workflow
-- expanded hidden-state evidence collection
-- 75 tests passing
+- real model loading
+- hidden-state capture
+- runner integration
+- real execution artifacts
+- 77 tests passing
 
-Evidence:
-- discovered capability boundary artifact generated
-- failure cases include hidden-state evidence fields
+Important research finding:
+The first real-model experiment failed at the minimum tested context. This does not prove a memory boundary of zero; it indicates the current evaluation task is not calibrated for the pretrained checkpoint.
 
-Current limitation:
-The current discovery is still based on deterministic synthetic probes. The next step is validating the framework with real SSM model execution and stronger diagnosis.
+The system must separate:
+- task/prompt failure
+- model capability failure
+- true long-context degradation
 
 # Research Direction
 
-StateFuzz goal:
+StateFuzz remains:
 
 **Automatically discovering and diagnosing long-context capability boundaries of State Space Models.**
 
-The system should answer:
+The next priority is not more infrastructure. It is producing scientifically valid measurements.
 
-1. Where does effective memory fail?
-2. Which input patterns trigger failure?
-3. What hidden-state dynamics explain the failure?
-4. How can findings guide future model improvement?
-
-# Round 008 Priority
+# Round 009 Priority
 
 Focus on:
 
-- real model-backed experiments
-- adaptive boundary search
-- evidence-based failure taxonomy
-- paper-quality experimental artifacts
+- calibrated short-context baselines
+- valid real-model capability curves
+- confidence-aware boundary estimation
+- mechanism-based failure reports
 
 Avoid:
 
-- generic infrastructure expansion
-- synthetic-only claims without validation
+- reporting invalid zero boundaries
+- synthetic-only conclusions
 
 Next executor: codex
