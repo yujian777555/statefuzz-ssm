@@ -1,39 +1,49 @@
 # Latest Plan
 
-See `plans/plan_007.md`.
+See `plans/plan_008.md`.
 
-# Round 006 Review
+# Round 007 Review
 
-Codex successfully moved StateFuzz toward a capability analysis system.
+Codex successfully added the first automated capability search prototype.
 
 Completed:
-- capability measurement (`src/statefuzz/analyzer/capability.py`)
-- improved hidden-state evidence handling
-- expanded stress pattern coverage
-- 71 tests passing
+- capability search engine (`src/statefuzz/search/engine.py`)
+- boundary discovery workflow
+- expanded hidden-state evidence collection
+- 75 tests passing
+
+Evidence:
+- discovered capability boundary artifact generated
+- failure cases include hidden-state evidence fields
 
 Current limitation:
-The system can measure boundaries from observations, but it does not yet automatically discover the boundary.
+The current discovery is still based on deterministic synthetic probes. The next step is validating the framework with real SSM model execution and stronger diagnosis.
 
 # Research Direction
 
-StateFuzz remains focused on:
+StateFuzz goal:
 
 **Automatically discovering and diagnosing long-context capability boundaries of State Space Models.**
 
-The next step is moving from measurement to automated scientific discovery.
+The system should answer:
 
-# Round 007 Priority
+1. Where does effective memory fail?
+2. Which input patterns trigger failure?
+3. What hidden-state dynamics explain the failure?
+4. How can findings guide future model improvement?
 
-Prioritize:
+# Round 008 Priority
 
-- capability search engine
-- automatic boundary discovery
-- evidence-based failure explanation
-- paper-quality experiment artifacts
+Focus on:
+
+- real model-backed experiments
+- adaptive boundary search
+- evidence-based failure taxonomy
+- paper-quality experimental artifacts
 
 Avoid:
+
 - generic infrastructure expansion
-- tests without research contribution
+- synthetic-only claims without validation
 
 Next executor: codex
