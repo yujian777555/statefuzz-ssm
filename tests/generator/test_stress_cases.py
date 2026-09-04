@@ -46,3 +46,35 @@ def test_pollution_probe_contains_long_distractor_context() -> None:
     assert probe.spec.n_items >= 32
     assert probe.provenance["stress_pattern"] == "state_pollution"
 
+
+@requires_generators
+def test_memory_decay_family_spans_context_and_target_position() -> None:
+    from statefuzz.generator.memory_decay import generate_memory_decay_family
+
+    family = generate_memory_decay_family(
+        seeds=[1], context_lengths=[1024, 4096], target_positions=[0.0, 0.5]
+    )
+    assert len(family) == 4
+    assert {probe.spec.context_tokens for probe in family} == {1024, 4096}
+    assert {probe.spec.target_position for probe in family} == {0.0, 0.5}
+
+
+@requires_generators
+def test_collision_family_exposes_interference_strength() -> None:
+    from statefuzz.generator.state_collision import generate_collision_family
+
+    family = generate_collision_family(seeds=[2], interference_strengths=[0.25, 0.75])
+    assert len(family) == 2
+    assert family[0].provenance["interference_strength"] == 0.25
+    assert family[1].provenance["interference_strength"] == 0.75
+
+
+@requires_generators
+def test_pollution_family_exposes_distractor_density() -> None:
+    from statefuzz.generator.state_pollution import generate_pollution_family
+
+    family = generate_pollution_family(seeds=[3], distractor_densities=[0.5, 1.0])
+    assert len(family) == 2
+    assert family[0].provenance["distractor_density"] == 0.5
+    assert family[1].provenance["distractor_density"] == 1.0
+

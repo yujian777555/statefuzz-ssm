@@ -39,6 +39,23 @@ def compute_state_similarity(left: Any, right: Any) -> float:
     return max(-1.0, min(1.0, similarity))
 
 
+def compute_state_norm(state: Any) -> float:
+    """计算隐藏状态的欧氏范数，作为状态强度证据。"""
+    values = _flatten(state)
+    if not values:
+        raise ValueError("状态不能为空")
+    return math.sqrt(sum(value * value for value in values))
+
+
+def compute_state_norm_change(reference: Any, current: Any) -> float:
+    """计算当前状态相对参考状态的范数变化比例。"""
+    reference_norm = compute_state_norm(reference)
+    current_norm = compute_state_norm(current)
+    if reference_norm == 0.0:
+        return 0.0 if current_norm == 0.0 else math.inf
+    return abs(current_norm - reference_norm) / reference_norm
+
+
 def detect_state_collapse(states: Iterable[Any], threshold: float = 0.999) -> bool:
     """若所有相邻状态均高于阈值，则判定状态表示发生塌缩。"""
     if not 0.0 <= threshold <= 1.0:
