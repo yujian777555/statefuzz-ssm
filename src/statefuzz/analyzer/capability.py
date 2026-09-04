@@ -57,14 +57,18 @@ def measure_effective_memory(
     )
     if degradation is None:
         effective = values[-1].context_tokens
+        estimated = effective
     else:
         effective = max(
             (item.context_tokens for item in values if item.score >= threshold),
             default=0,
         )
+        estimated = (effective + degradation) // 2
     return {
         "effective_memory_tokens": effective,
         "degradation_context_tokens": degradation,
+        "observed_failure_context_tokens": degradation,
+        "estimated_boundary_context_tokens": estimated,
         "threshold": threshold,
         "observations": [item.to_dict() for item in values],
     }

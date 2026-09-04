@@ -119,6 +119,82 @@ def search_boundary(
     }
 
 
+def adaptive_search_boundary(
+    evaluator: Callable[[SearchConfiguration], Any],
+    min_context: int,
+    max_context: int,
+    target_position: float = 0.0,
+    interference_strength: float = 0.0,
+    threshold: float = 0.5,
+    tolerance: int = 128,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """以二分细化上下文长度，区分观测失败点和估计边界。"""
+    if isinstance(min_context, bool) or isinstance(max_context, bool):
+        raise ValueError("context必须为正整数")
+    if min_context <= 0 or max_context < min_context:
+        raise ValueError("context范围非法")
+    if isinstance(tolerance, bool) or tolerance <= 0:
+        raise ValueError("tolerance必须为正整数")
+    _validate_space(
+        [min_context, max_context], [target_position], [interference_strength], threshold
+    )
+    curve: dict[int, dict[str, Any]] = {}
+
+    def observe(context_tokens: int) -> dict[str, Any]:
+        if context_tokens in curve:
+            return curve[context_tokens]
+        config = SearchConfiguration(
+            context_tokens=context_tokens,
+            target_position=target_position,
+            interference_strength=interference_strength,
+            seed=seed,
+        )
+        score, evidence = _normalize_evaluation(evaluator(config))
+        if not 0.0 <= score <= 1.0:
+            raise ValueError("score必须位于0到1之间")
+        case = {
+            **config.to_dict(),
+            "score": score,
+            "failure": score < threshold,
+            "evidence": evidence,
+        }
+        curve[context_tokens] = case
+        return case
+
+    lower_case = observe(min_context)
+    upper_case = observe(max_context)
+    lower = min_context
+    upper = max_context
+    if lower_case["failure"]:
+        estimated = 0
+        observed = min_context
+        lower = 0
+    elif not upper_case["failure"]:
+        estimated = max_context
+        observed = None
+        lower = upper = max_context
+    else:
+        while upper - lower > tolerance:
+            middle = (lower + upper) // 2
+            if observe(middle)["failure"]:
+                upper = middle
+            else:
+                lower = middle
+        estimated = lower
+        observed = upper
+    boundary = curve.get(observed) if observed is not None else None
+    return {
+        "threshold": threshold,
+        "estimated_capability_boundary": estimated,
+        "observed_failure_context_tokens": observed,
+        "confidence_interval": [lower, upper],
+        "confidence": 1.0 / (1.0 + max(0, upper - lower)),
+        "boundary": boundary,
+        "capability_curve": [curve[key] for key in sorted(curve)],
+    }
+
+
 def rank_failure_cases(
     cases: Iterable[Mapping[str, Any]], top_k: int | None = None
 ) -> list[dict[str, Any]]:

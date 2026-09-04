@@ -2,6 +2,7 @@
 
 from statefuzz.search.engine import (
     SearchConfiguration,
+    adaptive_search_boundary,
     build_failure_artifact,
     rank_failure_cases,
     search_boundary,
@@ -9,6 +10,7 @@ from statefuzz.search.engine import (
 
 __all__ = [
     "SearchConfiguration",
+    "adaptive_search_boundary",
     "build_failure_artifact",
     "rank_failure_cases",
     "search_boundary",

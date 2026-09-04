@@ -48,3 +48,39 @@ def test_mamba_runner_rejects_non_string_prediction() -> None:
     with pytest.raises(TypeError, match="字符串"):
         runner.run_probe(compile_probe(ProbeSpec(seed=5)))
 
+
+@requires_runner
+def test_model_backed_path_collects_hidden_states() -> None:
+    import torch
+
+    from statefuzz.runner.mamba_runner import MambaExperimentConfig, MambaRunner
+
+    class FakeTokenizer:
+        eos_token_id = 0
+
+        def __call__(self, prompt, return_tensors="pt"):
+            return {"input_ids": torch.tensor([[1, 2, 3]])}
+
+        def decode(self, tokens, skip_special_tokens=True):
+            return "answer"
+
+    class FakeModel(torch.nn.Module):
+        device = torch.device("cpu")
+
+        def forward(self, input_ids, **kwargs):
+            hidden = torch.ones(1, input_ids.shape[-1], 4)
+            return type("Output", (), {"hidden_states": (hidden,)})()
+
+        def generate(self, input_ids, **kwargs):
+            return input_ids
+
+    runner = MambaRunner(
+        model=FakeModel(),
+        tokenizer=FakeTokenizer(),
+        experiment_config=MambaExperimentConfig(model_id="fake/mamba"),
+    )
+    runner.run_probe(compile_probe(ProbeSpec(seed=6)))
+    captured = runner.capture_hidden_state()
+    assert tuple(captured.shape) == (1, 3, 4)
+    assert runner.experiment_config.to_dict()["model_id"] == "fake/mamba"
+

@@ -67,3 +67,26 @@ def test_failure_artifact_contains_trigger_and_hidden_state_evidence() -> None:
     assert "state_similarity" in artifact["hidden_state_evidence"]
     json.dumps(artifact)
 
+
+def test_adaptive_search_refines_observed_failure_interval() -> None:
+    from statefuzz.search.engine import adaptive_search_boundary
+
+    def evaluate(config):
+        return {"score": 1.0 if config.context_tokens < 1500 else 0.0}
+
+    result = adaptive_search_boundary(
+        evaluate,
+        min_context=512,
+        max_context=4096,
+        target_position=0.25,
+        interference_strength=0.5,
+        tolerance=64,
+        seed=9,
+    )
+    assert result["observed_failure_context_tokens"] is not None
+    assert result["estimated_capability_boundary"] < result["observed_failure_context_tokens"]
+    low, high = result["confidence_interval"]
+    assert high - low <= 64
+    assert result["capability_curve"]
+    json.dumps(result)
+
