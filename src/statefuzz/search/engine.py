@@ -195,6 +195,67 @@ def adaptive_search_boundary(
     }
 
 
+def search_calibrated_boundary(
+    evaluator: Callable[[SearchConfiguration], Any],
+    min_context: int,
+    max_context: int,
+    target_position: float = 0.0,
+    interference_strength: float = 0.0,
+    threshold: float = 0.5,
+    baseline_threshold: float = 0.5,
+    tolerance: int = 128,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """先验证短上下文基线，再允许自适应搜索进入长上下文。"""
+    if not 0.0 <= baseline_threshold <= 1.0:
+        raise ValueError("baseline_threshold必须位于0到1之间")
+    baseline_config = SearchConfiguration(
+        context_tokens=min_context,
+        target_position=target_position,
+        interference_strength=interference_strength,
+        seed=seed,
+    )
+    baseline_score, baseline_evidence = _normalize_evaluation(evaluator(baseline_config))
+    if not 0.0 <= baseline_score <= 1.0:
+        raise ValueError("score必须位于0到1之间")
+    baseline = {
+        **baseline_config.to_dict(),
+        "score": baseline_score,
+        "failure": baseline_score < baseline_threshold,
+        "evidence": baseline_evidence,
+    }
+    if baseline["failure"]:
+        return {
+            "valid_baseline": False,
+            "failure_reason": "baseline_failure",
+            "baseline": baseline,
+            "boundary": None,
+            "capability_curve": [baseline],
+        }
+    result = adaptive_search_boundary(
+        evaluator,
+        min_context=min_context,
+        max_context=max_context,
+        target_position=target_position,
+        interference_strength=interference_strength,
+        threshold=threshold,
+        tolerance=tolerance,
+        seed=seed,
+    )
+    result.update(
+        {
+            "valid_baseline": True,
+            "failure_reason": (
+                "long_context_degradation"
+                if result["boundary"] is not None
+                else "no_degradation_observed"
+            ),
+            "baseline": baseline,
+        }
+    )
+    return result
+
+
 def rank_failure_cases(
     cases: Iterable[Mapping[str, Any]], top_k: int | None = None
 ) -> list[dict[str, Any]]:

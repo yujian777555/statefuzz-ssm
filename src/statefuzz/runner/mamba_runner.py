@@ -162,6 +162,53 @@ class MambaRunner:
         """返回最近一次捕获结果的再次复制，防止调用方修改内部状态。"""
         return _copy_hidden_state(self._last_hidden_state)
 
+    def score_next_token(
+        self, prompt: str, target_token_id: int | None = None
+    ) -> dict[str, Any]:
+        """返回真实模型对下一token的概率和最后一层隐藏状态证据。"""
+        if self._model is None or self._tokenizer is None:
+            raise RuntimeError("score_next_token需要model-backed runner")
+        if not isinstance(prompt, str) or not prompt:
+            raise ValueError("prompt必须是非空字符串")
+        import torch
+
+        encoded = self._tokenizer(prompt, return_tensors="pt")
+        device = getattr(self._model, "device", "cpu")
+        inputs = {
+            key: value.to(device) if hasattr(value, "to") else value
+            for key, value in encoded.items()
+        }
+        with torch.inference_mode():
+            outputs = self._model(
+                **inputs,
+                output_hidden_states=True,
+                use_cache=True,
+                return_dict=True,
+            )
+            hidden_states = getattr(outputs, "hidden_states", None)
+            if hidden_states:
+                self._last_hidden_state = _copy_hidden_state(hidden_states[-1])
+            logits = outputs.logits[0, -1].float()
+            probabilities = torch.softmax(logits, dim=-1)
+            predicted_token_id = int(torch.argmax(probabilities).item())
+            target = (
+                predicted_token_id if target_token_id is None else target_token_id
+            )
+            if not isinstance(target, int) or not 0 <= target < probabilities.numel():
+                raise ValueError("target_token_id超出词表范围")
+            target_probability = float(probabilities[target].item())
+            predicted_probability = float(probabilities[predicted_token_id].item())
+        return {
+            "target_token_id": target,
+            "predicted_token_id": predicted_token_id,
+            "target_probability": target_probability,
+            "predicted_probability": predicted_probability,
+            "input_token_count": int(inputs["input_ids"].shape[-1]),
+            "hidden_state_shape": list(self._last_hidden_state.shape)
+            if hasattr(self._last_hidden_state, "shape")
+            else None,
+        }
+
 
 assert isinstance(MambaRunner(lambda _: ""), ProbeRunner)
 

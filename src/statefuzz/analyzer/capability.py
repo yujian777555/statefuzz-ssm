@@ -84,3 +84,39 @@ def build_capability_artifact(
         raise ValueError("model_id必须是非空字符串")
     return {"model_id": model_id, **measure_effective_memory(observations, threshold)}
 
+
+def build_calibrated_report(
+    model_id: str,
+    baseline_score: float,
+    search_result: dict[str, Any],
+    failure_evidence: dict[str, Any] | None = None,
+    baseline_threshold: float = 0.5,
+) -> dict[str, Any]:
+    """构建区分任务有效性、边界置信度和机制证据的报告。"""
+    if not isinstance(model_id, str) or not model_id.strip():
+        raise ValueError("model_id必须是非空字符串")
+    if not 0.0 <= baseline_score <= 1.0:
+        raise ValueError("baseline_score必须位于0到1之间")
+    valid = bool(search_result.get("valid_baseline", baseline_score >= baseline_threshold))
+    observed = search_result.get("observed_failure_context_tokens")
+    estimated = search_result.get("estimated_capability_boundary")
+    kind = "interval" if observed is not None else "lower_bound"
+    if not valid:
+        kind = "invalid_baseline"
+    return {
+        "model_id": model_id,
+        "task_validity": {
+            "valid": valid,
+            "baseline_score": baseline_score,
+            "baseline_threshold": baseline_threshold,
+            "failure_reason": search_result.get("failure_reason"),
+        },
+        "capability_boundary": {
+            "kind": kind,
+            "estimated_tokens": estimated,
+            "observed_failure_tokens": observed,
+            "confidence": search_result.get("confidence", 0.0) if valid else 0.0,
+        },
+        "failure_mechanism_evidence": dict(failure_evidence or {}),
+    }
+

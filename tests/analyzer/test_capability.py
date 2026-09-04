@@ -46,3 +46,24 @@ def test_capability_measurement_rejects_invalid_observations() -> None:
     with pytest.raises(ValueError, match="score"):
         measure_effective_memory([CapabilityObservation(context_tokens=512, score=2.0)])
 
+
+def test_calibrated_report_separates_task_validity_from_boundary_confidence() -> None:
+    from statefuzz.analyzer.capability import build_calibrated_report
+
+    report = build_calibrated_report(
+        "fake/mamba",
+        baseline_score=1.0,
+        search_result={
+            "valid_baseline": True,
+            "failure_reason": "no_degradation_observed",
+            "estimated_capability_boundary": 512,
+            "observed_failure_context_tokens": None,
+            "confidence": 1.0,
+        },
+        failure_evidence={"state_norm_change": 0.1},
+    )
+    assert report["task_validity"]["valid"] is True
+    assert report["capability_boundary"]["kind"] == "lower_bound"
+    assert report["capability_boundary"]["confidence"] == 1.0
+    assert report["failure_mechanism_evidence"]["state_norm_change"] == 0.1
+

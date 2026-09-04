@@ -90,3 +90,18 @@ def test_adaptive_search_refines_observed_failure_interval() -> None:
     assert result["capability_curve"]
     json.dumps(result)
 
+
+def test_calibrated_search_refuses_invalid_baseline_and_classifies_reason() -> None:
+    from statefuzz.search.engine import search_calibrated_boundary
+
+    result = search_calibrated_boundary(
+        lambda config: {"score": 0.0, "evidence": {"reason": "mismatch"}},
+        min_context=64,
+        max_context=512,
+        threshold=0.5,
+        baseline_threshold=0.5,
+    )
+    assert result["valid_baseline"] is False
+    assert result["boundary"] is None
+    assert result["failure_reason"] == "baseline_failure"
+
