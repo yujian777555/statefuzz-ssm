@@ -1,68 +1,42 @@
 # Latest Plan
 
-See `plans/plan_005.md`.
+See `plans/plan_006.md`.
 
-# Important Research Direction Change
+# Round 005 Review
 
-The project is no longer only a generic SSM testing framework.
+Codex successfully moved the project into the research prototype stage.
 
-The research goal has changed to:
+Completed:
+- generator modules for memory decay, collision, and pollution patterns
+- runner abstraction for model execution
+- analyzer modules for hidden-state and failure classification
+- 62 tests passing
 
-**StateFuzz: Automatically discovering and diagnosing long-context capability boundaries of State Space Models.**
+However, the current implementation is still a prototype framework.
 
-The objective is not only to find failing inputs, but to build a scientific analysis platform that can answer:
+# Research Direction
 
-1. What is the effective memory boundary of SSM models?
-2. Which input patterns trigger failures?
-3. What hidden-state mechanism causes the failure?
-4. How can discovered weaknesses guide future model improvement?
+StateFuzz is now defined as:
 
-# New Research Contributions
+**Automatically discovering and diagnosing long-context capability boundaries of State Space Models.**
 
-The implementation should prioritize:
+The goal is not only detecting failures, but discovering:
 
-## 1. Capability Boundary Discovery
+1. Effective memory boundaries.
+2. Input patterns that trigger degradation.
+3. Hidden-state mechanisms causing failure.
+4. Evidence that can guide future model improvement.
 
-Automatically search for limits of:
+# Round 006 Priority
 
-- long-range retrieval
-- memory decay
-- interference resistance
-- state persistence
+Focus on scientific discovery rather than infrastructure:
 
-## 2. SSM-specific Failure Discovery
+- parameterized stress generation
+- capability boundary measurement
+- evidence-based hidden-state diagnosis
 
-Focus on:
-
-- state forgetting
-- state collision
-- state pollution
-
-## 3. Mechanistic Diagnosis
-
-Collect and analyze hidden states:
-
-- state similarity
-- state norm changes
-- layer/channel abnormal behavior
-
-The output should explain not only that a model failed, but why it failed.
-
-# Engineering Priority Change
-
-Avoid spending future rounds only on generic infrastructure, protocol code, or testing utilities.
-
-Prioritize research modules:
-
-- generator/
-- runner/
-- analyzer/
-- capability measurement/
-
-The final goal is a research platform for understanding and improving SSM long-context behavior.
-
-Planner analysis:
-
-Codex should treat this as a strategic shift from benchmark construction to scientific discovery of SSM memory mechanisms.
+Avoid:
+- adding only more generic tests
+- expanding protocol infrastructure without research value
 
 Next executor: codex
