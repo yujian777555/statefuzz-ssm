@@ -105,3 +105,22 @@ def test_calibrated_search_refuses_invalid_baseline_and_classifies_reason() -> N
     assert result["boundary"] is None
     assert result["failure_reason"] == "baseline_failure"
 
+
+def test_adaptive_search_expands_exponentially_before_binary_refinement() -> None:
+    from statefuzz.search.engine import adaptive_search_boundary
+
+    def evaluate(config):
+        return 1.0 if config.context_tokens < 1500 else 0.0
+
+    result = adaptive_search_boundary(
+        evaluate,
+        min_context=128,
+        max_context=4096,
+        tolerance=64,
+    )
+    contexts = [case["context_tokens"] for case in result["capability_curve"]]
+    assert contexts[:4] == [128, 256, 512, 1024]
+    assert result["observed_failure_context_tokens"] >= 1500
+    assert result["estimated_capability_boundary"] < result["observed_failure_context_tokens"]
+    assert result["boundary"] is not None
+

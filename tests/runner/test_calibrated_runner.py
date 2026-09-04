@@ -32,3 +32,26 @@ def test_next_token_scoring_returns_probability_and_hidden_state() -> None:
     assert evidence["target_probability"] > 0.9
     assert evidence["input_token_count"] == 2
 
+
+def test_next_token_instance_scoring_returns_one_record_per_prompt() -> None:
+    import torch
+
+    from statefuzz.runner.mamba_runner import MambaRunner
+
+    class FakeTokenizer:
+        def __call__(self, prompt, return_tensors="pt"):
+            return {"input_ids": torch.tensor([[1, 2]])}
+
+    class FakeModel(torch.nn.Module):
+        device = torch.device("cpu")
+
+        def forward(self, input_ids, **kwargs):
+            logits = torch.tensor([[[0.0, 0.0, 4.0], [0.0, 0.0, 4.0]]])
+            hidden = torch.ones(1, 2, 3)
+            return type("Output", (), {"logits": logits, "hidden_states": (hidden,)})()
+
+    runner = MambaRunner(model=FakeModel(), tokenizer=FakeTokenizer())
+    records = runner.score_next_token_instances(["a", "b"], target_token_id=2)
+    assert len(records) == 2
+    assert all(record["target_token_id"] == 2 for record in records)
+

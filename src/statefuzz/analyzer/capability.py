@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
+from statistics import NormalDist
 from typing import Any, Iterable
 
 
@@ -118,5 +120,52 @@ def build_calibrated_report(
             "confidence": search_result.get("confidence", 0.0) if valid else 0.0,
         },
         "failure_mechanism_evidence": dict(failure_evidence or {}),
+    }
+
+
+def compute_confidence_interval(
+    values: Iterable[float], confidence: float = 0.95
+) -> dict[str, float | int]:
+    """用正态近似计算有界得分均值的可复核置信区间。"""
+    if not 0.0 < confidence < 1.0:
+        raise ValueError("confidence必须位于0到1之间")
+    samples = [float(value) for value in values]
+    if not samples:
+        raise ValueError("values不能为空")
+    if any(not 0.0 <= value <= 1.0 for value in samples):
+        raise ValueError("values必须位于0到1之间")
+    count = len(samples)
+    mean = sum(samples) / count
+    if count == 1:
+        margin = 0.0
+    else:
+        variance = sum((value - mean) ** 2 for value in samples) / (count - 1)
+        z_value = NormalDist().inv_cdf(0.5 + confidence / 2.0)
+        margin = z_value * math.sqrt(variance / count)
+    return {
+        "n": count,
+        "mean": mean,
+        "lower": max(0.0, mean - margin),
+        "upper": min(1.0, mean + margin),
+        "confidence": confidence,
+    }
+
+
+def aggregate_failure_evidence(
+    evidences: Iterable[dict[str, Any]],
+) -> dict[str, float | int | None]:
+    """聚合多个失败实例中的状态相似度和范数变化。"""
+    records = list(evidences)
+    if not records:
+        raise ValueError("evidences不能为空")
+
+    def mean_field(field: str) -> float | None:
+        values = [float(item[field]) for item in records if item.get(field) is not None]
+        return round(sum(values) / len(values), 12) if values else None
+
+    return {
+        "count": len(records),
+        "mean_state_norm_change": mean_field("state_norm_change"),
+        "mean_state_similarity": mean_field("state_similarity"),
     }
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from numbers import Real
 from typing import Any
 
@@ -72,4 +72,32 @@ def detect_state_collapse(states: Iterable[Any], threshold: float = 0.999) -> bo
             return False
         previous = current
     return compared
+
+
+def compute_state_retention(reference: Any, current: Any) -> float:
+    """计算当前状态范数相对参考状态的保留比例。"""
+    reference_norm = compute_state_norm(reference)
+    current_norm = compute_state_norm(current)
+    if reference_norm == 0.0:
+        return 1.0 if current_norm == 0.0 else 0.0
+    return current_norm / reference_norm
+
+
+def summarize_layer_states(layer_states: Mapping[str, Any]) -> dict[str, dict[str, float]]:
+    """按层统计有限比例和范数，供失败证据聚合使用。"""
+    if not isinstance(layer_states, Mapping) or not layer_states:
+        raise ValueError("layer_states必须是非空对象")
+    summary: dict[str, dict[str, float]] = {}
+    for layer, state in layer_states.items():
+        values = _flatten(state)
+        if not values:
+            raise ValueError("层状态不能为空")
+        finite = [value for value in values if math.isfinite(value)]
+        norm = math.sqrt(sum(value * value for value in finite)) if finite else math.inf
+        summary[str(layer)] = {
+            "finite_fraction": len(finite) / len(values),
+            "norm": norm,
+            "num_values": float(len(values)),
+        }
+    return summary
 

@@ -163,26 +163,36 @@ def adaptive_search_boundary(
         return case
 
     lower_case = observe(min_context)
-    upper_case = observe(max_context)
     lower = min_context
-    upper = max_context
+    upper = min_context
     if lower_case["failure"]:
         estimated = 0
         observed = min_context
         lower = 0
-    elif not upper_case["failure"]:
-        estimated = max_context
-        observed = None
-        lower = upper = max_context
     else:
-        while upper - lower > tolerance:
-            middle = (lower + upper) // 2
-            if observe(middle)["failure"]:
-                upper = middle
-            else:
-                lower = middle
-        estimated = lower
-        observed = upper
+        observed = None
+        current = min_context
+        while current < max_context:
+            next_context = min(max_context, max(current + 1, current * 2))
+            case = observe(next_context)
+            if case["failure"]:
+                upper = next_context
+                observed = next_context
+                break
+            current = next_context
+            lower = current
+        if observed is None:
+            estimated = lower
+            upper = lower
+        else:
+            estimated = lower
+            while upper - lower > tolerance:
+                middle = (lower + upper) // 2
+                if observe(middle)["failure"]:
+                    upper = middle
+                else:
+                    lower = middle
+            estimated = lower
     boundary = curve.get(observed) if observed is not None else None
     return {
         "threshold": threshold,

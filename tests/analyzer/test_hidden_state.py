@@ -42,6 +42,21 @@ def test_state_norm_and_relative_change_are_explicit_evidence() -> None:
 
 
 @requires_analyzer
+def test_layer_statistics_and_retention_are_machine_readable() -> None:
+    from statefuzz.analyzer.hidden_state import (
+        compute_state_retention,
+        summarize_layer_states,
+    )
+
+    summary = summarize_layer_states(
+        {"layer0": [3.0, 4.0], "layer1": [1.0, 0.0]}
+    )
+    assert summary["layer0"]["norm"] == 5.0
+    assert summary["layer1"]["norm"] == 1.0
+    assert compute_state_retention([2.0, 0.0], [1.0, 0.0]) == 0.5
+
+
+@requires_analyzer
 def test_failure_classifier_exposes_mechanism_category() -> None:
     from statefuzz.analyzer.failure_classifier import classify_failure
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Iterable
 
 
 def generate_calibrated_prompt(context_tokens: int, seed: int = 0) -> str:
@@ -13,4 +14,16 @@ def generate_calibrated_prompt(context_tokens: int, seed: int = 0) -> str:
     vocabulary = ("memory", "state", "signal", "context", "sequence", "token")
     filler = " ".join(rng.choice(vocabulary) for _ in range(context_tokens))
     return f"StateFuzz calibration sequence: {filler} The next symbol is"
+
+
+def generate_calibrated_prompts(
+    context_tokens: int, seed: int = 0, instances: int = 1
+) -> list[str]:
+    """生成多个独立seed的校准任务实例。"""
+    if isinstance(instances, bool) or instances < 1:
+        raise ValueError("instances必须是正整数")
+    return [
+        generate_calibrated_prompt(context_tokens, seed=seed + offset)
+        for offset in range(instances)
+    ]
 

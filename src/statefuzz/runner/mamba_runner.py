@@ -209,6 +209,17 @@ class MambaRunner:
             else None,
         }
 
+    def score_next_token_instances(
+        self, prompts: list[str], target_token_id: int | None = None
+    ) -> list[dict[str, Any]]:
+        """按相同目标token逐个评分，保留每个实例的独立证据。"""
+        if not isinstance(prompts, list) or not prompts:
+            raise ValueError("prompts必须是非空列表")
+        return [
+            self.score_next_token(prompt, target_token_id=target_token_id)
+            for prompt in prompts
+        ]
+
 
 assert isinstance(MambaRunner(lambda _: ""), ProbeRunner)
 

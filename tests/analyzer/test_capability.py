@@ -67,3 +67,27 @@ def test_calibrated_report_separates_task_validity_from_boundary_confidence() ->
     assert report["capability_boundary"]["confidence"] == 1.0
     assert report["failure_mechanism_evidence"]["state_norm_change"] == 0.1
 
+
+def test_confidence_interval_is_deterministic() -> None:
+    from statefuzz.analyzer.capability import compute_confidence_interval
+
+    interval = compute_confidence_interval([1.0, 0.0, 1.0, 1.0])
+    assert interval["n"] == 4
+    assert interval["mean"] == 0.75
+    assert interval["lower"] <= interval["mean"] <= interval["upper"]
+    assert interval == compute_confidence_interval([1.0, 0.0, 1.0, 1.0])
+
+
+def test_failure_evidence_aggregation_reports_mean_metrics() -> None:
+    from statefuzz.analyzer.capability import aggregate_failure_evidence
+
+    summary = aggregate_failure_evidence(
+        [
+            {"state_norm_change": 0.2, "state_similarity": 0.9},
+            {"state_norm_change": 0.4, "state_similarity": 1.0},
+        ]
+    )
+    assert summary["count"] == 2
+    assert summary["mean_state_norm_change"] == 0.3
+    assert summary["mean_state_similarity"] == 0.95
+
