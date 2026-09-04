@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,16 @@ from statefuzz.io_atomic import atomic_write_json
 
 
 REQUIRED_FIELDS = ("round", "previous_actor", "next", "last_plan", "last_result")
+_ALLOWED_ACTORS = {"planner", "codex", "gpt"}
+_LOCKS_GUARD = threading.Lock()
+_STATUS_LOCKS: dict[Path, threading.Lock] = {}
+
+
+def _status_lock(path: Path) -> threading.Lock:
+    """为同一规范路径返回进程内共享锁。"""
+    resolved = Path(path).resolve()
+    with _LOCKS_GUARD:
+        return _STATUS_LOCKS.setdefault(resolved, threading.Lock())
 
 
 def _validate_status(status: dict[str, Any]) -> dict[str, Any]:
@@ -24,6 +35,14 @@ def _validate_status(status: dict[str, Any]) -> dict[str, Any]:
     for field in ("previous_actor", "next", "last_plan"):
         if not isinstance(status[field], str) or not status[field]:
             raise ValueError(f"{field}必须是非空字符串")
+    previous_actor = status["previous_actor"]
+    next_actor = status["next"]
+    if (
+        previous_actor not in _ALLOWED_ACTORS
+        or next_actor not in _ALLOWED_ACTORS
+        or previous_actor == next_actor
+    ):
+        raise ValueError("执行者转换非法")
     if status["last_result"] is not None and not isinstance(status["last_result"], str):
         raise ValueError("last_result必须是字符串或null")
     return dict(status)
@@ -31,7 +50,10 @@ def _validate_status(status: dict[str, Any]) -> dict[str, Any]:
 
 def load_status(path: Path) -> dict[str, Any]:
     """加载并校验状态文件。"""
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise ValueError("状态JSON损坏") from exc
     if not isinstance(data, dict):
         raise ValueError("状态文件必须是JSON对象")
     return _validate_status(data)
@@ -45,17 +67,18 @@ def write_status(path: Path, status: dict[str, Any]) -> None:
 def update_status(path: Path, **updates: Any) -> dict[str, Any]:
     """合并字段并原子更新状态；文件不存在时从round 0开始。"""
     target = Path(path)
-    if target.exists():
-        current = load_status(target)
-    else:
-        current = {
-            "round": 0,
-            "previous_actor": "planner",
-            "next": "codex",
-            "last_plan": "plans/latest_plan.md",
-            "last_result": None,
-        }
-    current.update(updates)
-    write_status(target, current)
-    return current
+    with _status_lock(target):
+        if target.exists():
+            current = load_status(target)
+        else:
+            current = {
+                "round": 0,
+                "previous_actor": "planner",
+                "next": "codex",
+                "last_plan": "plans/latest_plan.md",
+                "last_result": None,
+            }
+        current.update(updates)
+        write_status(target, current)
+        return current
 
