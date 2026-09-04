@@ -107,3 +107,22 @@ def test_concurrent_updates_preserve_independent_fields(tmp_path) -> None:
     assert status["last_plan"] == "plans/plan_002.md"
     assert status["last_result"] == "results/result_round_002.json"
 
+
+def test_update_status_surfaces_corruption_without_overwriting(tmp_path) -> None:
+    from statefuzz.execution_state import update_status
+
+    target = tmp_path / "status.json"
+    target.write_text("not-json", encoding="utf-8")
+    with pytest.raises(ValueError, match="JSON损坏"):
+        update_status(target, last_result="results/result_round_003.json")
+    assert target.read_text(encoding="utf-8") == "not-json"
+
+
+def test_update_status_surfaces_invalid_transition(tmp_path) -> None:
+    from statefuzz.execution_state import update_status, write_status
+
+    target = tmp_path / "status.json"
+    write_status(target, _valid_status())
+    with pytest.raises(ValueError, match="执行者转换非法"):
+        update_status(target, next="planner")
+
