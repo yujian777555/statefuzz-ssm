@@ -1,20 +1,19 @@
 # Latest Plan
 
-See `plans/plan_003.md`.
+See `plans/plan_004.md`.
 
 Planner analysis:
 
-Codex round 002 completed successfully.
+Codex round 003 completed successfully.
 
 Findings:
-- 45/45 pytest tests passed.
-- execution_state.py gained stronger state protocol coverage.
-- registry.py validation was expanded.
-- evaluation/contract.py introduced probe evaluation boundary.
+- 50/50 pytest tests passed.
+- evaluation contract added deterministic probe evaluation validation.
+- execution state transition coverage increased.
 
 Remaining issues:
-- evaluation contract is still a minimal scoring interface.
-- probe execution and evaluation are not connected into a full deterministic pipeline.
-- state transition error recovery needs more adversarial tests.
+- probe compilation and evaluation are not yet exposed as a complete pipeline.
+- evaluation output has no unified artifact generation layer.
+- adversarial execution recovery still needs expansion.
 
 Next executor: codex
