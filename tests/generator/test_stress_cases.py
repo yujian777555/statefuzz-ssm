@@ -78,3 +78,35 @@ def test_pollution_family_exposes_distractor_density() -> None:
     assert family[0].provenance["distractor_density"] == 0.5
     assert family[1].provenance["distractor_density"] == 1.0
 
+
+def test_long_range_retrieval_probe_contains_a_needle() -> None:
+    from statefuzz.generator.long_range_retrieval import generate_long_range_retrieval_probe
+
+    probe = generate_long_range_retrieval_probe(seed=4, context_tokens=512)
+    assert "NEEDLE" in probe.prompt
+    assert probe.provenance["stress_pattern"] == "long_range_retrieval"
+
+
+def test_interference_probe_exposes_strength() -> None:
+    from statefuzz.generator.interference import generate_interference_probe
+
+    probe = generate_interference_probe(seed=5, interference_strength=0.75)
+    assert probe.provenance["interference_strength"] == 0.75
+    assert probe.provenance["interference_items"] > 0
+
+
+def test_conflicting_collision_probe_contains_duplicate_key() -> None:
+    from statefuzz.generator.state_collision import generate_conflicting_collision_probe
+
+    probe = generate_conflicting_collision_probe(seed=6)
+    assert probe.provenance["collision_key"] in probe.prompt
+    assert len(probe.provenance["conflicting_values"]) == 2
+
+
+def test_pollution_recovery_probe_contains_recovery_instruction() -> None:
+    from statefuzz.generator.state_pollution import generate_pollution_recovery_probe
+
+    probe = generate_pollution_recovery_probe(seed=7)
+    assert "RECOVER" in probe.prompt
+    assert probe.provenance["recovery_protocol"] == "explicit_marker"
+

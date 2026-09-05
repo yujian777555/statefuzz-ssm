@@ -27,3 +27,17 @@ def generate_calibrated_prompts(
         for offset in range(instances)
     ]
 
+
+def generate_interference_prompt(
+    context_tokens: int, seed: int = 0, interference_strength: float = 0.0
+) -> str:
+    """在校准任务末尾前注入可控干扰词。"""
+    if not 0.0 <= interference_strength <= 1.0:
+        raise ValueError("interference_strength必须位于0到1之间")
+    prompt = generate_calibrated_prompt(context_tokens, seed)
+    marker = " The next symbol is"
+    base, suffix = prompt.rsplit(marker, 1)
+    count = round(context_tokens * interference_strength)
+    interference = " ".join(f"distractor{i % 31:02d}" for i in range(count))
+    return f"{base} {interference}{marker}{suffix}" if interference else prompt
+

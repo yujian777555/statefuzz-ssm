@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from typing import Any
 
 from statefuzz.analyzer.hidden_state import (
@@ -44,6 +44,7 @@ def diagnose_failure(
     expected: str,
     prediction: str,
     states: Iterable[Any] | None = None,
+    layer_states: Mapping[str, tuple[Any, Any]] | None = None,
 ) -> dict[str, Any]:
     """返回失败类别及相似度、范数变化等机制证据。"""
     state_values = list(states) if states is not None else []
@@ -64,12 +65,18 @@ def diagnose_failure(
         states=state_values,
         state_norms=state_norms,
     )
+    evidence = {
+        "state_similarity": similarity,
+        "state_norm_change": norm_change,
+        "state_norms": state_norms,
+    }
+    if layer_states is not None:
+        evidence["layer_similarity"] = {
+            str(layer): compute_state_similarity(pair[0], pair[1])
+            for layer, pair in layer_states.items()
+        }
     return {
         "category": category,
-        "evidence": {
-            "state_similarity": similarity,
-            "state_norm_change": norm_change,
-            "state_norms": state_norms,
-        },
+        "evidence": evidence,
     }
 

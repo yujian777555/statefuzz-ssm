@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from statefuzz.generator import _tag_probe
+from statefuzz.generator import _rebuild_probe, _tag_probe
 from statefuzz.probes.compiler import CompiledProbe, compile_probe
 from statefuzz.probes.schema import ProbeSpec, TaskFamily
 
@@ -58,4 +58,23 @@ def generate_collision_family(
         for context_tokens in context_lengths
         for strength in interference_strengths
     ]
+
+
+def generate_conflicting_collision_probe(
+    seed: int = 0, context_tokens: int = 4096
+) -> CompiledProbe:
+    """为同一键注入两个不同值，构造显式状态碰撞。"""
+    probe = generate_collision_probe(seed=seed, context_tokens=context_tokens)
+    key = probe.provenance["queried_keys"][0]
+    first_value = probe.provenance["queried_values"][0]
+    second_value = f"V{(int(first_value[1:]) + 1) % 100000:05d}"
+    conflict = f"{key} = {first_value}\n{key} = {second_value}\n"
+    rebuilt = _rebuild_probe(
+        probe,
+        conflict + probe.prompt,
+        stress_pattern="state_collision_conflict",
+        collision_key=key,
+        conflicting_values=[first_value, second_value],
+    )
+    return rebuilt
 

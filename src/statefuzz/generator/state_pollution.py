@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from statefuzz.generator import _tag_probe
+from statefuzz.generator import _rebuild_probe, _tag_probe
 from statefuzz.probes.compiler import CompiledProbe, compile_probe
 from statefuzz.probes.schema import ProbeSpec
 
@@ -54,4 +54,20 @@ def generate_pollution_family(
         for context_tokens in context_lengths
         for density in distractor_densities
     ]
+
+
+def generate_pollution_recovery_probe(
+    seed: int = 0, context_tokens: int = 4096
+) -> CompiledProbe:
+    """在高污染上下文后追加显式恢复标记。"""
+    probe = generate_pollution_probe(
+        seed=seed, context_tokens=context_tokens, n_items=64
+    )
+    prompt = probe.prompt + "\nRECOVER: return the original target only."
+    return _rebuild_probe(
+        probe,
+        prompt,
+        stress_pattern="state_pollution_recovery",
+        recovery_protocol="explicit_marker",
+    )
 

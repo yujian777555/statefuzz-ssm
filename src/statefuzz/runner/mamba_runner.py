@@ -66,6 +66,7 @@ class MambaRunner:
         self._tokenizer = tokenizer
         self.experiment_config = experiment_config
         self._last_hidden_state: Any = None
+        self._last_layer_states: dict[str, Any] = {}
 
     @classmethod
     def from_pretrained(cls, config: MambaExperimentConfig) -> "MambaRunner":
@@ -127,6 +128,10 @@ class MambaRunner:
             hidden_states = getattr(outputs, "hidden_states", None)
             if hidden_states:
                 self._last_hidden_state = _copy_hidden_state(hidden_states[-1])
+                self._last_layer_states = {
+                    f"layer_{index}": _copy_hidden_state(state[:, -1, :])
+                    for index, state in enumerate(hidden_states)
+                }
             generated = self._model.generate(
                 **inputs,
                 max_new_tokens=config.max_new_tokens,
@@ -162,6 +167,13 @@ class MambaRunner:
         """返回最近一次捕获结果的再次复制，防止调用方修改内部状态。"""
         return _copy_hidden_state(self._last_hidden_state)
 
+    def capture_layer_states(self) -> dict[str, Any]:
+        """返回各层最后时间点隐藏状态的独立副本。"""
+        return {
+            name: _copy_hidden_state(state)
+            for name, state in self._last_layer_states.items()
+        }
+
     def score_next_token(
         self, prompt: str, target_token_id: int | None = None
     ) -> dict[str, Any]:
@@ -188,6 +200,10 @@ class MambaRunner:
             hidden_states = getattr(outputs, "hidden_states", None)
             if hidden_states:
                 self._last_hidden_state = _copy_hidden_state(hidden_states[-1])
+                self._last_layer_states = {
+                    f"layer_{index}": _copy_hidden_state(state[:, -1, :])
+                    for index, state in enumerate(hidden_states)
+                }
             logits = outputs.logits[0, -1].float()
             probabilities = torch.softmax(logits, dim=-1)
             predicted_token_id = int(torch.argmax(probabilities).item())

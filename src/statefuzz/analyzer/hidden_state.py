@@ -101,3 +101,24 @@ def summarize_layer_states(layer_states: Mapping[str, Any]) -> dict[str, dict[st
         }
     return summary
 
+
+def compute_temporal_retention(states: Iterable[Any]) -> list[float]:
+    """以首个时间点为参考，返回每个时间点的状态保留比例。"""
+    values = list(states)
+    if not values:
+        raise ValueError("states不能为空")
+    reference = values[0]
+    return [compute_state_retention(reference, state) for state in values]
+
+
+def compute_layer_similarity(
+    reference: Mapping[str, Any], current: Mapping[str, Any]
+) -> dict[str, float]:
+    """计算对应层隐藏状态的余弦相似度。"""
+    if set(reference) != set(current):
+        raise ValueError("层集合不一致")
+    return {
+        str(layer): compute_state_similarity(reference[layer], current[layer])
+        for layer in reference
+    }
+

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+
 from statefuzz.probes.compiler import CompiledProbe
 
 
@@ -15,5 +18,30 @@ def _tag_probe(probe: CompiledProbe, pattern: str, **metadata: object) -> Compil
         answer=probe.answer,
         provenance=provenance,
         probe_hash=probe.probe_hash,
+    )
+
+
+def _rebuild_probe(
+    probe: CompiledProbe, prompt: str, **metadata: object
+) -> CompiledProbe:
+    """在改变提示后重新计算审计哈希并保留原答案。"""
+    provenance = dict(probe.provenance)
+    provenance.update(metadata)
+    payload = json.dumps(
+        {
+            "spec": probe.spec.canonical_payload(),
+            "prompt": prompt,
+            "answer": probe.answer,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return CompiledProbe(
+        spec=probe.spec,
+        prompt=prompt,
+        answer=probe.answer,
+        provenance=provenance,
+        probe_hash=hashlib.sha256(payload.encode("utf-8")).hexdigest(),
     )
 

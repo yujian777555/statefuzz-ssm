@@ -57,6 +57,40 @@ def test_layer_statistics_and_retention_are_machine_readable() -> None:
 
 
 @requires_analyzer
+def test_temporal_retention_and_layer_similarity_are_explicit() -> None:
+    from statefuzz.analyzer.hidden_state import (
+        compute_layer_similarity,
+        compute_temporal_retention,
+    )
+
+    assert compute_temporal_retention([[2.0, 0.0], [1.0, 0.0]]) == [1.0, 0.5]
+    similarity = compute_layer_similarity(
+        {"layer0": [1.0, 0.0], "layer1": [0.0, 1.0]},
+        {"layer0": [1.0, 0.0], "layer1": [1.0, 0.0]},
+    )
+    assert similarity["layer0"] == 1.0
+    assert similarity["layer1"] == 0.0
+
+
+@requires_analyzer
+def test_failure_diagnosis_includes_layer_evidence() -> None:
+    from statefuzz.analyzer.failure_classifier import diagnose_failure
+
+    report = diagnose_failure(
+        "expected",
+        "wrong",
+        layer_states={
+            "layer0": ([1.0, 0.0], [1.0, 0.0]),
+            "layer1": ([1.0, 0.0], [0.0, 1.0]),
+        },
+    )
+    assert report["evidence"]["layer_similarity"] == {
+        "layer0": 1.0,
+        "layer1": 0.0,
+    }
+
+
+@requires_analyzer
 def test_failure_classifier_exposes_mechanism_category() -> None:
     from statefuzz.analyzer.failure_classifier import classify_failure
 
