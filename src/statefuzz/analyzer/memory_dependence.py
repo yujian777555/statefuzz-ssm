@@ -68,6 +68,29 @@ def compute_counterfactual_memory_score(record: Mapping[str, Any]) -> dict[str, 
     """计算 A/B 两个方向的对称反事实偏好差，结果限制在 ``[0, 1]``。"""
     if not isinstance(record, Mapping):
         raise TypeError("record必须是对象")
+    candidate_ids = record.get("candidate_token_ids")
+    if (
+        not isinstance(candidate_ids, (list, tuple))
+        or len(candidate_ids) != 2
+        or any(not isinstance(value, int) or isinstance(value, bool) for value in candidate_ids)
+    ):
+        counts = list(record.get("prompt_token_counts", []))
+        return {
+            "seed": record.get("seed"),
+            "template_id": record.get("template_id"),
+            "candidate_token_ids": list(candidate_ids) if isinstance(candidate_ids, (list, tuple)) else [],
+            "candidate_values": list(record.get("candidate_values", record.get("values", []))),
+            "prompt_token_counts": counts,
+            "paired_token_counts": len(counts) == 2 and counts[0] == counts[1],
+            "matched": bool(record.get("matched", False)),
+            "candidate_valid": False,
+            "direction_a_contrast": 0.0,
+            "direction_b_contrast": 0.0,
+            "direction_a_logit_contrast": 0.0,
+            "direction_b_logit_contrast": 0.0,
+            "memory_dependence_score": 0.5,
+            "valid_short_context_task": False,
+        }
     result = _metric_for_pair(record)
     counts = result["prompt_token_counts"]
     result["paired_token_counts"] = len(counts) == 2 and counts[0] == counts[1]
