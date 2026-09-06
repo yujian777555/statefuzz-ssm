@@ -87,6 +87,40 @@ def test_interference_frontier_does_not_call_control_failure_a_stress_failure() 
     ]
 
 
+def test_invalid_remote_memory_task_cannot_produce_boundary() -> None:
+    from statefuzz.search.engine import search_remote_memory_boundary
+
+    result = search_remote_memory_boundary(
+        {"valid_short_context_task": False},
+        lambda context: {"memory_dependence_score": 1.0},
+        context_lengths=[64, 128],
+    )
+    assert result["status"] == "invalid_task"
+    assert result["memory_boundary"] is None
+    assert result["capability_curve"] == []
+
+
+def test_remote_memory_search_distinguishes_boundary_and_lower_bound() -> None:
+    from statefuzz.search.engine import search_remote_memory_boundary
+
+    validity = {"valid_short_context_task": True}
+    boundary = search_remote_memory_boundary(
+        validity,
+        lambda context: {"memory_dependence_score": 1.0 if context < 256 else 0.0},
+        context_lengths=[64, 128, 256],
+        threshold=0.5,
+    )
+    assert boundary["boundary_kind"] == "observed_failure"
+    assert boundary["memory_boundary"] == 256
+    lower = search_remote_memory_boundary(
+        validity,
+        lambda context: {"memory_dependence_score": 1.0},
+        context_lengths=[64, 128],
+    )
+    assert lower["boundary_kind"] == "lower_bound"
+    assert lower["memory_boundary"] == 128
+
+
 def test_failure_artifact_contains_trigger_and_hidden_state_evidence() -> None:
     from statefuzz.search.engine import build_failure_artifact, search_boundary
 
@@ -161,4 +195,3 @@ def test_adaptive_search_expands_exponentially_before_binary_refinement() -> Non
     assert result["observed_failure_context_tokens"] >= 1500
     assert result["estimated_capability_boundary"] < result["observed_failure_context_tokens"]
     assert result["boundary"] is not None
-

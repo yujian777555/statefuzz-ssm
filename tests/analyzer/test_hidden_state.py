@@ -90,6 +90,23 @@ def test_failure_diagnosis_includes_layer_evidence() -> None:
     }
 
 
+def test_compare_recurrent_states_separates_ssm_and_conv_evidence() -> None:
+    from statefuzz.analyzer.hidden_state import compare_recurrent_states
+
+    reference = {
+        "ssm_states": [[1.0, 0.0], [1.0, 1.0]],
+        "conv_states": [[0.0, 1.0], [1.0, 0.0]],
+    }
+    counterfactual = {
+        "ssm_states": [[1.0, 0.0], [0.0, 1.0]],
+        "conv_states": [[0.0, 1.0], [1.0, 0.0]],
+    }
+    result = compare_recurrent_states(reference, counterfactual)
+    assert result["state_source"] == "direct_recurrent_cache"
+    assert result["ssm_states"]["strongest_divergent_layer"] == 1
+    assert result["conv_states"]["minimum_similarity"] == 1.0
+
+
 @requires_analyzer
 def test_failure_classifier_exposes_mechanism_category() -> None:
     from statefuzz.analyzer.failure_classifier import classify_failure
@@ -136,4 +153,3 @@ def test_failure_diagnosis_contains_mechanism_evidence() -> None:
     )
     assert report["category"] == "state_collapse"
     assert report["evidence"]["state_similarity"] == 1.0
-

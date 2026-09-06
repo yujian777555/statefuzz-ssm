@@ -186,3 +186,45 @@ def test_recurrent_state_summary_identifies_dynamic_cache() -> None:
     assert len(summary["layers"]) == 2
     assert summary["layers"][0]["ssm_shape"] == [1, 2, 4]
 
+
+def test_single_token_candidate_scoring_uses_explicit_values() -> None:
+    import torch
+
+    from statefuzz.generator.remote_memory import generate_remote_memory_pair
+    from statefuzz.runner.mamba_runner import MambaRunner
+
+    class FakeTokenizer:
+        eos_token_id = 0
+        pad_token_id = 0
+
+        def __call__(self, text, return_tensors="pt", **kwargs):
+            mapping = {" red": [1], " blue": [2], "two words": [1, 2]}
+            ids = mapping.get(text, [4, 5, 6])
+            return {"input_ids": torch.tensor([ids])}
+
+        def decode(self, tokens, **kwargs):
+            return {1: " red", 2: " blue", 3: " top"}.get(tokens[0], "?")
+
+    class FakeModel(torch.nn.Module):
+        device = torch.device("cpu")
+
+        def forward(self, input_ids, **kwargs):
+            logits = torch.zeros(1, input_ids.shape[-1], 7)
+            logits[0, -1, 1] = 2.0
+            logits[0, -1, 2] = 1.0
+            logits[0, -1, 3] = 3.0
+            hidden = torch.ones(1, input_ids.shape[-1], 3)
+            return type("Output", (), {"logits": logits, "hidden_states": (hidden,)})()
+
+    runner = MambaRunner(model=FakeModel(), tokenizer=FakeTokenizer())
+    assert runner.single_token_id(" red") == 1
+    assert runner.single_token_id("two words") is None
+    scored = runner.score_candidate_tokens("prompt", [1, 2])
+    assert scored["candidates"][0]["token_id"] == 1
+    assert scored["candidates"][0]["rank"] == 2
+    assert scored["top1_token_id"] == 3
+    pair = runner.score_remote_memory_pair(
+        generate_remote_memory_pair(64, seed=7, value_a=" red", value_b=" blue")
+    )
+    assert pair["candidate_token_ids"] == [1, 2]
+    assert pair["matched"] is True

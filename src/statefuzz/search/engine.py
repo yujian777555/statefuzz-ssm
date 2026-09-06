@@ -329,6 +329,81 @@ def search_interference_frontier(
     }
 
 
+def search_remote_memory_boundary(
+    task_validation: Mapping[str, Any],
+    evaluator: Callable[[int], Any],
+    context_lengths: Iterable[int],
+    threshold: float = 0.5,
+    target_position: float = 0.0,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """仅对通过短上下文反事实校验的任务搜索远程记忆边界。"""
+    if not isinstance(task_validation, Mapping):
+        raise TypeError("task_validation必须是对象")
+    if not 0.0 <= threshold <= 1.0:
+        raise ValueError("threshold必须位于0到1之间")
+    contexts = sorted(set(context_lengths))
+    if not contexts or any(
+        isinstance(value, bool) or not isinstance(value, int) or value <= 0
+        for value in contexts
+    ):
+        raise ValueError("context_lengths必须为正整数")
+    if not bool(task_validation.get("valid_short_context_task", False)):
+        return {
+            "status": "invalid_task",
+            "boundary_kind": "invalid_task",
+            "threshold": threshold,
+            "memory_boundary": None,
+            "boundary": None,
+            "capability_curve": [],
+            "reason": "short_context_counterfactual_dependence_failed",
+        }
+    cases: list[dict[str, Any]] = []
+    for context_tokens in contexts:
+        raw = evaluator(context_tokens)
+        if isinstance(raw, Mapping):
+            if "memory_dependence_score" not in raw:
+                raise ValueError("远程记忆评价结果缺少memory_dependence_score")
+            score = float(raw["memory_dependence_score"])
+            evidence = dict(raw.get("evidence", {}))
+        elif isinstance(raw, Real):
+            score = float(raw)
+            evidence = {}
+        else:
+            raise TypeError("远程记忆评价器必须返回数值或对象")
+        if not 0.0 <= score <= 1.0:
+            raise ValueError("memory_dependence_score必须位于0到1之间")
+        cases.append(
+            {
+                "context_tokens": context_tokens,
+                "target_position": target_position,
+                "seed": seed,
+                "memory_dependence_score": score,
+                "failure": score < threshold,
+                "evidence": evidence,
+            }
+        )
+    failures = [case for case in cases if case["failure"]]
+    if failures:
+        boundary = min(failures, key=lambda case: case["context_tokens"])
+        return {
+            "status": "ok",
+            "boundary_kind": "observed_failure",
+            "threshold": threshold,
+            "memory_boundary": boundary["context_tokens"],
+            "boundary": boundary,
+            "capability_curve": cases,
+        }
+    return {
+        "status": "ok",
+        "boundary_kind": "lower_bound",
+        "threshold": threshold,
+        "memory_boundary": contexts[-1],
+        "boundary": None,
+        "capability_curve": cases,
+    }
+
+
 def rank_failure_cases(
     cases: Iterable[Mapping[str, Any]], top_k: int | None = None
 ) -> list[dict[str, Any]]:
@@ -374,4 +449,3 @@ def build_failure_artifact(
         },
         "hidden_state_evidence": dict(hidden_state_evidence),
     }
-

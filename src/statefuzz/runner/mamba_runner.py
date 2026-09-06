@@ -328,6 +328,170 @@ class MambaRunner:
             for prompt in prompts
         ]
 
+    def single_token_id(self, text: str) -> int | None:
+        """返回文本在当前tokenizer下的唯一token id，不满足时返回None。"""
+        if self._model is None or self._tokenizer is None:
+            raise RuntimeError("single_token_id需要model-backed runner")
+        if not isinstance(text, str) or not text:
+            raise ValueError("text必须是非空字符串")
+        encoded = self._tokenizer(
+            text, return_tensors="pt", add_special_tokens=False
+        )
+        token_ids = encoded.get("input_ids") if hasattr(encoded, "get") else None
+        if token_ids is None:
+            raise ValueError("tokenizer输出缺少input_ids")
+        if hasattr(token_ids, "shape"):
+            if token_ids.ndim != 2 or token_ids.shape[0] != 1:
+                raise ValueError("tokenizer必须返回单批次input_ids")
+            if int(token_ids.shape[-1]) != 1:
+                return None
+            return int(token_ids[0, 0].item())
+        values = list(token_ids[0]) if token_ids and isinstance(token_ids[0], list) else list(token_ids)
+        return int(values[0]) if len(values) == 1 else None
+
+    def score_candidate_tokens(
+        self, prompt: str, candidate_token_ids: list[int]
+    ) -> dict[str, Any]:
+        """在同一次forward中评分显式候选，不使用模型argmax替换候选。"""
+        if self._model is None or self._tokenizer is None:
+            raise RuntimeError("score_candidate_tokens需要model-backed runner")
+        if not isinstance(candidate_token_ids, list) or not candidate_token_ids:
+            raise ValueError("candidate_token_ids必须是非空列表")
+        if any(
+            isinstance(token_id, bool) or not isinstance(token_id, int)
+            for token_id in candidate_token_ids
+        ):
+            raise ValueError("candidate_token_ids必须为整数")
+        import torch
+
+        encoded = self._tokenizer(
+            prompt, return_tensors="pt", add_special_tokens=False
+        )
+        device = getattr(self._model, "device", "cpu")
+        inputs = {
+            key: value.to(device) if hasattr(value, "to") else value
+            for key, value in encoded.items()
+        }
+        with torch.inference_mode():
+            outputs = self._model(
+                **inputs,
+                output_hidden_states=True,
+                use_cache=True,
+                return_dict=True,
+            )
+            self._record_outputs(outputs)
+            logits = outputs.logits[0, -1].float()
+            probabilities = torch.softmax(logits, dim=-1)
+            top1_token_id = int(torch.argmax(probabilities).item())
+            top1_probability = float(probabilities[top1_token_id].item())
+            candidates: list[dict[str, Any]] = []
+            for token_id in candidate_token_ids:
+                if not 0 <= token_id < probabilities.numel():
+                    raise ValueError("candidate_token_id超出词表范围")
+                probability = float(probabilities[token_id].item())
+                log_probability = float(torch.log(probabilities[token_id]).item())
+                candidates.append(
+                    {
+                        "token_id": token_id,
+                        "token_text": _decode_token(self._tokenizer, token_id),
+                        "probability": probability,
+                        "logit": float(logits[token_id].item()),
+                        "log_probability": log_probability,
+                        "rank": int((probabilities > probability).sum().item()) + 1,
+                    }
+                )
+        return {
+            "candidates": candidates,
+            "top1_token_id": top1_token_id,
+            "top1_token_text": _decode_token(self._tokenizer, top1_token_id),
+            "top1_probability": top1_probability,
+            "input_token_count": int(inputs["input_ids"].shape[-1]),
+            "hidden_state_shape": list(self._last_hidden_state.shape)
+            if hasattr(self._last_hidden_state, "shape")
+            else None,
+            "state_source": self._state_source,
+        }
+
+    def score_remote_memory_pair(
+        self, pair: Any, *, include_state_copies: bool = True
+    ) -> dict[str, Any]:
+        """评分远程记忆A/B对，并保留候选、长度和循环状态证据。"""
+        if not hasattr(pair, "prompt_a") or not hasattr(pair, "prompt_b"):
+            raise TypeError("pair必须是RemoteMemoryPair")
+        value_a = str(pair.value_a)
+        value_b = str(pair.value_b)
+        token_id_a = self.single_token_id(value_a)
+        token_id_b = self.single_token_id(value_b)
+        counts = [self.count_tokens(pair.prompt_a), self.count_tokens(pair.prompt_b)]
+        result: dict[str, Any] = {
+            "seed": pair.seed,
+            "template_id": pair.template_id,
+            "target_position": pair.target_position,
+            "candidate_values": [value_a, value_b],
+            "candidate_token_ids": [token_id_a, token_id_b],
+            "prompt_token_counts": counts,
+            "matched": counts[0] == counts[1],
+            "candidate_valid": token_id_a is not None and token_id_b is not None and token_id_a != token_id_b,
+            "state_source": "unavailable",
+        }
+        if not result["matched"]:
+            result["reason"] = "token_length_mismatch"
+            return result
+        if not result["candidate_valid"]:
+            result["reason"] = "candidate_not_single_token_or_duplicate"
+            return result
+        candidate_ids = [int(token_id_a), int(token_id_b)]
+        score_a = self.score_candidate_tokens(pair.prompt_a, candidate_ids)
+        recurrent_a = self.capture_recurrent_state()
+        layers_a = self.capture_layer_states()
+        score_b = self.score_candidate_tokens(pair.prompt_b, candidate_ids)
+        recurrent_b = self.capture_recurrent_state()
+        layers_b = self.capture_layer_states()
+        result.update(
+            {
+                "prompt_a": score_a,
+                "prompt_b": score_b,
+                "score_a": score_a,
+                "score_b": score_b,
+                "state_source": score_b.get("state_source", self._state_source),
+                "recurrent_state_a": recurrent_a if include_state_copies else None,
+                "recurrent_state_b": recurrent_b if include_state_copies else None,
+                "layer_states_a": layers_a if include_state_copies else {},
+                "layer_states_b": layers_b if include_state_copies else {},
+                "recurrent_state_summary_a": self._summarize_recurrent_state(recurrent_a),
+                "recurrent_state_summary_b": self._summarize_recurrent_state(recurrent_b),
+            }
+        )
+        return result
+
+    @staticmethod
+    def _summarize_recurrent_state(state: dict[str, list[Any]] | None) -> dict[str, Any]:
+        """为实验产物提供不含完整张量的循环状态摘要。"""
+        if state is None:
+            return {"state_source": "unavailable", "layers": []}
+        import torch
+
+        conv_states = state.get("conv_states", [])
+        ssm_states = state.get("ssm_states", [])
+        layers = []
+        for index, (conv_state, ssm_state) in enumerate(
+            zip(conv_states, ssm_states, strict=False)
+        ):
+            layers.append(
+                {
+                    "layer": index,
+                    "conv_shape": list(conv_state.shape) if hasattr(conv_state, "shape") else None,
+                    "ssm_shape": list(ssm_state.shape) if hasattr(ssm_state, "shape") else None,
+                    "conv_l2_norm": float(torch.linalg.vector_norm(conv_state.float()))
+                    if hasattr(conv_state, "float")
+                    else None,
+                    "ssm_l2_norm": float(torch.linalg.vector_norm(ssm_state.float()))
+                    if hasattr(ssm_state, "float")
+                    else None,
+                }
+            )
+        return {"state_source": "direct_recurrent_cache", "layers": layers}
+
     def count_tokens(self, prompt: str) -> int:
         """使用真实tokenizer计数，不把字符数当作token数。"""
         if self._model is None or self._tokenizer is None:
@@ -380,4 +544,3 @@ class MambaRunner:
 
 
 assert isinstance(MambaRunner(lambda _: ""), ProbeRunner)
-

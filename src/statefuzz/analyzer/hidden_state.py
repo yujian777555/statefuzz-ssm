@@ -122,3 +122,59 @@ def compute_layer_similarity(
         for layer in reference
     }
 
+
+def compare_recurrent_states(
+    reference: Mapping[str, Any], counterfactual: Mapping[str, Any]
+) -> dict[str, Any]:
+    """逐层比较反事实提示产生的直接循环/卷积缓存状态。
+
+    该函数只汇总可观测的状态差异，不把差异自动解释成遗忘或污染。
+    """
+    if not isinstance(reference, Mapping) or not isinstance(counterfactual, Mapping):
+        raise TypeError("reference和counterfactual必须是对象")
+    result: dict[str, Any] = {"state_source": "direct_recurrent_cache"}
+    for state_name in ("ssm_states", "conv_states"):
+        left = list(reference.get(state_name, []))
+        right = list(counterfactual.get(state_name, []))
+        if not left and not right:
+            result[state_name] = {
+                "available": False,
+                "layers": [],
+                "minimum_similarity": None,
+                "median_similarity": None,
+                "maximum_similarity": None,
+                "strongest_divergent_layer": None,
+            }
+            continue
+        if len(left) != len(right):
+            raise ValueError(f"{state_name}层数不一致")
+        layers: list[dict[str, float | int]] = []
+        for index, (reference_state, counterfactual_state) in enumerate(zip(left, right)):
+            similarity = compute_state_similarity(reference_state, counterfactual_state)
+            norm_change = compute_state_norm_change(reference_state, counterfactual_state)
+            layers.append(
+                {
+                    "layer": index,
+                    "cosine_similarity": similarity,
+                    "relative_norm_change": norm_change,
+                }
+            )
+        similarities = [float(layer["cosine_similarity"]) for layer in layers]
+        ordered = sorted(similarities)
+        middle = len(ordered) // 2
+        median = (
+            ordered[middle]
+            if len(ordered) % 2
+            else (ordered[middle - 1] + ordered[middle]) / 2.0
+        )
+        result[state_name] = {
+            "available": True,
+            "layers": layers,
+            "minimum_similarity": min(similarities),
+            "median_similarity": median,
+            "maximum_similarity": max(similarities),
+            "strongest_divergent_layer": min(
+                range(len(similarities)), key=lambda index: similarities[index]
+            ),
+        }
+    return result
