@@ -94,12 +94,12 @@ def test_failure_diagnosis_includes_layer_evidence() -> None:
 def test_failure_classifier_exposes_mechanism_category() -> None:
     from statefuzz.analyzer.failure_classifier import classify_failure
 
-    assert classify_failure("expected", "") == "state_forgetting"
+    assert classify_failure("expected", "") == "behavioral_interference"
     assert (
         classify_failure("expected", "wrong", [[1.0, 2.0], [1.0, 2.0]])
         == "state_collapse"
     )
-    assert classify_failure("expected", "wrong") == "state_pollution"
+    assert classify_failure("expected", "wrong") == "behavioral_interference"
 
 
 @requires_analyzer
@@ -110,6 +110,21 @@ def test_failure_classifier_uses_state_norm_evidence() -> None:
         classify_failure("expected", "wrong", state_norms=[10.0, 1.0])
         == "state_forgetting"
     )
+
+
+@requires_analyzer
+def test_failure_classifier_requires_explicit_collision_evidence() -> None:
+    from statefuzz.analyzer.failure_classifier import classify_failure
+
+    assert (
+        classify_failure(
+            "expected",
+            "wrong",
+            evidence={"state_collision": True},
+        )
+        == "state_collision"
+    )
+    assert classify_failure("expected", "expected-prefix") == "behavioral_interference"
 
 
 @requires_analyzer

@@ -49,6 +49,44 @@ def test_search_boundary_rejects_invalid_space_or_scores() -> None:
         search_boundary(lambda _: 2.0, context_lengths=[512])
 
 
+def test_interference_frontier_requires_passing_matched_control() -> None:
+    from statefuzz.search.engine import search_interference_frontier
+
+    def evaluate(config):
+        control = 1.0
+        stressed = 0.0 if config.interference_strength >= 0.5 else 1.0
+        return {
+            "control_score": control,
+            "stressed_score": stressed,
+            "matched": True,
+        }
+
+    result = search_interference_frontier(
+        evaluate,
+        context_lengths=[64, 128],
+        interference_strengths=[0.0, 0.5, 1.0],
+        threshold=0.5,
+    )
+    assert result["memory_boundary"] is None
+    assert result["frontier"] == [
+        {"context_tokens": 64, "minimum_failure_interference": 0.5},
+        {"context_tokens": 128, "minimum_failure_interference": 0.5},
+    ]
+
+
+def test_interference_frontier_does_not_call_control_failure_a_stress_failure() -> None:
+    from statefuzz.search.engine import search_interference_frontier
+
+    result = search_interference_frontier(
+        lambda config: {"control_score": 0.0, "stressed_score": 0.0, "matched": True},
+        context_lengths=[64],
+        interference_strengths=[0.5],
+    )
+    assert result["frontier"] == [
+        {"context_tokens": 64, "minimum_failure_interference": None}
+    ]
+
+
 def test_failure_artifact_contains_trigger_and_hidden_state_evidence() -> None:
     from statefuzz.search.engine import build_failure_artifact, search_boundary
 

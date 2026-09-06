@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import random
-from collections.abc import Iterable
 
 
 def generate_calibrated_prompt(context_tokens: int, seed: int = 0) -> str:
@@ -40,4 +39,25 @@ def generate_interference_prompt(
     count = round(context_tokens * interference_strength)
     interference = " ".join(f"distractor{i % 31:02d}" for i in range(count))
     return f"{base} {interference}{marker}{suffix}" if interference else prompt
+
+
+def generate_length_matched_interference_pair(
+    context_tokens: int, seed: int, interference_strength: float
+) -> tuple[str, str]:
+    """用替换而非追加构造token槽位数相同的控制/干扰提示。"""
+    if not 0.0 <= interference_strength <= 1.0:
+        raise ValueError("interference_strength必须位于0到1之间")
+    if isinstance(context_tokens, bool) or context_tokens < 64:
+        raise ValueError("context_tokens必须至少为64")
+    rng = random.Random(seed)
+    control_vocabulary = ("memory", "state", "signal", "context", "sequence", "token")
+    interference_vocabulary = ("noise", "clash", "drift", "alias", "dummy", "offset")
+    control_slots = [rng.choice(control_vocabulary) for _ in range(context_tokens)]
+    stressed_slots = list(control_slots)
+    replace_count = round(context_tokens * interference_strength)
+    for index in rng.sample(range(context_tokens), replace_count):
+        stressed_slots[index] = rng.choice(interference_vocabulary)
+    prefix = "StateFuzz calibration sequence: "
+    suffix = " The next symbol is"
+    return prefix + " ".join(control_slots) + suffix, prefix + " ".join(stressed_slots) + suffix
 

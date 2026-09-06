@@ -6,6 +6,7 @@ from statefuzz.search.engine import (
     build_failure_artifact,
     rank_failure_cases,
     search_boundary,
+    search_interference_frontier,
     search_calibrated_boundary,
 )
 
@@ -15,6 +16,7 @@ __all__ = [
     "build_failure_artifact",
     "rank_failure_cases",
     "search_boundary",
+    "search_interference_frontier",
     "search_calibrated_boundary",
 ]
 

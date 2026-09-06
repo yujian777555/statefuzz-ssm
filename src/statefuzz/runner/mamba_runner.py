@@ -44,6 +44,14 @@ def _copy_hidden_state(value: Any) -> Any:
     return copy.deepcopy(value)
 
 
+def _decode_token(tokenizer: Any, token_id: int) -> str:
+    """尽可能返回单token可读文本，避免把不可打印字节当作证据。"""
+    try:
+        return str(tokenizer.decode([token_id], skip_special_tokens=False))
+    except (AttributeError, TypeError, ValueError):
+        return str(token_id)
+
+
 class MambaRunner:
     """通过预测函数注入模型，避免在协议层绑定具体权重或框架。"""
 
@@ -67,6 +75,8 @@ class MambaRunner:
         self.experiment_config = experiment_config
         self._last_hidden_state: Any = None
         self._last_layer_states: dict[str, Any] = {}
+        self._last_recurrent_state: dict[str, list[Any]] | None = None
+        self._state_source = "unavailable"
 
     @classmethod
     def from_pretrained(cls, config: MambaExperimentConfig) -> "MambaRunner":
@@ -125,13 +135,7 @@ class MambaRunner:
                 use_cache=True,
                 return_dict=True,
             )
-            hidden_states = getattr(outputs, "hidden_states", None)
-            if hidden_states:
-                self._last_hidden_state = _copy_hidden_state(hidden_states[-1])
-                self._last_layer_states = {
-                    f"layer_{index}": _copy_hidden_state(state[:, -1, :])
-                    for index, state in enumerate(hidden_states)
-                }
+            self._record_outputs(outputs)
             generated = self._model.generate(
                 **inputs,
                 max_new_tokens=config.max_new_tokens,
@@ -174,6 +178,93 @@ class MambaRunner:
             for name, state in self._last_layer_states.items()
         }
 
+    def capture_recurrent_state(self) -> dict[str, list[Any]] | None:
+        """返回模型明确暴露的SSM cache副本；不可用时返回None。"""
+        if self._last_recurrent_state is None:
+            return None
+        return {
+            name: [_copy_hidden_state(value) for value in values]
+            for name, values in self._last_recurrent_state.items()
+        }
+
+    def capture_recurrent_state_summary(self) -> dict[str, Any]:
+        """返回cache来源、各层形状和范数，不存储完整大张量。"""
+        if self._last_recurrent_state is None:
+            return {"state_source": "unavailable", "layers": []}
+        import torch
+
+        layers = []
+        for index, (conv_state, ssm_state) in enumerate(
+            zip(
+                self._last_recurrent_state.get("conv_states", []),
+                self._last_recurrent_state.get("ssm_states", []),
+                strict=False,
+            )
+        ):
+            layers.append(
+                {
+                    "layer": index,
+                    "conv_shape": list(conv_state.shape)
+                    if hasattr(conv_state, "shape")
+                    else None,
+                    "ssm_shape": list(ssm_state.shape)
+                    if hasattr(ssm_state, "shape")
+                    else None,
+                    "conv_l2_norm": float(torch.linalg.vector_norm(conv_state.float()))
+                    if hasattr(conv_state, "float")
+                    else None,
+                    "ssm_l2_norm": float(torch.linalg.vector_norm(ssm_state.float()))
+                    if hasattr(ssm_state, "float")
+                    else None,
+                }
+            )
+        return {"state_source": self._state_source, "layers": layers}
+
+    def _record_outputs(self, outputs: Any) -> None:
+        """从一次forward中分别记录层激活和显式cache状态。"""
+        hidden_states = getattr(outputs, "hidden_states", None)
+        if hidden_states:
+            self._last_hidden_state = _copy_hidden_state(hidden_states[-1])
+            self._last_layer_states = {
+                f"layer_{index}": _copy_hidden_state(state[:, -1, :])
+                for index, state in enumerate(hidden_states)
+            }
+        cache = getattr(outputs, "cache_params", None)
+        if cache is not None and all(
+            hasattr(cache, name) for name in ("conv_states", "ssm_states")
+        ):
+            self._last_recurrent_state = {
+                "conv_states": [
+                    _copy_hidden_state(value) for value in cache.conv_states
+                ],
+                "ssm_states": [
+                    _copy_hidden_state(value) for value in cache.ssm_states
+                ],
+            }
+            self._state_source = "direct_recurrent_cache"
+        elif cache is not None and hasattr(cache, "layers"):
+            layers = list(cache.layers)
+            if layers and all(
+                hasattr(layer, name)
+                for layer in layers
+                for name in ("conv_states", "recurrent_states")
+            ):
+                self._last_recurrent_state = {
+                    "conv_states": [
+                        _copy_hidden_state(layer.conv_states) for layer in layers
+                    ],
+                    "ssm_states": [
+                        _copy_hidden_state(layer.recurrent_states) for layer in layers
+                    ],
+                }
+                self._state_source = "direct_recurrent_cache"
+            else:
+                self._last_recurrent_state = None
+                self._state_source = "unavailable"
+        else:
+            self._last_recurrent_state = None
+            self._state_source = "unavailable"
+
     def score_next_token(
         self, prompt: str, target_token_id: int | None = None
     ) -> dict[str, Any]:
@@ -197,13 +288,7 @@ class MambaRunner:
                 use_cache=True,
                 return_dict=True,
             )
-            hidden_states = getattr(outputs, "hidden_states", None)
-            if hidden_states:
-                self._last_hidden_state = _copy_hidden_state(hidden_states[-1])
-                self._last_layer_states = {
-                    f"layer_{index}": _copy_hidden_state(state[:, -1, :])
-                    for index, state in enumerate(hidden_states)
-                }
+            self._record_outputs(outputs)
             logits = outputs.logits[0, -1].float()
             probabilities = torch.softmax(logits, dim=-1)
             predicted_token_id = int(torch.argmax(probabilities).item())
@@ -214,11 +299,18 @@ class MambaRunner:
                 raise ValueError("target_token_id超出词表范围")
             target_probability = float(probabilities[target].item())
             predicted_probability = float(probabilities[predicted_token_id].item())
+            target_rank = int((probabilities > target_probability).sum().item()) + 1
         return {
             "target_token_id": target,
             "predicted_token_id": predicted_token_id,
             "target_probability": target_probability,
             "predicted_probability": predicted_probability,
+            "target_token_text": _decode_token(self._tokenizer, target),
+            "predicted_token_text": _decode_token(
+                self._tokenizer, predicted_token_id
+            ),
+            "target_rank": target_rank,
+            "top1_margin": predicted_probability - target_probability,
             "input_token_count": int(inputs["input_ids"].shape[-1]),
             "hidden_state_shape": list(self._last_hidden_state.shape)
             if hasattr(self._last_hidden_state, "shape")
@@ -235,6 +327,56 @@ class MambaRunner:
             self.score_next_token(prompt, target_token_id=target_token_id)
             for prompt in prompts
         ]
+
+    def count_tokens(self, prompt: str) -> int:
+        """使用真实tokenizer计数，不把字符数当作token数。"""
+        if self._model is None or self._tokenizer is None:
+            raise RuntimeError("count_tokens需要model-backed runner")
+        if not isinstance(prompt, str) or not prompt:
+            raise ValueError("prompt必须是非空字符串")
+        encoded = self._tokenizer(
+            prompt, return_tensors="pt", add_special_tokens=False
+        )
+        return int(encoded["input_ids"].shape[-1])
+
+    def score_paired_next_token(
+        self,
+        control_prompt: str,
+        stressed_prompt: str,
+        target_token_id: int | None = None,
+    ) -> dict[str, Any]:
+        """评分长度匹配的控制/干扰对，长度不一致时不宣称可比。"""
+        control_count = self.count_tokens(control_prompt)
+        stressed_count = self.count_tokens(stressed_prompt)
+        result: dict[str, Any] = {
+            "control_token_count": control_count,
+            "stressed_token_count": stressed_count,
+            "matched": control_count == stressed_count,
+        }
+        if control_count != stressed_count:
+            result["reason"] = "token_length_mismatch"
+            return result
+        control = self.score_next_token(control_prompt, target_token_id=target_token_id)
+        control_recurrent = self.capture_recurrent_state_summary()
+        control_layers = self.capture_layer_states()
+        effective_target = control["target_token_id"]
+        stressed = self.score_next_token(
+            stressed_prompt, target_token_id=effective_target
+        )
+        stressed_recurrent = self.capture_recurrent_state_summary()
+        stressed_layers = self.capture_layer_states()
+        result.update(
+            {
+                "control": control,
+                "stressed": stressed,
+                "control_layers": control_layers,
+                "stressed_layers": stressed_layers,
+                "control_recurrent_state": control_recurrent,
+                "stressed_recurrent_state": stressed_recurrent,
+                "state_source": stressed_recurrent["state_source"],
+            }
+        )
+        return result
 
 
 assert isinstance(MambaRunner(lambda _: ""), ProbeRunner)

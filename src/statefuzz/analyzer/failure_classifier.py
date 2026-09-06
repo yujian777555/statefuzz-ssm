@@ -19,15 +19,19 @@ def classify_failure(
     states: Iterable[Any] | None = None,
     *,
     state_norms: Iterable[float] | None = None,
+    evidence: Mapping[str, Any] | None = None,
+    target_token_id: int | None = None,
+    predicted_token_id: int | None = None,
 ) -> str:
-    """按可复核规则分类状态遗忘、塌缩、碰撞和污染。"""
+    """只在有对应证据时分类状态机制，否则返回保守行为标签。"""
     if not isinstance(expected, str) or not isinstance(prediction, str):
         raise TypeError("expected和prediction必须是字符串")
     if prediction == expected:
         return "none"
-    if not prediction.strip():
-        return "state_forgetting"
-    if states is not None and detect_state_collapse(states):
+    explicit = dict(evidence or {})
+    if explicit.get("state_collapse") or (
+        states is not None and detect_state_collapse(states)
+    ):
         return "state_collapse"
     if state_norms is not None:
         norms = list(state_norms)
@@ -35,9 +39,21 @@ def classify_failure(
             raise ValueError("state_norms不能为负数")
         if len(norms) >= 2 and norms[0] > 0.0 and norms[-1] / norms[0] < 0.25:
             return "state_forgetting"
-    if expected.startswith(prediction) or prediction.startswith(expected):
+    if explicit.get("state_forgetting"):
+        return "state_forgetting"
+    if explicit.get("state_collision"):
         return "state_collision"
-    return "state_pollution"
+    if explicit.get("state_pollution"):
+        return "state_pollution"
+    if (
+        target_token_id is not None
+        and predicted_token_id is not None
+        and target_token_id != predicted_token_id
+    ):
+        return "interference_induced_token_shift"
+    if states is not None or state_norms is not None:
+        return "insufficient_mechanism_evidence"
+    return "behavioral_interference"
 
 
 def diagnose_failure(
@@ -45,6 +61,7 @@ def diagnose_failure(
     prediction: str,
     states: Iterable[Any] | None = None,
     layer_states: Mapping[str, tuple[Any, Any]] | None = None,
+    state_source: str = "unavailable",
 ) -> dict[str, Any]:
     """返回失败类别及相似度、范数变化等机制证据。"""
     state_values = list(states) if states is not None else []
@@ -66,6 +83,7 @@ def diagnose_failure(
         state_norms=state_norms,
     )
     evidence = {
+        "state_source": state_source,
         "state_similarity": similarity,
         "state_norm_change": norm_change,
         "state_norms": state_norms,

@@ -266,6 +266,69 @@ def search_calibrated_boundary(
     return result
 
 
+def search_interference_frontier(
+    evaluator: Callable[[SearchConfiguration], Mapping[str, Any]],
+    context_lengths: Iterable[int],
+    interference_strengths: Iterable[float],
+    threshold: float = 0.5,
+    target_position: float = 0.0,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """在每个上下文长度上寻找通过匹配控制后的最小干扰失败强度。"""
+    contexts, _, strengths = _validate_space(
+        context_lengths, [target_position], interference_strengths, threshold
+    )
+    if 0.0 not in strengths:
+        strengths = [0.0, *strengths]
+    cases: list[dict[str, Any]] = []
+    frontier: list[dict[str, Any]] = []
+    for context_tokens in contexts:
+        minimum_failure: float | None = None
+        for strength in strengths:
+            configuration = SearchConfiguration(
+                context_tokens=context_tokens,
+                target_position=target_position,
+                interference_strength=strength,
+                seed=seed,
+            )
+            raw = evaluator(configuration)
+            if not isinstance(raw, Mapping):
+                raise TypeError("frontier评价器必须返回对象")
+            if "control_score" not in raw or "stressed_score" not in raw:
+                raise ValueError("frontier评价结果缺少control_score或stressed_score")
+            control_score = float(raw["control_score"])
+            stressed_score = float(raw["stressed_score"])
+            if not 0.0 <= control_score <= 1.0 or not 0.0 <= stressed_score <= 1.0:
+                raise ValueError("control_score和stressed_score必须位于0到1之间")
+            matched = bool(raw.get("matched", False))
+            control_valid = matched and control_score >= threshold
+            failure = control_valid and stressed_score < threshold
+            case = {
+                **configuration.to_dict(),
+                "control_score": control_score,
+                "stressed_score": stressed_score,
+                "matched": matched,
+                "control_valid": control_valid,
+                "failure": failure,
+                "evidence": dict(raw.get("evidence", {})),
+            }
+            cases.append(case)
+            if failure and minimum_failure is None:
+                minimum_failure = strength
+        frontier.append(
+            {
+                "context_tokens": context_tokens,
+                "minimum_failure_interference": minimum_failure,
+            }
+        )
+    return {
+        "threshold": threshold,
+        "memory_boundary": None,
+        "frontier": frontier,
+        "cases": cases,
+    }
+
+
 def rank_failure_cases(
     cases: Iterable[Mapping[str, Any]], top_k: int | None = None
 ) -> list[dict[str, Any]]:
