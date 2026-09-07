@@ -203,6 +203,51 @@ def test_replicated_remote_memory_search_rejects_token_count_mismatch() -> None:
     assert result["nominal_boundary_context"] is None
 
 
+def test_replicated_remote_memory_search_reports_actual_transition_interval() -> None:
+    from statefuzz.search.engine import search_replicated_remote_memory_boundary
+
+    def evaluate(context):
+        margin = 0.5 if context == 512 else -0.5
+        actual = 1115 if context == 512 else 2220
+        return [
+            {
+                "seed": seed,
+                "min_signed_margin": margin,
+                "actual_input_tokens": actual,
+            }
+            for seed in (13, 14, 15, 16)
+        ]
+
+    result = search_replicated_remote_memory_boundary(
+        evaluate, context_lengths=[512, 1024], heldout_seeds=[13, 14, 15, 16]
+    )
+    assert result["boundary_kind"] == "replicated_zero_crossing"
+    assert result["actual_boundary_interval"] == [1115, 2220]
+    assert result["last_replicated_pass_actual_tokens"] == 1115
+    assert result["first_replicated_fail_actual_tokens"] == 2220
+
+
+def test_replicated_remote_memory_search_marks_nonmonotonic_reversal() -> None:
+    from statefuzz.search.engine import search_replicated_remote_memory_boundary
+
+    def evaluate(context):
+        margin = 0.5 if context in {512, 2048} else -0.5
+        return [
+            {
+                "seed": seed,
+                "min_signed_margin": margin,
+                "actual_input_tokens": context,
+            }
+            for seed in (13, 14)
+        ]
+
+    result = search_replicated_remote_memory_boundary(
+        evaluate, context_lengths=[512, 1024, 2048], heldout_seeds=[13, 14]
+    )
+    assert result["boundary_kind"] == "nonmonotonic"
+    assert result["nominal_boundary_context"] is None
+
+
 def test_failure_artifact_contains_trigger_and_hidden_state_evidence() -> None:
     from statefuzz.search.engine import build_failure_artifact, search_boundary
 

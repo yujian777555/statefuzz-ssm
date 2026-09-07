@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from collections import Counter
 from collections.abc import Iterable, Mapping
 from numbers import Real
 from statistics import median
@@ -262,3 +263,46 @@ def summarize_behavior_state_alignment(
         },
         "interpretation": "描述性对齐，不单独构成任何命名SSM失败机制的因果证据",
     }
+
+
+def summarize_counterfactual_state_convergence(
+    records: Iterable[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """跨种子汇总反事实循环状态的收敛程度。"""
+    values = list(records)
+    if not values:
+        raise ValueError("records不能为空")
+    result: dict[str, Any] = {}
+    for state_name in ("ssm_states", "conv_states"):
+        similarities: list[float] = []
+        distances: list[float] = []
+        divergent_layers: list[int] = []
+        for record in values:
+            comparison = record.get("recurrent_state_comparison", {})
+            state = comparison.get(state_name, {}) if isinstance(comparison, Mapping) else {}
+            if not isinstance(state, Mapping):
+                continue
+            if state.get("minimum_similarity") is not None:
+                similarities.append(float(state["minimum_similarity"]))
+            if state.get("maximum_relative_l2_distance") is not None:
+                distances.append(float(state["maximum_relative_l2_distance"]))
+            if state.get("strongest_divergent_layer") is not None:
+                divergent_layers.append(int(state["strongest_divergent_layer"]))
+        result[state_name] = {
+            "median_minimum_similarity": float(median(similarities))
+            if similarities
+            else None,
+            "median_maximum_relative_l2_distance": round(float(median(distances)), 12)
+            if distances
+            else None,
+            "inter_seed_similarity_range": [min(similarities), max(similarities)]
+            if similarities
+            else None,
+            "inter_seed_relative_l2_range": [min(distances), max(distances)]
+            if distances
+            else None,
+            "most_frequent_strongest_divergent_layer": Counter(divergent_layers).most_common(1)[0][0]
+            if divergent_layers
+            else None,
+        }
+    return result

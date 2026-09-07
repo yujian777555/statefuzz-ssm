@@ -149,6 +149,49 @@ def test_behavior_state_alignment_keeps_mechanism_descriptive() -> None:
     assert summary["state"]["median_max_ssm_relative_l2"] == 0.4
 
 
+def test_counterfactual_state_convergence_aggregates_layers_and_seeds() -> None:
+    from statefuzz.analyzer.hidden_state import summarize_counterfactual_state_convergence
+
+    summary = summarize_counterfactual_state_convergence(
+        [
+            {
+                "seed": 13,
+                "recurrent_state_comparison": {
+                    "ssm_states": {
+                        "minimum_similarity": 0.8,
+                        "maximum_relative_l2_distance": 0.4,
+                        "strongest_divergent_layer": 3,
+                    },
+                    "conv_states": {
+                        "minimum_similarity": 0.9,
+                        "maximum_relative_l2_distance": 0.2,
+                        "strongest_divergent_layer": 2,
+                    },
+                },
+            },
+            {
+                "seed": 14,
+                "recurrent_state_comparison": {
+                    "ssm_states": {
+                        "minimum_similarity": 0.6,
+                        "maximum_relative_l2_distance": 0.8,
+                        "strongest_divergent_layer": 3,
+                    },
+                    "conv_states": {
+                        "minimum_similarity": 0.7,
+                        "maximum_relative_l2_distance": 0.4,
+                        "strongest_divergent_layer": 2,
+                    },
+                },
+            },
+        ]
+    )
+    assert summary["ssm_states"]["median_minimum_similarity"] == 0.7
+    assert summary["ssm_states"]["median_maximum_relative_l2_distance"] == 0.6
+    assert summary["ssm_states"]["most_frequent_strongest_divergent_layer"] == 3
+    assert summary["conv_states"]["inter_seed_similarity_range"] == [0.7, 0.9]
+
+
 @requires_analyzer
 def test_failure_classifier_exposes_mechanism_category() -> None:
     from statefuzz.analyzer.failure_classifier import classify_failure

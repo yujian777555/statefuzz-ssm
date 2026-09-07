@@ -436,8 +436,8 @@ def search_replicated_remote_memory_boundary(
     if not seeds:
         raise ValueError("heldout_seeds不能为空")
     cases: list[dict[str, Any]] = []
-    previous_passing: int | None = None
-    first_candidate: int | None = None
+    first_all_fail: dict[str, Any] | None = None
+    first_partial: dict[str, Any] | None = None
     for context_tokens in contexts:
         raw = evaluator(context_tokens)
         if isinstance(raw, Mapping):
@@ -453,7 +453,7 @@ def search_replicated_remote_memory_boundary(
                 "boundary_kind": "invalid_task",
                 "nominal_boundary_context": None,
                 "actual_boundary_token_range": None,
-                "previous_passing_context": previous_passing,
+                "previous_passing_context": None,
                 "cases": cases,
                 "reason": "heldout_seed_set_mismatch",
             }
@@ -463,7 +463,7 @@ def search_replicated_remote_memory_boundary(
                 "boundary_kind": "invalid_task",
                 "nominal_boundary_context": None,
                 "actual_boundary_token_range": None,
-                "previous_passing_context": previous_passing,
+                "previous_passing_context": None,
                 "cases": cases,
                 "reason": "duplicate_heldout_seed",
             }
@@ -491,7 +491,7 @@ def search_replicated_remote_memory_boundary(
                     "boundary_kind": "invalid_task",
                     "nominal_boundary_context": None,
                     "actual_boundary_token_range": None,
-                    "previous_passing_context": previous_passing,
+                    "previous_passing_context": None,
                     "cases": cases,
                     "reason": "token_length_or_margin_invalid",
                 }
@@ -519,26 +519,57 @@ def search_replicated_remote_memory_boundary(
             "records": normalized,
         }
         cases.append(case)
-        if all_pass:
-            previous_passing = context_tokens
-            continue
-        if first_candidate is None:
-            first_candidate = context_tokens
-        if all_fail and previous_passing == (cases[-2]["context_tokens"] if len(cases) > 1 else None):
+        if all_fail and first_all_fail is None:
+            first_all_fail = case
+        elif not all_pass and not all_fail and first_partial is None:
+            first_partial = case
+
+    # A later all-pass point after a failure invalidates a single monotone boundary.
+    if first_all_fail is not None:
+        first_fail_index = cases.index(first_all_fail)
+        if any(case["all_seeds_pass"] for case in cases[first_fail_index + 1 :]):
+            return {
+                "status": "ok",
+                "boundary_kind": "nonmonotonic",
+                "nominal_boundary_context": None,
+                "actual_boundary_token_range": None,
+                "previous_passing_context": None,
+                "cases": cases,
+            }
+    if first_partial is not None:
+        return {
+            "status": "ok",
+            "boundary_kind": "candidate_unreplicated",
+            "nominal_boundary_context": first_partial["context_tokens"],
+            "actual_boundary_token_range": first_partial["actual_input_token_range"],
+            "previous_passing_context": cases[cases.index(first_partial) - 1]["context_tokens"]
+            if cases.index(first_partial) > 0 and cases[cases.index(first_partial) - 1]["all_seeds_pass"]
+            else None,
+            "cases": cases,
+        }
+    if first_all_fail is not None:
+        first_fail_index = cases.index(first_all_fail)
+        previous = cases[first_fail_index - 1] if first_fail_index > 0 else None
+        if previous is not None and previous["all_seeds_pass"]:
+            last_pass_actual = previous["actual_input_token_range"][1]
+            first_fail_actual = first_all_fail["actual_input_token_range"][0]
             return {
                 "status": "ok",
                 "boundary_kind": "replicated_zero_crossing",
-                "nominal_boundary_context": context_tokens,
-                "actual_boundary_token_range": case["actual_input_token_range"],
-                "previous_passing_context": previous_passing,
+                "nominal_boundary_context": first_all_fail["context_tokens"],
+                "actual_boundary_token_range": first_all_fail["actual_input_token_range"],
+                "actual_boundary_interval": [last_pass_actual, first_fail_actual],
+                "last_replicated_pass_actual_tokens": last_pass_actual,
+                "first_replicated_fail_actual_tokens": first_fail_actual,
+                "previous_passing_context": previous["context_tokens"],
                 "cases": cases,
             }
         return {
             "status": "ok",
             "boundary_kind": "candidate_unreplicated",
-            "nominal_boundary_context": first_candidate,
-            "actual_boundary_token_range": case["actual_input_token_range"],
-            "previous_passing_context": previous_passing,
+            "nominal_boundary_context": first_all_fail["context_tokens"],
+            "actual_boundary_token_range": first_all_fail["actual_input_token_range"],
+            "previous_passing_context": None,
             "cases": cases,
         }
     return {
@@ -546,7 +577,8 @@ def search_replicated_remote_memory_boundary(
         "boundary_kind": "lower_bound",
         "nominal_boundary_context": None,
         "actual_boundary_token_range": None,
-        "previous_passing_context": previous_passing,
+        "actual_boundary_interval": None,
+        "previous_passing_context": contexts[-1],
         "lower_bound_context": contexts[-1],
         "actual_lower_bound_token_range": cases[-1]["actual_input_token_range"],
         "cases": cases,

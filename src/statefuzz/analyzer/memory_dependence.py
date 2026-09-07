@@ -127,6 +127,32 @@ def compute_pairwise_memory_metrics(record: Mapping[str, Any]) -> dict[str, Any]
     }
 
 
+def decompose_pairwise_preference(record: Mapping[str, Any]) -> dict[str, Any]:
+    """把候选偏好拆成反事实记忆信号与共享词汇偏置。"""
+    if not isinstance(record, Mapping):
+        raise TypeError("record必须是对象")
+    if "direction_a_margin" in record and "direction_b_margin" in record:
+        direction_a = float(record["direction_a_margin"])
+        direction_b = float(record["direction_b_margin"])
+    else:
+        metrics = compute_pairwise_memory_metrics(record)
+        direction_a = float(metrics["direction_a_margin"])
+        direction_b = float(metrics["direction_b_margin"])
+    # direction_b_margin是B-A，因此还原prompt B上的原始A-B偏好。
+    raw_preference_b = -direction_b
+    memory_signal = (direction_a - raw_preference_b) / 2.0
+    lexical_bias = (direction_a + raw_preference_b) / 2.0
+    bias_dominance_margin = memory_signal - abs(lexical_bias)
+    return {
+        "raw_preference_prompt_a": direction_a,
+        "raw_preference_prompt_b": raw_preference_b,
+        "memory_signal": memory_signal,
+        "lexical_bias": lexical_bias,
+        "bias_dominance_margin": bias_dominance_margin,
+        "bias_dominated": bias_dominance_margin <= 0.0,
+    }
+
+
 def compute_counterfactual_memory_score(record: Mapping[str, Any]) -> dict[str, Any]:
     """计算 A/B 两个方向的对称反事实偏好差，结果限制在 ``[0, 1]``。"""
     if not isinstance(record, Mapping):
@@ -154,9 +180,11 @@ def compute_counterfactual_memory_score(record: Mapping[str, Any]) -> dict[str, 
             "memory_dependence_score": 0.5,
             "valid_short_context_task": False,
             **compute_pairwise_memory_metrics(record),
+            **decompose_pairwise_preference(record),
         }
     result = _metric_for_pair(record)
     result.update(compute_pairwise_memory_metrics(record))
+    result.update(decompose_pairwise_preference(result))
     counts = result["prompt_token_counts"]
     result["paired_token_counts"] = len(counts) == 2 and counts[0] == counts[1]
     result["valid_short_context_task"] = bool(

@@ -112,3 +112,24 @@ def test_pairwise_score_sensitivity_is_secondary_and_threshold_labeled() -> None
     assert sensitivity["0.7"] == 256
     assert sensitivity["0.8"] == 128
     assert sensitivity["0.9"] == 128
+
+
+def test_decompose_pairwise_preference_separates_memory_signal_and_bias() -> None:
+    from statefuzz.analyzer.memory_dependence import decompose_pairwise_preference
+
+    strong = decompose_pairwise_preference(
+        {"direction_a_margin": 4.0, "direction_b_margin": 2.0}
+    )
+    assert strong["memory_signal"] == 3.0
+    assert strong["lexical_bias"] == 1.0
+    assert strong["bias_dominance_margin"] == 2.0
+    assert strong["bias_dominated"] is False
+
+    biased = decompose_pairwise_preference(
+        {"direction_a_margin": 3.0, "direction_b_margin": -1.0}
+    )
+    assert biased["memory_signal"] == 1.0
+    assert biased["lexical_bias"] == 2.0
+    assert biased["bias_dominance_margin"] == -1.0
+    assert biased["memory_signal"] > 0.0
+    assert biased["bias_dominated"] is True
