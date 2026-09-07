@@ -1,54 +1,54 @@
 # Latest Plan
 
-See `plans/plan_016.md`.
+See `plans/plan_017.md`.
 
-# Round 015 Review
+# Round 016 Review
 
-Round 015 independently replicated and strengthened the remote-memory finding.
+Round 016 successfully added the Transformer control path, actual-token budget fitting, and filler-style control, but it **did not establish a general SSM-specific memory boundary**.
 
-Confirmed from the actual result and implementation:
+Confirmed from the actual result:
 
-- discovery seeds `[9,10,11,12]` and confirmatory seeds `[13,14,15,16]` are separated;
-- the frozen primary `template_id=1`, ` one` / ` two` task was reused without re-selection;
-- the primary transition is localized to `[1115, 1388]` actual tokenizer tokens: all confirmatory seeds pass at 1115 and all fail at 1388;
-- `memory_signal` decays strongly with context while lexical bias remains large enough to dominate the failing direction;
-- direct Mamba counterfactual recurrent-state discriminability contracts with the behavioral memory signal;
-- predeclared alternative value pairs produce `multi_pair_generalization`;
-- full pytest passes 127/127.
+- primary models loaded successfully: `state-spaces/mamba-130m-hf` and `EleutherAI/pythia-160m`;
+- Pythia exposes a 2048-token context limit and was evaluated behaviorally without treating KV cache as Mamba recurrent state;
+- full pytest passes 137/137;
+- under `lexically_diverse`, Mamba has no replicated transition through about 1.8k actual tokens for any predeclared value pair;
+- under `structured_repetitive`, `cat/dog` remains a lower bound and `one/two` is only candidate-unreplicated;
+- the only replicated Mamba transition is `structured_repetitive + red/blue`, with discovery interval `[1531,1791]` actual tokens;
+- Pythia remains a lower bound through the same covered range for that condition, giving one `ssm_specific_candidate` combination;
+- because the effect is not yet independently confirmed as a frozen condition and the filler result is not broadly replicated, the overall paper claim correctly remains `architecture_specificity_inconclusive`;
+- the 1280 target budget produced `budget_unreachable` gaps for some seeds and cannot define a paper boundary.
 
 # Critical Scientific Interpretation
 
-The current result is now a real independently replicated phenomenon in `state-spaces/mamba-130m-hf`, but it is not yet an SSM-specific result.
+The Round 015 `[1115,1388]` one/two result should no longer be described as a universal Mamba memory limit. Round 016 shows that the observed effective-memory transition depends on the stress condition, including filler distribution, value pair, seed set, and exact prompt construction.
 
-The most important unresolved alternative explanation is architectural/task specificity:
+The new scientifically defensible hypothesis is narrower and more useful:
 
-> a similarly sized Transformer base LM may show the same counterfactual remote-memory decay under the same completion and filler protocol.
+> StateFuzz discovered a candidate structured-repetition stress pattern (`template_1`, red/blue) under which Mamba-130M loses counterfactual remote-memory preference before a similarly sized Pythia control.
 
-A second unresolved confound is filler structure: the current filler is highly templated/repetitive, so the effect could be driven by repeated-distribution behavior rather than state-space architecture.
+This is a discovery result. It requires an independent confirmation round before causal state intervention or an SSM-specific paper claim.
 
-Therefore the next round must attempt to falsify SSM specificity before pursuing a named mechanism or more precise Mamba-only boundary.
+# Round 017 Research Decision
 
-# Round 016 Research Decision
-
-Round 016 is an **architecture-specificity + filler-control falsification round**.
+Round 017 is an **independent stressor-confirmation + cross-round reconciliation** round.
 
 Priority:
 
-1. add a behavior-only Hugging Face causal-LM runner for a predeclared Transformer control;
-2. compare models at actual tokenizer token budgets rather than nominal generator lengths;
-3. use new seeds `[17,18,19,20]`;
-4. compare `state-spaces/mamba-130m-hf` with predeclared `EleutherAI/pythia-160m`;
-5. evaluate both `structured_repetitive` and `lexically_diverse` filler styles;
-6. preserve the predeclared `red/blue`, `cat/dog`, and `one/two` pairs without post-hoc selection;
-7. classify the result as SSM-specific candidate, architecture differential, shared base-LM decay, task/filler-specific, or inconclusive;
-8. keep Mamba recurrent-state evidence separate from Transformer behavioral evidence.
+1. freeze the Round 016 discovery condition `structured_repetitive + red/blue`;
+2. use new confirmation seeds `[21,22,23,24,25,26,27,28]`;
+3. independently re-estimate the Mamba replicated transition with complete seed sets;
+4. run Pythia through the entire confirmed Mamba failure region up to its context limit;
+5. keep `lexically_diverse + red/blue` as a predeclared negative control;
+6. fix/relax token-budget fitting only enough to avoid incomplete seed sets, while reporting exact actual counts;
+7. explicitly document that effective memory is a condition-dependent response surface rather than one scalar model limit;
+8. proceed to recurrent-state causal intervention only if the SSM stressor independently confirms.
 
 Avoid:
 
-- calling the Round 015 result SSM-specific before a valid Transformer control covers the Mamba bracket;
-- comparing nominal context values across different tokenizers;
-- swapping in a different Transformer after seeing an unfavorable control result;
-- interpreting Transformer KV cache as equivalent to Mamba recurrent state;
-- preserving the prior paper story if architecture/filler controls falsify it.
+- calling Mamba's universal boundary 1115-1388 or 1531-1791;
+- hiding the failure of one/two to replicate universally;
+- post-hoc selecting a new value pair after Round 017 outcomes;
+- calling repetitive-filler sensitivity a general long-context failure;
+- beginning causal mechanism claims before the frozen stressor confirms.
 
 Next executor: codex
