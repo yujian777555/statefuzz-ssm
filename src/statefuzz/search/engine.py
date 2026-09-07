@@ -404,6 +404,155 @@ def search_remote_memory_boundary(
     }
 
 
+def search_replicated_remote_memory_boundary(
+    evaluator: Callable[[int], Iterable[Mapping[str, Any]]],
+    context_lengths: Iterable[int],
+    heldout_seeds: Iterable[int],
+    task_validation: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """按所有留出种子的signed-margin零交叉搜索可复现实验边界。
+
+    只有“前一测试点所有种子通过、当前测试点所有种子失败”才是论文级
+    replicated_zero_crossing；部分种子失败只记录为candidate_unreplicated。
+    """
+    if task_validation is not None and not bool(
+        task_validation.get("valid_short_context_task", False)
+    ):
+        return {
+            "status": "invalid_task",
+            "boundary_kind": "invalid_task",
+            "nominal_boundary_context": None,
+            "actual_boundary_token_range": None,
+            "previous_passing_context": None,
+            "cases": [],
+        }
+    contexts = sorted(set(context_lengths))
+    seeds = list(dict.fromkeys(heldout_seeds))
+    if not contexts or any(
+        isinstance(value, bool) or not isinstance(value, int) or value <= 0
+        for value in contexts
+    ):
+        raise ValueError("context_lengths必须为正整数")
+    if not seeds:
+        raise ValueError("heldout_seeds不能为空")
+    cases: list[dict[str, Any]] = []
+    previous_passing: int | None = None
+    first_candidate: int | None = None
+    for context_tokens in contexts:
+        raw = evaluator(context_tokens)
+        if isinstance(raw, Mapping):
+            records_raw = raw.get("records", raw.get("cases", []))
+        else:
+            records_raw = raw
+        if not isinstance(records_raw, Iterable) or isinstance(records_raw, (str, bytes)):
+            raise TypeError("评价器必须返回记录列表或包含records的对象")
+        records = [dict(record) for record in records_raw]
+        if {record.get("seed") for record in records} != set(seeds):
+            return {
+                "status": "invalid_task",
+                "boundary_kind": "invalid_task",
+                "nominal_boundary_context": None,
+                "actual_boundary_token_range": None,
+                "previous_passing_context": previous_passing,
+                "cases": cases,
+                "reason": "heldout_seed_set_mismatch",
+            }
+        if len(records) != len(seeds):
+            return {
+                "status": "invalid_task",
+                "boundary_kind": "invalid_task",
+                "nominal_boundary_context": None,
+                "actual_boundary_token_range": None,
+                "previous_passing_context": previous_passing,
+                "cases": cases,
+                "reason": "duplicate_heldout_seed",
+            }
+        normalized: list[dict[str, Any]] = []
+        for record in sorted(records, key=lambda value: seeds.index(value["seed"])):
+            actual_tokens = record.get("actual_input_tokens")
+            counts = record.get("prompt_token_counts")
+            matched = record.get("matched", True)
+            if counts is not None and (
+                not isinstance(counts, (list, tuple))
+                or len(counts) != 2
+                or counts[0] != counts[1]
+            ):
+                matched = False
+            valid = (
+                bool(matched)
+                and isinstance(actual_tokens, int)
+                and not isinstance(actual_tokens, bool)
+                and actual_tokens > 0
+                and isinstance(record.get("min_signed_margin"), Real)
+            )
+            if not valid:
+                return {
+                    "status": "invalid_task",
+                    "boundary_kind": "invalid_task",
+                    "nominal_boundary_context": None,
+                    "actual_boundary_token_range": None,
+                    "previous_passing_context": previous_passing,
+                    "cases": cases,
+                    "reason": "token_length_or_margin_invalid",
+                }
+            margin = float(record["min_signed_margin"])
+            normalized.append(
+                {
+                    **record,
+                    "context_tokens": context_tokens,
+                    "actual_input_tokens": actual_tokens,
+                    "failure": margin <= 0.0,
+                }
+            )
+        failures = [record for record in normalized if record["failure"]]
+        all_pass = not failures
+        all_fail = len(failures) == len(normalized)
+        case = {
+            "context_tokens": context_tokens,
+            "actual_input_token_range": [
+                min(record["actual_input_tokens"] for record in normalized),
+                max(record["actual_input_tokens"] for record in normalized),
+            ],
+            "all_seeds_pass": all_pass,
+            "all_seeds_fail": all_fail,
+            "failure_seed_count": len(failures),
+            "records": normalized,
+        }
+        cases.append(case)
+        if all_pass:
+            previous_passing = context_tokens
+            continue
+        if first_candidate is None:
+            first_candidate = context_tokens
+        if all_fail and previous_passing == (cases[-2]["context_tokens"] if len(cases) > 1 else None):
+            return {
+                "status": "ok",
+                "boundary_kind": "replicated_zero_crossing",
+                "nominal_boundary_context": context_tokens,
+                "actual_boundary_token_range": case["actual_input_token_range"],
+                "previous_passing_context": previous_passing,
+                "cases": cases,
+            }
+        return {
+            "status": "ok",
+            "boundary_kind": "candidate_unreplicated",
+            "nominal_boundary_context": first_candidate,
+            "actual_boundary_token_range": case["actual_input_token_range"],
+            "previous_passing_context": previous_passing,
+            "cases": cases,
+        }
+    return {
+        "status": "ok",
+        "boundary_kind": "lower_bound",
+        "nominal_boundary_context": None,
+        "actual_boundary_token_range": None,
+        "previous_passing_context": previous_passing,
+        "lower_bound_context": contexts[-1],
+        "actual_lower_bound_token_range": cases[-1]["actual_input_token_range"],
+        "cases": cases,
+    }
+
+
 def rank_failure_cases(
     cases: Iterable[Mapping[str, Any]], top_k: int | None = None
 ) -> list[dict[str, Any]]:

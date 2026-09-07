@@ -50,3 +50,65 @@ def test_validate_remote_memory_task_accepts_symmetric_dependence() -> None:
     )
     assert artifact["valid_short_context_task"] is True
     assert artifact["memory_dependence_score"] > 0.55
+
+
+def _logit_record(logit_a_on_a, logit_b_on_a, logit_a_on_b, logit_b_on_b):
+    return {
+        "prompt_a": {
+            "candidates": [
+                {"token_id": 1, "probability": 0.001, "logit": logit_a_on_a},
+                {"token_id": 2, "probability": 0.0005, "logit": logit_b_on_a},
+            ]
+        },
+        "prompt_b": {
+            "candidates": [
+                {"token_id": 1, "probability": 0.00001, "logit": logit_a_on_b},
+                {"token_id": 2, "probability": 0.000005, "logit": logit_b_on_b},
+            ]
+        },
+        "candidate_token_ids": [1, 2],
+        "prompt_token_counts": [64, 64],
+        "matched": True,
+        "candidate_valid": True,
+        "seed": 7,
+        "template_id": 1,
+        "candidate_values": [" one", " two"],
+    }
+
+
+def test_pairwise_memory_metrics_use_within_prompt_signed_margins() -> None:
+    import pytest
+
+    from statefuzz.analyzer.memory_dependence import compute_pairwise_memory_metrics
+
+    metrics = compute_pairwise_memory_metrics(_logit_record(4.0, 1.0, 1.0, 3.0))
+    assert metrics["direction_a_margin"] == pytest.approx(3.0)
+    assert metrics["direction_b_margin"] == pytest.approx(2.0)
+    assert metrics["min_signed_margin"] == pytest.approx(2.0)
+    assert metrics["pairwise_preference_valid"] is True
+
+
+def test_pairwise_metric_survives_absolute_probability_shrinkage() -> None:
+    from statefuzz.analyzer.memory_dependence import compute_pairwise_memory_metrics
+
+    metrics = compute_pairwise_memory_metrics(_logit_record(2.0, 0.0, 0.0, 2.0))
+    assert metrics["direction_a_pair_probability"] > 0.5
+    assert metrics["direction_b_pair_probability"] > 0.5
+    assert metrics["pairwise_preference_valid"] is True
+
+
+def test_pairwise_score_sensitivity_is_secondary_and_threshold_labeled() -> None:
+    from statefuzz.analyzer.memory_dependence import compute_pairwise_score_sensitivity
+
+    sensitivity = compute_pairwise_score_sensitivity(
+        [
+            {"context_tokens": 64, "pairwise_memory_score": 0.95},
+            {"context_tokens": 128, "pairwise_memory_score": 0.75},
+            {"context_tokens": 256, "pairwise_memory_score": 0.55},
+        ],
+        thresholds=[0.60, 0.70, 0.80, 0.90],
+    )
+    assert sensitivity["0.6"] == 256
+    assert sensitivity["0.7"] == 256
+    assert sensitivity["0.8"] == 128
+    assert sensitivity["0.9"] == 128

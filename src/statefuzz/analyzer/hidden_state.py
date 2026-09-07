@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from collections.abc import Iterable, Mapping
 from numbers import Real
+from statistics import median
 from typing import Any
 
 
@@ -54,6 +55,30 @@ def compute_state_norm_change(reference: Any, current: Any) -> float:
     if reference_norm == 0.0:
         return 0.0 if current_norm == 0.0 else math.inf
     return abs(current_norm - reference_norm) / reference_norm
+
+
+def compute_relative_l2_distance(
+    reference: Any, counterfactual: Any, eps: float = 1e-12
+) -> float:
+    """计算按两状态平均范数归一化的L2距离。"""
+    if eps <= 0.0:
+        raise ValueError("eps必须为正数")
+    reference_values = _flatten(reference)
+    counterfactual_values = _flatten(counterfactual)
+    if len(reference_values) != len(counterfactual_values):
+        raise ValueError("状态形状不一致")
+    reference_norm = math.sqrt(sum(value * value for value in reference_values))
+    counterfactual_norm = math.sqrt(
+        sum(value * value for value in counterfactual_values)
+    )
+    difference = math.sqrt(
+        sum(
+            (left - right) * (left - right)
+            for left, right in zip(reference_values, counterfactual_values)
+        )
+    )
+    denominator = max((reference_norm + counterfactual_norm) / 2.0, eps)
+    return difference / denominator
 
 
 def detect_state_collapse(states: Iterable[Any], threshold: float = 0.999) -> bool:
@@ -143,7 +168,11 @@ def compare_recurrent_states(
                 "minimum_similarity": None,
                 "median_similarity": None,
                 "maximum_similarity": None,
+                "minimum_relative_l2_distance": None,
+                "median_relative_l2_distance": None,
+                "maximum_relative_l2_distance": None,
                 "strongest_divergent_layer": None,
+                "strongest_l2_divergent_layer": None,
             }
             continue
         if len(left) != len(right):
@@ -152,20 +181,31 @@ def compare_recurrent_states(
         for index, (reference_state, counterfactual_state) in enumerate(zip(left, right)):
             similarity = compute_state_similarity(reference_state, counterfactual_state)
             norm_change = compute_state_norm_change(reference_state, counterfactual_state)
+            relative_l2_distance = compute_relative_l2_distance(
+                reference_state, counterfactual_state
+            )
             layers.append(
                 {
                     "layer": index,
                     "cosine_similarity": similarity,
                     "relative_norm_change": norm_change,
+                    "relative_l2_distance": relative_l2_distance,
                 }
             )
         similarities = [float(layer["cosine_similarity"]) for layer in layers]
+        distances = [float(layer["relative_l2_distance"]) for layer in layers]
         ordered = sorted(similarities)
+        ordered_distances = sorted(distances)
         middle = len(ordered) // 2
         median = (
             ordered[middle]
             if len(ordered) % 2
             else (ordered[middle - 1] + ordered[middle]) / 2.0
+        )
+        distance_median = (
+            ordered_distances[middle]
+            if len(ordered_distances) % 2
+            else (ordered_distances[middle - 1] + ordered_distances[middle]) / 2.0
         )
         result[state_name] = {
             "available": True,
@@ -173,8 +213,52 @@ def compare_recurrent_states(
             "minimum_similarity": min(similarities),
             "median_similarity": median,
             "maximum_similarity": max(similarities),
+            "minimum_relative_l2_distance": min(distances),
+            "median_relative_l2_distance": distance_median,
+            "maximum_relative_l2_distance": max(distances),
             "strongest_divergent_layer": min(
                 range(len(similarities)), key=lambda index: similarities[index]
             ),
+            "strongest_l2_divergent_layer": max(
+                range(len(distances)), key=lambda index: distances[index]
+            ),
         }
     return result
+
+
+def summarize_behavior_state_alignment(
+    records: Iterable[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """对同一上下文的行为margin与SSM状态可辨识度作描述性对齐。"""
+    values = list(records)
+    if not values:
+        raise ValueError("records不能为空")
+    margins = [float(record["min_signed_margin"]) for record in values]
+    ssm_cosines: list[float] = []
+    ssm_distances: list[float] = []
+    for record in values:
+        comparison = record.get("recurrent_state_comparison", {})
+        if not isinstance(comparison, Mapping):
+            continue
+        ssm = comparison.get("ssm_states", {})
+        if not isinstance(ssm, Mapping):
+            continue
+        if ssm.get("minimum_similarity") is not None:
+            ssm_cosines.append(float(ssm["minimum_similarity"]))
+        if ssm.get("maximum_relative_l2_distance") is not None:
+            ssm_distances.append(float(ssm["maximum_relative_l2_distance"]))
+    return {
+        "behavior": {
+            "median_min_signed_margin": float(median(margins)),
+            "failure_seed_count": sum(margin <= 0.0 for margin in margins),
+        },
+        "state": {
+            "median_min_ssm_cosine": float(median(ssm_cosines))
+            if ssm_cosines
+            else None,
+            "median_max_ssm_relative_l2": float(median(ssm_distances))
+            if ssm_distances
+            else None,
+        },
+        "interpretation": "描述性对齐，不单独构成任何命名SSM失败机制的因果证据",
+    }

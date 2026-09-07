@@ -9,6 +9,7 @@ from statefuzz.search.engine import (
     search_interference_frontier,
     search_calibrated_boundary,
     search_remote_memory_boundary,
+    search_replicated_remote_memory_boundary,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "search_interference_frontier",
     "search_calibrated_boundary",
     "search_remote_memory_boundary",
+    "search_replicated_remote_memory_boundary",
 ]

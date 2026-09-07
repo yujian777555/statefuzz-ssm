@@ -121,6 +121,88 @@ def test_remote_memory_search_distinguishes_boundary_and_lower_bound() -> None:
     assert lower["memory_boundary"] == 128
 
 
+def test_replicated_remote_memory_search_returns_lower_bound_without_sign_loss() -> None:
+    from statefuzz.search.engine import search_replicated_remote_memory_boundary
+
+    def evaluate(context):
+        return [
+            {"seed": seed, "min_signed_margin": 1.0, "actual_input_tokens": context}
+            for seed in (9, 10)
+        ]
+
+    result = search_replicated_remote_memory_boundary(
+        evaluate, context_lengths=[64, 128], heldout_seeds=[9, 10]
+    )
+    assert result["boundary_kind"] == "lower_bound"
+    assert result["nominal_boundary_context"] is None
+    assert result["actual_boundary_token_range"] is None
+
+
+def test_replicated_remote_memory_search_marks_single_seed_failure_unreplicated() -> None:
+    from statefuzz.search.engine import search_replicated_remote_memory_boundary
+
+    def evaluate(context):
+        return [
+            {"seed": 9, "min_signed_margin": -0.1, "actual_input_tokens": context},
+            {"seed": 10, "min_signed_margin": 0.3, "actual_input_tokens": context},
+        ]
+
+    result = search_replicated_remote_memory_boundary(
+        evaluate, context_lengths=[64], heldout_seeds=[9, 10]
+    )
+    assert result["boundary_kind"] == "candidate_unreplicated"
+    assert result["nominal_boundary_context"] == 64
+
+
+def test_replicated_remote_memory_search_requires_all_seeds_at_zero_crossing() -> None:
+    from statefuzz.search.engine import search_replicated_remote_memory_boundary
+
+    def evaluate(context):
+        margin = 0.2 if context < 256 else -0.2
+        return [
+            {
+                "seed": seed,
+                "min_signed_margin": margin,
+                "pairwise_memory_score": 0.5,
+                "actual_input_tokens": context + seed,
+            }
+            for seed in (9, 10)
+        ]
+
+    result = search_replicated_remote_memory_boundary(
+        evaluate, context_lengths=[64, 128, 256], heldout_seeds=[9, 10]
+    )
+    assert result["boundary_kind"] == "replicated_zero_crossing"
+    assert result["nominal_boundary_context"] == 256
+    assert result["previous_passing_context"] == 128
+    assert result["actual_boundary_token_range"] == [265, 266]
+
+
+def test_replicated_remote_memory_search_rejects_token_count_mismatch() -> None:
+    from statefuzz.search.engine import search_replicated_remote_memory_boundary
+
+    result = search_replicated_remote_memory_boundary(
+        lambda context: [
+            {
+                "seed": 9,
+                "min_signed_margin": -1.0,
+                "actual_input_tokens": None,
+                "prompt_token_counts": [64, 65],
+            },
+            {
+                "seed": 10,
+                "min_signed_margin": -1.0,
+                "actual_input_tokens": None,
+                "prompt_token_counts": [64, 65],
+            },
+        ],
+        context_lengths=[64],
+        heldout_seeds=[9, 10],
+    )
+    assert result["boundary_kind"] == "invalid_task"
+    assert result["nominal_boundary_context"] is None
+
+
 def test_failure_artifact_contains_trigger_and_hidden_state_evidence() -> None:
     from statefuzz.search.engine import build_failure_artifact, search_boundary
 

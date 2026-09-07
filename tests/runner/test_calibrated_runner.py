@@ -228,3 +228,50 @@ def test_single_token_candidate_scoring_uses_explicit_values() -> None:
     )
     assert pair["candidate_token_ids"] == [1, 2]
     assert pair["matched"] is True
+    assert pair["actual_input_tokens"] == pair["prompt_token_counts"][0]
+
+
+def test_remote_memory_pair_reports_no_actual_length_when_mismatched() -> None:
+    import torch
+
+    from statefuzz.generator.remote_memory import generate_remote_memory_pair
+    from statefuzz.runner.mamba_runner import MambaRunner
+
+    class FakeTokenizer:
+        eos_token_id = 0
+        pad_token_id = 0
+
+        def __call__(self, text, return_tensors="pt", **kwargs):
+            if text in {" red", " blue"}:
+                return {"input_ids": torch.tensor([[1]])}
+            length = 2 if text.endswith("a") else 3
+            return {"input_ids": torch.ones(1, length, dtype=torch.long)}
+
+        def decode(self, tokens, **kwargs):
+            return "tok"
+
+    class FakeModel(torch.nn.Module):
+        device = torch.device("cpu")
+
+        def forward(self, input_ids, **kwargs):
+            logits = torch.zeros(1, input_ids.shape[-1], 4)
+            hidden = torch.ones(1, input_ids.shape[-1], 2)
+            return type("Output", (), {"logits": logits, "hidden_states": (hidden,)})()
+
+    runner = MambaRunner(model=FakeModel(), tokenizer=FakeTokenizer())
+    pair = generate_remote_memory_pair(64, seed=7, value_a=" red", value_b=" blue")
+    pair = type(pair)(
+        prompt_a=pair.prompt_a + "a",
+        prompt_b=pair.prompt_b + "b",
+        value_a=pair.value_a,
+        value_b=pair.value_b,
+        template_id=pair.template_id,
+        seed=pair.seed,
+        context_tokens=pair.context_tokens,
+        target_position=pair.target_position,
+        local_suffix=pair.local_suffix,
+        filler_slots=pair.filler_slots,
+    )
+    result = runner.score_remote_memory_pair(pair)
+    assert result["matched"] is False
+    assert result["actual_input_tokens"] is None

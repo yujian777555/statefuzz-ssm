@@ -107,6 +107,48 @@ def test_compare_recurrent_states_separates_ssm_and_conv_evidence() -> None:
     assert result["conv_states"]["minimum_similarity"] == 1.0
 
 
+def test_compare_recurrent_states_reports_relative_l2_distance() -> None:
+    from statefuzz.analyzer.hidden_state import compare_recurrent_states
+
+    result = compare_recurrent_states(
+        {"ssm_states": [[1.0, 0.0]], "conv_states": [[1.0, 1.0]]},
+        {"ssm_states": [[2.0, 0.0]], "conv_states": [[1.0, 1.0]]},
+    )
+    assert result["ssm_states"]["minimum_relative_l2_distance"] > 0.0
+    assert result["conv_states"]["maximum_relative_l2_distance"] == 0.0
+
+
+def test_behavior_state_alignment_keeps_mechanism_descriptive() -> None:
+    from statefuzz.analyzer.hidden_state import summarize_behavior_state_alignment
+
+    summary = summarize_behavior_state_alignment(
+        [
+            {
+                "min_signed_margin": 1.0,
+                "recurrent_state_comparison": {
+                    "ssm_states": {
+                        "minimum_similarity": 0.8,
+                        "maximum_relative_l2_distance": 0.3,
+                    }
+                },
+            },
+            {
+                "min_signed_margin": -1.0,
+                "recurrent_state_comparison": {
+                    "ssm_states": {
+                        "minimum_similarity": 0.6,
+                        "maximum_relative_l2_distance": 0.5,
+                    }
+                },
+            },
+        ]
+    )
+    assert summary["behavior"]["median_min_signed_margin"] == 0.0
+    assert summary["behavior"]["failure_seed_count"] == 1
+    assert summary["state"]["median_min_ssm_cosine"] == 0.7
+    assert summary["state"]["median_max_ssm_relative_l2"] == 0.4
+
+
 @requires_analyzer
 def test_failure_classifier_exposes_mechanism_category() -> None:
     from statefuzz.analyzer.failure_classifier import classify_failure

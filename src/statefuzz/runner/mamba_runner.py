@@ -431,6 +431,7 @@ class MambaRunner:
             "candidate_token_ids": [token_id_a, token_id_b],
             "prompt_token_counts": counts,
             "matched": counts[0] == counts[1],
+            "actual_input_tokens": counts[0] if counts[0] == counts[1] else None,
             "candidate_valid": token_id_a is not None and token_id_b is not None and token_id_a != token_id_b,
             "state_source": "unavailable",
         }
