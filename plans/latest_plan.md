@@ -1,67 +1,55 @@
 # Latest Plan
 
-See `plans/plan_014.md`.
+See `plans/plan_015.md`.
 
-# Round 013 Review
+# Round 014 Review
 
-Codex successfully proved that the new task is genuinely remote-memory dependent before long-context search.
+Codex successfully corrected the Round 013 probability-mass confound and produced the strongest behavioral result so far.
 
-Confirmed from the actual Round 013 result and implementation:
+Confirmed from the actual Round 014 result:
 
-- template/value selection was performed on calibration seeds 7/8;
-- the frozen selected task is `template_1`, values ` one` / ` two`;
-- held-out seeds pass the short-context counterfactual-dependence validity gate;
-- candidate targets come from explicit remote values, not model argmax;
-- A/B prompts are tokenizer-length matched;
-- direct Mamba recurrent/cache states are compared between counterfactual memories;
-- Round 013 reports a candidate first degradation at nominal `context_tokens=512`, and already marks it as requiring replication.
+- primary metric is now within-prompt signed candidate margin;
+- frozen task remains `template_id=1`, values ` one` / ` two`;
+- held-out seeds `[9,10,11,12]` were evaluated without task re-selection;
+- nominal 512 / actual 1115 tokens: all four seeds pass;
+- nominal 1024 / actual 2220 tokens: all four seeds fail;
+- nominal 2048 / actual 4443 tokens: all four seeds remain failed;
+- the Round 013 nominal-512 candidate was correctly retracted;
+- direct recurrent-state discriminability contracts strongly as context grows;
+- full pytest passes (123/123).
 
-# New Critical Finding
+# Critical Scientific Interpretation
 
-The current Round 013 boundary metric is still scientifically confounded.
+The Round 014 artifact currently reports nominal 1024 / actual 2220 tokens as a replicated zero-crossing. This is a real replicated *tested failure point*, but it is not yet an exact memory boundary. With the current grid, the scientifically supported transition interval is between the last all-pass point (1115 actual tokens) and first all-fail point (2220 actual tokens).
 
-`src/statefuzz/analyzer/memory_dependence.py::_metric_for_pair()` defines its primary score from cross-prompt differences in **absolute softmax probabilities**:
+A second important signal is directional asymmetry:
 
-- `P(A | prompt_A) - P(A | prompt_B)`
-- `P(B | prompt_B) - P(B | prompt_A)`
+- at the failing contexts, the `one`-correct direction still has a positive candidate margin;
+- the `two`-correct direction becomes negative;
+- therefore the failure is not symmetric disappearance of all remote-memory information;
+- a plausible hypothesis is that the counterfactual memory signal weakens until a lexical candidate bias dominates one direction.
 
-At long context, candidate probability mass can shrink because unrelated vocabulary tokens receive more mass even while A/B relative discrimination remains intact. Therefore a score drifting toward 0.5 does not necessarily mean the model has forgotten which remote value is correct.
+At the same time, A/B direct recurrent states become progressively more similar. This supports a descriptive hypothesis of **counterfactual recurrent-state convergence associated with memory-signal decay**, but it is not yet causal evidence for a named SSM mechanism.
 
-The Round 013 artifact already shows exactly why this must be checked: at long context the raw probability contrasts become tiny while candidate logit evidence remains nontrivial. The reported nominal-512 boundary must therefore remain a candidate until recomputed with a within-prompt pairwise metric.
+# Round 015 Research Decision
 
-# Round 014 Research Decision
+Round 015 is an **independent confirmation + boundary localization + bias decomposition** round.
 
-Round 014 is a **metric validity + replication** round.
+The next executor must:
 
-The primary behavioral quantity must become within-prompt A/B discrimination:
-
-- on prompt A: `logit(A) - logit(B)`;
-- on prompt B: `logit(B) - logit(A)`;
-- main failure event: a signed margin crosses zero;
-- paper-facing observed boundary: the zero crossing is replicated across all primary held-out seeds and the previous context passes.
-
-Pairwise conditional probabilities may be reported, but cross-prompt absolute probability differences become diagnostics only.
-
-The frozen task must not be re-selected using held-out data.
-
-# Round 014 Priority
-
-Focus on:
-
-- within-prompt candidate-pair margins;
-- threshold-free replicated zero-crossing boundary semantics;
-- actual tokenizer token counts at every curve point;
-- expanded held-out seeds `[9, 10, 11, 12]`;
-- explicit survival/retraction decision for the Round 013 nominal-512 candidate boundary;
-- recurrent-state discriminability aligned with the corrected behavioral curve;
-- conservative mechanism interpretation.
+1. decompose candidate preference into remote-memory signal versus shared lexical bias;
+2. fix paper-facing boundary semantics to an actual-token interval;
+3. independently replicate the finding on new seeds `[13,14,15,16]`;
+4. refine the pass/fail interval only after independent replication;
+5. test the same template on predeclared `red/blue`, `cat/dog`, and `one/two` pairs without post-hoc selection;
+6. quantify recurrent-state convergence alongside behavioral memory-signal decay.
 
 Avoid:
 
-- defending the 512 boundary because it appeared in Round 013;
-- using cross-prompt raw probability mass as the main memory metric;
-- re-selecting template/value pairs on held-out seeds;
-- reporting nominal generator context as if it were actual tokenizer length;
-- naming `state_collision`, `state_forgetting`, or `state_pollution` without causal intervention evidence.
+- calling 2220 an exact boundary from the coarse grid;
+- reusing seeds 9-12 as independent confirmation;
+- interpreting one-direction failure as complete memory erasure;
+- choosing a new best value pair after seeing long-context results;
+- naming state collision/forgetting/pollution without intervention evidence.
 
 Next executor: codex
