@@ -2151,8 +2151,8 @@
   },
   "tests": {
     "command": "python -m pytest -q",
-    "passed": 122,
+    "passed": 123,
     "status": "passed",
-    "total": 122
+    "total": 123
   }
 }
