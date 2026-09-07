@@ -1,55 +1,54 @@
 # Latest Plan
 
-See `plans/plan_015.md`.
+See `plans/plan_016.md`.
 
-# Round 014 Review
+# Round 015 Review
 
-Codex successfully corrected the Round 013 probability-mass confound and produced the strongest behavioral result so far.
+Round 015 independently replicated and strengthened the remote-memory finding.
 
-Confirmed from the actual Round 014 result:
+Confirmed from the actual result and implementation:
 
-- primary metric is now within-prompt signed candidate margin;
-- frozen task remains `template_id=1`, values ` one` / ` two`;
-- held-out seeds `[9,10,11,12]` were evaluated without task re-selection;
-- nominal 512 / actual 1115 tokens: all four seeds pass;
-- nominal 1024 / actual 2220 tokens: all four seeds fail;
-- nominal 2048 / actual 4443 tokens: all four seeds remain failed;
-- the Round 013 nominal-512 candidate was correctly retracted;
-- direct recurrent-state discriminability contracts strongly as context grows;
-- full pytest passes (123/123).
+- discovery seeds `[9,10,11,12]` and confirmatory seeds `[13,14,15,16]` are separated;
+- the frozen primary `template_id=1`, ` one` / ` two` task was reused without re-selection;
+- the primary transition is localized to `[1115, 1388]` actual tokenizer tokens: all confirmatory seeds pass at 1115 and all fail at 1388;
+- `memory_signal` decays strongly with context while lexical bias remains large enough to dominate the failing direction;
+- direct Mamba counterfactual recurrent-state discriminability contracts with the behavioral memory signal;
+- predeclared alternative value pairs produce `multi_pair_generalization`;
+- full pytest passes 127/127.
 
 # Critical Scientific Interpretation
 
-The Round 014 artifact currently reports nominal 1024 / actual 2220 tokens as a replicated zero-crossing. This is a real replicated *tested failure point*, but it is not yet an exact memory boundary. With the current grid, the scientifically supported transition interval is between the last all-pass point (1115 actual tokens) and first all-fail point (2220 actual tokens).
+The current result is now a real independently replicated phenomenon in `state-spaces/mamba-130m-hf`, but it is not yet an SSM-specific result.
 
-A second important signal is directional asymmetry:
+The most important unresolved alternative explanation is architectural/task specificity:
 
-- at the failing contexts, the `one`-correct direction still has a positive candidate margin;
-- the `two`-correct direction becomes negative;
-- therefore the failure is not symmetric disappearance of all remote-memory information;
-- a plausible hypothesis is that the counterfactual memory signal weakens until a lexical candidate bias dominates one direction.
+> a similarly sized Transformer base LM may show the same counterfactual remote-memory decay under the same completion and filler protocol.
 
-At the same time, A/B direct recurrent states become progressively more similar. This supports a descriptive hypothesis of **counterfactual recurrent-state convergence associated with memory-signal decay**, but it is not yet causal evidence for a named SSM mechanism.
+A second unresolved confound is filler structure: the current filler is highly templated/repetitive, so the effect could be driven by repeated-distribution behavior rather than state-space architecture.
 
-# Round 015 Research Decision
+Therefore the next round must attempt to falsify SSM specificity before pursuing a named mechanism or more precise Mamba-only boundary.
 
-Round 015 is an **independent confirmation + boundary localization + bias decomposition** round.
+# Round 016 Research Decision
 
-The next executor must:
+Round 016 is an **architecture-specificity + filler-control falsification round**.
 
-1. decompose candidate preference into remote-memory signal versus shared lexical bias;
-2. fix paper-facing boundary semantics to an actual-token interval;
-3. independently replicate the finding on new seeds `[13,14,15,16]`;
-4. refine the pass/fail interval only after independent replication;
-5. test the same template on predeclared `red/blue`, `cat/dog`, and `one/two` pairs without post-hoc selection;
-6. quantify recurrent-state convergence alongside behavioral memory-signal decay.
+Priority:
+
+1. add a behavior-only Hugging Face causal-LM runner for a predeclared Transformer control;
+2. compare models at actual tokenizer token budgets rather than nominal generator lengths;
+3. use new seeds `[17,18,19,20]`;
+4. compare `state-spaces/mamba-130m-hf` with predeclared `EleutherAI/pythia-160m`;
+5. evaluate both `structured_repetitive` and `lexically_diverse` filler styles;
+6. preserve the predeclared `red/blue`, `cat/dog`, and `one/two` pairs without post-hoc selection;
+7. classify the result as SSM-specific candidate, architecture differential, shared base-LM decay, task/filler-specific, or inconclusive;
+8. keep Mamba recurrent-state evidence separate from Transformer behavioral evidence.
 
 Avoid:
 
-- calling 2220 an exact boundary from the coarse grid;
-- reusing seeds 9-12 as independent confirmation;
-- interpreting one-direction failure as complete memory erasure;
-- choosing a new best value pair after seeing long-context results;
-- naming state collision/forgetting/pollution without intervention evidence.
+- calling the Round 015 result SSM-specific before a valid Transformer control covers the Mamba bracket;
+- comparing nominal context values across different tokenizers;
+- swapping in a different Transformer after seeing an unfavorable control result;
+- interpreting Transformer KV cache as equivalent to Mamba recurrent state;
+- preserving the prior paper story if architecture/filler controls falsify it.
 
 Next executor: codex
