@@ -1,54 +1,63 @@
 # Latest Plan
 
-See `plans/plan_017.md`.
+See `plans/plan_018.md`.
 
-# Round 016 Review
+# Round 017 Review
 
-Round 016 successfully added the Transformer control path, actual-token budget fitting, and filler-style control, but it **did not establish a general SSM-specific memory boundary**.
+Round 017 did not independently replicate the Round 016 candidate as a clean all-seed pass-to-fail boundary, so the prior `ssm_specific_candidate` must not be promoted to a confirmed hard boundary.
 
-Confirmed from the actual result:
+Confirmed from the actual Round 017 result:
 
-- primary models loaded successfully: `state-spaces/mamba-130m-hf` and `EleutherAI/pythia-160m`;
-- Pythia exposes a 2048-token context limit and was evaluated behaviorally without treating KV cache as Mamba recurrent state;
-- full pytest passes 137/137;
-- under `lexically_diverse`, Mamba has no replicated transition through about 1.8k actual tokens for any predeclared value pair;
-- under `structured_repetitive`, `cat/dog` remains a lower bound and `one/two` is only candidate-unreplicated;
-- the only replicated Mamba transition is `structured_repetitive + red/blue`, with discovery interval `[1531,1791]` actual tokens;
-- Pythia remains a lower bound through the same covered range for that condition, giving one `ssm_specific_candidate` combination;
-- because the effect is not yet independently confirmed as a frozen condition and the filler result is not broadly replicated, the overall paper claim correctly remains `architecture_specificity_inconclusive`;
-- the 1280 target budget produced `budget_unreachable` gaps for some seeds and cannot define a paper boundary.
+- discovery seeds `[17,18,19,20]` and confirmation seeds `[21,22,23,24,25,26,27,28]` are independent;
+- strict architecture confirmation is `candidate_not_replicated`;
+- structured red/blue Mamba shows seed-heterogeneous failure progression rather than a single simultaneous crossing:
+  - ~1661 actual tokens: 2/8 seeds fail;
+  - ~1791 actual tokens: 6/8 fail;
+  - ~1921 actual tokens: 8/8 fail;
+- Pythia remains a lower bound through ~1921 actual tokens;
+- lexically-diverse Mamba red/blue remains a lower bound through ~1929 tokens;
+- all boundary-relevant seed sets are complete after the improved budget fitter;
+- full pytest passes 142/142;
+- paper claim status is correctly `architecture_candidate_not_independently_replicated`.
 
 # Critical Scientific Interpretation
 
-The Round 015 `[1115,1388]` one/two result should no longer be described as a universal Mamba memory limit. Round 016 shows that the observed effective-memory transition depends on the stress condition, including filler distribution, value pair, seed set, and exact prompt construction.
+The Round 017 strict negative conclusion is real and must remain visible. However, the raw data also show that the all-seed boundary criterion is too coarse for heterogeneous seeds: failure risk rises from partial to majority to universal failure as distance increases, while the matched Pythia control remains all-pass over the same tested region.
 
-The new scientifically defensible hypothesis is narrower and more useful:
+Therefore the next scientific question is no longer:
 
-> StateFuzz discovered a candidate structured-repetition stress pattern (`template_1`, red/blue) under which Mamba-130M loses counterfactual remote-memory preference before a similarly sized Pythia control.
+> Is there one exact token at which all Mamba seeds fail?
 
-This is a discovery result. It requires an independent confirmation round before causal state intervention or an SSM-specific paper claim.
+It is:
 
-# Round 017 Research Decision
+> Does the probability of counterfactual sign loss rise reproducibly for Mamba under the frozen structured-repetition stressor, and is that failure risk significantly higher than Pythia at a predeclared transition endpoint?
 
-Round 017 is an **independent stressor-confirmation + cross-round reconciliation** round.
+This keeps the Round 017 non-replication intact while testing a more realistic seed-distributed transition model.
+
+# Round 018 Research Decision
+
+Round 018 is a **prospective probabilistic transition + paired architecture-risk confirmation** round.
 
 Priority:
 
-1. freeze the Round 016 discovery condition `structured_repetitive + red/blue`;
-2. use new confirmation seeds `[21,22,23,24,25,26,27,28]`;
-3. independently re-estimate the Mamba replicated transition with complete seed sets;
-4. run Pythia through the entire confirmed Mamba failure region up to its context limit;
-5. keep `lexically_diverse + red/blue` as a predeclared negative control;
-6. fix/relax token-budget fitting only enough to avoid incomplete seed sets, while reporting exact actual counts;
-7. explicitly document that effective memory is a condition-dependent response surface rather than one scalar model limit;
-8. proceed to recurrent-state causal intervention only if the SSM stressor independently confirms.
+1. add a dedicated failure-risk analyzer with Wilson binomial intervals and exact paired McNemar testing;
+2. preserve the historical strict all-seed boundary result separately;
+3. use a third fresh cohort `[29..44]` (16 seeds);
+4. freeze structured red/blue as the primary stress condition;
+5. predeclare target budget 1792 as the only primary architecture endpoint;
+6. evaluate complete Mamba/Pythia curves at `[256,1024,1408,1536,1664,1792,1920]`;
+7. model each seed as its own pass/fail trajectory and report first-crossing intervals/censoring;
+8. run lexically-diverse red/blue as a predeclared negative control;
+9. keep Mamba recurrent-state comparisons descriptive only;
+10. permit recurrent-state intervention in the next round only if the fresh paired architecture-risk gap is prospectively confirmed.
 
 Avoid:
 
-- calling Mamba's universal boundary 1115-1388 or 1531-1791;
-- hiding the failure of one/two to replicate universally;
-- post-hoc selecting a new value pair after Round 017 outcomes;
-- calling repetitive-filler sensitivity a general long-context failure;
-- beginning causal mechanism claims before the frozen stressor confirms.
+- rewriting Round 017 as a successful hard-boundary replication;
+- selecting 1920 or another endpoint after seeing Round 018 outcomes;
+- treating multiple context points as independent confirmatory tests;
+- using fake confidence values instead of statistical intervals/tests;
+- calling one Mamba/Pythia pair evidence about all SSMs/Transformers;
+- starting causal mechanism claims before the prospective risk gap is confirmed.
 
 Next executor: codex
