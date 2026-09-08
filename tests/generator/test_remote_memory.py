@@ -108,3 +108,24 @@ def test_fit_remote_memory_pair_reports_unreachable_budget() -> None:
     assert result.status == "budget_unreachable"
     assert result.pair is None
     assert result.actual_tokens is None
+
+
+def test_fit_remote_memory_pair_checks_neighbors_across_coarse_token_jump() -> None:
+    from statefuzz.generator.remote_memory import fit_remote_memory_pair_to_token_budget
+
+    def coarse_counter(prompt):
+        return prompt.count("\n") * 20
+
+    result = fit_remote_memory_pair_to_token_budget(
+        coarse_counter,
+        target_tokens=102,
+        tolerance_tokens=5,
+        seed=21,
+        template_id=1,
+        value_a=" red",
+        value_b=" blue",
+    )
+    assert result.status == "ok"
+    assert result.actual_tokens == 100
+    assert result.absolute_error == 2
+    assert coarse_counter(result.pair.prompt_a) == coarse_counter(result.pair.prompt_b)

@@ -194,7 +194,8 @@ def fit_remote_memory_pair_to_token_budget(
     low, high = 2, max(4, target_tokens * 2)
     best: tuple[int, RemoteMemoryPair] | None = None
     iterations = 0
-    while low <= high and iterations < 32:
+    max_calls = 128
+    while low <= high and iterations < max_calls:
         iterations += 1
         slots = (low + high) // 2
         pair = generate_remote_memory_pair(**kwargs, filler_slots=slots)
@@ -214,8 +215,8 @@ def fit_remote_memory_pair_to_token_budget(
             low = slots + 1
     if best is not None:
         center = best[1].filler_slots
-        for slots in range(max(2, center - 8), center + 9):
-            if iterations >= 32:
+        for slots in range(max(2, center - 32), center + 33):
+            if iterations >= max_calls:
                 break
             iterations += 1
             pair = generate_remote_memory_pair(**kwargs, filler_slots=slots)
