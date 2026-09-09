@@ -1,39 +1,45 @@
 # Latest Plan
 
-See `plans/plan_020.md`.
+See `plans/plan_021.md`.
 
-# Round 019 Review
+# Round 020 Review
 
-Round 019 is the first causal-intervention attempt.
+Round 020 successfully resolved the main ambiguity from Round 019.
 
-Findings:
+Evidence:
 
-- Frozen stress condition remained structured_repetitive + red/blue on Mamba-130M.
-- Historical risk gap remains: Mamba failure rate 0.75 at the primary endpoint while Pythia remains 0.0, with exact McNemar p=0.00048828125.
-- Direct recurrent cache override is now technically working.
-- Short-context state injection recovered the failed behavior.
-- However randomized-state injection also recovered behavior.
+- Fresh seeds `[45..52]` were used.
+- Frozen condition remained `structured_repetitive + red/blue` on `state-spaces/mamba-130m-hf`.
+- Original long-context cache failed for all 8 seeds.
+- Memory-consistent value-B short state recovered all 8/8 seeds.
+- Wrong-memory value-A state recovered 0/8 seeds.
+- Randomized matched state recovered only 1/8 seeds.
 
-Scientific conclusion:
+The key result:
 
-The result is currently `intervention_inconclusive`. It proves recurrent cache perturbation can change behavior, but does not yet prove that the recovery comes from restoring the correct remote memory content.
+The recovery effect is specific to memory-consistent recurrent state, not generic cache perturbation.
 
-# Round 020 Decision
+Scientific status:
 
-Round 020 performs causal disambiguation.
+`recurrent_state_causal_candidate_confirmed`
 
-Priority:
+The paper claim can now move beyond correlation, but remains scoped:
 
-1. keep the frozen stress condition;
-2. replicate intervention with fresh seeds;
-3. compare memory-consistent state, wrong-memory state, and randomized state;
-4. quantify memory-specific recovery rather than any state perturbation effect;
-5. only claim recurrent-state causal involvement if the intervention effect is specific.
+> Under a controlled structured-repetition remote-memory stress condition, Mamba-130M recurrent state content causally affects remote-memory behavior.
 
-Avoid:
+Do not generalize to all SSMs.
 
-- claiming state restoration from random recovery;
-- expanding beyond Mamba-130M before mechanism evidence is clear;
-- introducing new stress patterns.
+# Round 021 Decision
+
+Goal: strengthen mechanism evidence.
+
+Tasks:
+
+1. replicate causal intervention on fresh seeds;
+2. test wrong-memory and randomized controls again;
+3. evaluate one additional frozen value pair (`cat/dog`) to avoid red/blue overfitting;
+4. quantify memory-specific recovery gap.
+
+Only after this round should the paper mechanism section be finalized.
 
 Next executor: codex
