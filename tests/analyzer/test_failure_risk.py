@@ -180,3 +180,21 @@ def test_compare_memory_state_interventions_reports_specificity_gap() -> None:
     assert result["specificity_gap"] == 1.0
     with pytest.raises(ValueError, match="相同"):
         compare_memory_state_interventions([1.0], [1.0, 2.0], [1.0], [1.0])
+
+
+def test_summarize_mechanism_evidence_preserves_scope_and_cross_pair_support() -> None:
+    from statefuzz.analyzer.failure_risk import summarize_mechanism_evidence
+
+    def pair(baseline, correct, wrong, random):
+        return {
+            "normal_long": {"recovery_rate": baseline, "seed_count": 8},
+            "value_b_short_correct_memory": {"recovery_rate": correct, "seed_count": 8},
+            "value_a_short_wrong_memory": {"recovery_rate": wrong, "seed_count": 8},
+            "randomized_matched": {"recovery_rate": random, "seed_count": 8},
+        }
+
+    result = summarize_mechanism_evidence({"pairs": {"red/blue": pair(0, 1, 0, 0), "cat/dog": pair(1, 1, 0, 0.625)}})
+    assert result["cross_pair_support"] is True
+    assert result["pairs"]["red/blue"]["behavior_failure_risk"] == 1.0
+    assert result["pairs"]["cat/dog"]["memory_specificity_gap"] == 0.375
+    assert "Mamba-130M" in result["claim_scope"]

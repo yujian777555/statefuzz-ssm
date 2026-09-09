@@ -1,0 +1,17 @@
+{
+  "round": 22,
+  "plan": "plans/plan_022.md",
+  "purpose": "consolidate_mechanism_evidence_and_paper_artifacts",
+  "source_round": 21,
+  "claim": "Under structured-repetition remote-memory stress conditions, Mamba-130M recurrent state content causally influences remote-memory behavior.",
+  "scope_limits": ["仅Mamba-130M", "结构化重复填充", "已测试模板和值对", "不适用于所有SSM", "不是普适记忆长度", "不适用于所有长上下文失败"],
+  "evidence_summary": {
+    "red/blue": {"failure_risk": 1.0, "correct_memory_recovery": 1.0, "wrong_memory_rejection": 1.0, "random_rejection": 1.0, "specificity_gap": 1.0},
+    "cat/dog": {"failure_risk": 0.0, "correct_memory_recovery": 1.0, "wrong_memory_rejection": 1.0, "random_rejection": 0.375, "specificity_gap": 0.375}
+  },
+  "paper_artifacts": ["docs/paper_claims.md", "results/paper_figures_round_022.json"],
+  "additional_experiment": "skipped: Round21 already supplied predeclared cat/dog robustness pair",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 156, "total": 156, "status": "passed"},
+  "failures": [],
+  "status": "publication_ready_mechanism_package_scoped"
+}

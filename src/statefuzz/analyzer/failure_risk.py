@@ -349,3 +349,36 @@ def compare_memory_state_interventions(
         "mean_correct_minus_randomized_margin": sum(c - r for c, r in zip(correct, randomized, strict=True)) / len(correct),
         "baseline_failure_rate": 1.0 - recovery(baseline),
     }
+
+
+def summarize_mechanism_evidence(results: Mapping[str, Any]) -> dict[str, Any]:
+    """将多值对干预结果压缩为论文可用的机制证据摘要。"""
+    pairs = results.get("pairs") if isinstance(results, Mapping) else None
+    if not isinstance(pairs, Mapping) or not pairs:
+        raise ValueError("results必须包含非空pairs映射")
+    summary_pairs = {}
+    for pair_name, pair in pairs.items():
+        if not isinstance(pair, Mapping):
+            raise ValueError("pair结果必须是映射")
+        def rate(name: str) -> float:
+            value = pair.get(name)
+            if not isinstance(value, Mapping) or value.get("seed_count", 0) <= 0:
+                raise ValueError(f"{pair_name}缺少{name}统计")
+            return float(value["recovery_rate"])
+        correct = rate("value_b_short_correct_memory")
+        wrong = rate("value_a_short_wrong_memory")
+        randomized = rate("randomized_matched")
+        baseline = rate("normal_long")
+        summary_pairs[str(pair_name)] = {
+            "behavior_failure_risk": 1.0 - baseline,
+            "memory_consistent_recovery": correct,
+            "wrong_memory_rejection": 1.0 - wrong,
+            "random_perturbation_rejection": 1.0 - randomized,
+            "memory_specificity_gap": correct - randomized,
+            "seed_count": int(pair["value_b_short_correct_memory"]["seed_count"]),
+        }
+    return {
+        "pairs": summary_pairs,
+        "cross_pair_support": len(summary_pairs) >= 2,
+        "claim_scope": "Mamba-130M结构化重复远程记忆压力条件",
+    }

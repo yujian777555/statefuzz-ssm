@@ -1,0 +1,17 @@
+# StateFuzz-SSM 论文机制声明
+
+## 允许使用的核心结论
+
+> Under structured-repetition remote-memory stress conditions, Mamba-130M recurrent state content causally influences remote-memory behavior.
+
+中文表述：在结构化重复的远程记忆压力条件下，Mamba-130M 的循环状态内容会对远程记忆行为产生因果影响。
+
+## 证据边界
+
+- 红/蓝冻结条件的新种子中，正确记忆状态恢复 8/8，错误记忆状态恢复 0/8，匹配统计随机状态恢复 0/8。
+- 预声明的猫/狗值对中，正确状态 8/8、错误状态 0/8、随机状态 5/8；该值对的原始长上下文已 8/8 成功，因此仅作为状态内容特异性支持。
+- 结论只适用于已测试的 Mamba-130M 检查点、模板、填充方式和值对。
+
+## 禁止表述
+
+不得声称所有 SSM 都以循环状态存储全部记忆，不得声称存在普适的记忆长度边界，也不得把本结果推广到所有长上下文失败。

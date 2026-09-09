@@ -1,0 +1,25 @@
+{
+  "round": 22,
+  "source": "results/result_round_021.json",
+  "scope": "Mamba-130M结构化重复远程记忆压力条件",
+  "figures": {
+    "failure_risk_curve": {
+      "x": "condition",
+      "series": {"red/blue_normal_long": {"failure_rate": 1.0, "seed_count": 8}, "cat/dog_normal_long": {"failure_rate": 0.0, "seed_count": 8}}
+    },
+    "intervention_recovery_bar": {
+      "x": "value_pair",
+      "series": {"red/blue": {"correct_memory": 1.0, "wrong_memory": 0.0, "randomized": 0.0}, "cat/dog": {"correct_memory": 1.0, "wrong_memory": 0.0, "randomized": 0.625}}
+    },
+    "memory_specificity_gap": {
+      "x": ["red/blue", "cat/dog"],
+      "specificity_gap": [1.0, 0.375],
+      "definition": "correct_memory_recovery_rate - randomized_recovery_rate"
+    },
+    "state_intervention_schematic": {
+      "nodes": ["long_context_failed_cache", "short_memory_consistent_cache", "short_wrong_memory_cache", "matched_random_cache", "next_token_behavior"],
+      "edges": [["long_context_failed_cache", "next_token_behavior"], ["short_memory_consistent_cache", "next_token_behavior"], ["short_wrong_memory_cache", "next_token_behavior"], ["matched_random_cache", "next_token_behavior"]]
+    }
+  },
+  "interpretation": "图表用于展示风险、干预恢复和记忆特异性；不支持超出Mamba-130M测试范围的普适性结论。"
+}
