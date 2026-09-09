@@ -1,45 +1,23 @@
 # Latest Plan
 
-See `plans/plan_021.md`.
+See `plans/plan_022.md`.
 
-# Round 020 Review
+# Round 021 Review
 
-Round 020 successfully resolved the main ambiguity from Round 019.
+Round 021 strengthened the causal mechanism evidence.
 
-Evidence:
+Findings:
 
-- Fresh seeds `[45..52]` were used.
-- Frozen condition remained `structured_repetitive + red/blue` on `state-spaces/mamba-130m-hf`.
-- Original long-context cache failed for all 8 seeds.
-- Memory-consistent value-B short state recovered all 8/8 seeds.
-- Wrong-memory value-A state recovered 0/8 seeds.
-- Randomized matched state recovered only 1/8 seeds.
+- Fresh seeds `[53..60]` replicated Round 020 on red/blue.
+- Correct memory-consistent state recovered 8/8 failed cases.
+- Wrong-memory state recovered 0/8.
+- Randomized state recovered 0/8.
+- An additional frozen pair (`cat/dog`) showed state-content specificity, although it was not a failure-recovery case because the original long context already succeeded.
 
-The key result:
+Scientific interpretation:
 
-The recovery effect is specific to memory-consistent recurrent state, not generic cache perturbation.
+The evidence supports that recurrent state content, rather than arbitrary perturbation, influences remote-memory behavior under the tested Mamba-130M stress condition.
 
-Scientific status:
-
-`recurrent_state_causal_candidate_confirmed`
-
-The paper claim can now move beyond correlation, but remains scoped:
-
-> Under a controlled structured-repetition remote-memory stress condition, Mamba-130M recurrent state content causally affects remote-memory behavior.
-
-Do not generalize to all SSMs.
-
-# Round 021 Decision
-
-Goal: strengthen mechanism evidence.
-
-Tasks:
-
-1. replicate causal intervention on fresh seeds;
-2. test wrong-memory and randomized controls again;
-3. evaluate one additional frozen value pair (`cat/dog`) to avoid red/blue overfitting;
-4. quantify memory-specific recovery gap.
-
-Only after this round should the paper mechanism section be finalized.
+Round 022 should consolidate evidence, generate paper artifacts, and avoid expanding claims beyond the tested scope.
 
 Next executor: codex
