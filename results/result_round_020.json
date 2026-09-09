@@ -1,0 +1,73 @@
+{
+  "round": 20,
+  "plan": "plans/plan_020.md",
+  "frozen_condition": {
+    "model": "state-spaces/mamba-130m-hf",
+    "template_id": 1,
+    "value_pair": [" red", " blue"],
+    "filler_style": "structured_repetitive",
+    "target_position": 0.0,
+    "seeds": [45, 46, 47, 48, 49, 50, 51, 52]
+  },
+  "environment": {
+    "device": "cuda",
+    "dtype": "float16",
+    "implementation": "Transformers sequential Mamba path",
+    "fast_cuda_kernels": "unavailable"
+  },
+  "intervention_modes": [
+    "long_context_failed",
+    "value_a_short",
+    "value_b_short",
+    "randomized_matched"
+  ],
+  "endpoint": {
+    "long_prompt_tokens": 3884,
+    "long_body_tokens": 3883,
+    "short_body_tokens": 555,
+    "query_suffix": " is",
+    "margin_definition": "logit(blue)-logit(red)",
+    "recovery_definition": "margin > 0"
+  },
+  "seed_results": [
+    {"seed": 45, "normal_long": -1.214844, "value_a_short": -1.90625, "value_b_short": 2.164062, "randomized_matched": -0.03125},
+    {"seed": 46, "normal_long": -1.179306, "value_a_short": -1.96875, "value_b_short": 2.171875, "randomized_matched": -1.4375},
+    {"seed": 47, "normal_long": -1.267212, "value_a_short": -1.71875, "value_b_short": 2.359375, "randomized_matched": -3.15625},
+    {"seed": 48, "normal_long": -1.294678, "value_a_short": -1.796875, "value_b_short": 2.3125, "randomized_matched": 0.140625},
+    {"seed": 49, "normal_long": -1.152344, "value_a_short": -1.828125, "value_b_short": 2.078125, "randomized_matched": -0.875},
+    {"seed": 50, "normal_long": -1.367188, "value_a_short": -1.773438, "value_b_short": 2.015625, "randomized_matched": -1.1875},
+    {"seed": 51, "normal_long": -1.224609, "value_a_short": -1.890625, "value_b_short": 2.109375, "randomized_matched": -2.375},
+    {"seed": 52, "normal_long": -1.21106, "value_a_short": -1.90625, "value_b_short": 2.03125, "randomized_matched": -1.53125}
+  ],
+  "aggregate": {
+    "normal_long": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -1.238905},
+    "value_a_short": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -1.848633},
+    "value_b_short": {"recovery_count": 8, "seed_count": 8, "recovery_rate": 1.0, "mean_margin": 2.155273},
+    "randomized_matched": {"recovery_count": 1, "seed_count": 8, "recovery_rate": 0.125, "mean_margin": -1.306641},
+    "memory_restoration_effect_mean": 3.461914,
+    "randomized_effect_mean": -0.067736,
+    "behavior_recovery_gap_mean": 3.461914,
+    "state_specificity_ratio": 0.980434
+  },
+  "mechanism_localization": {
+    "ssm_state_strongest_layers_by_mean_relative_l2": [15, 3, 2],
+    "conv_state_strongest_layers_by_mean_relative_l2": [21, 22, 23],
+    "memory_specific_recovery": true,
+    "causal_candidate": true
+  },
+  "causal_status": "recurrent_state_causal_candidate_confirmed",
+  "scientific_interpretation": "8个新种子中，长上下文失败状态均未恢复；注入与目标值B一致的短状态8/8恢复，而值A错误状态0/8恢复，匹配统计随机状态仅1/8恢复。恢复效应在记忆一致状态与随机状态之间明确分离，因此支持循环状态参与远程记忆行为的因果候选，但仍限于Mamba-130M与该冻结压力条件。",
+  "failures": [
+    {"step": "首次实验启动", "error": "VM仍使用Round19 runner，run_with_state_override不接受state_source，8个种子均TypeError", "resolution": "同步Round20 runner后从头重跑；该次不计入有效记录"},
+    {"step": "Mamba快速路径", "error": "selective_state_update/causal_conv1d等CUDA kernel不可用", "resolution": "使用Transformers顺序实现完成实验"}
+  ],
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 154, "total": 154, "status": "passed"},
+  "changed_files": [
+    "src/statefuzz/runner/mamba_runner.py",
+    "src/statefuzz/analyzer/failure_risk.py",
+    "tests/runner/test_mamba_runner.py",
+    "tests/analyzer/test_failure_risk.py",
+    "results/result_round_020.json",
+    "status.json"
+  ]
+}

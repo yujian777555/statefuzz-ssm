@@ -140,3 +140,26 @@ def test_architecture_failure_risk_and_claim_classifier_are_conservative() -> No
         )
         == "architecture_risk_gap_confirmed"
     )
+
+
+def test_memory_specificity_metrics_and_classifier_are_conservative() -> None:
+    from statefuzz.analyzer.failure_risk import (
+        behavior_recovery_gap,
+        classify_recurrent_state_causality,
+        memory_restoration_effect,
+        state_specificity_ratio,
+    )
+
+    assert memory_restoration_effect(2.0, 0.5) == pytest.approx(1.5)
+    assert behavior_recovery_gap(2.0, 0.5) == pytest.approx(1.5)
+    assert state_specificity_ratio(2.0, 0.5) == pytest.approx(0.8)
+    assert classify_recurrent_state_causality(
+        memory_consistent_recovers=True,
+        randomized_recovers_equally=False,
+        replicated=True,
+    ) == "recurrent_state_causal_candidate_confirmed"
+    assert classify_recurrent_state_causality(
+        memory_consistent_recovers=True,
+        randomized_recovers_equally=True,
+        replicated=True,
+    ) == "recurrent_state_intervention_effect_but_not_memory_specific"

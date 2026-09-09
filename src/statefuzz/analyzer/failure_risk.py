@@ -265,3 +265,46 @@ def classify_prospective_architecture_risk(
     if mamba_rate >= 0.5 and transformer_rate >= 0.5:
         return "shared_failure_risk"
     return "architecture_risk_gap_not_confirmed"
+
+
+def memory_restoration_effect(
+    memory_consistent_margin: float, randomized_margin: float
+) -> float:
+    """计算记忆一致状态相对随机状态的恢复效应（signed margin差）。"""
+    values = (float(memory_consistent_margin), float(randomized_margin))
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("干预margin必须是有限数")
+    return values[0] - values[1]
+
+
+def state_specificity_ratio(
+    memory_consistent_margin: float,
+    randomized_margin: float,
+    baseline_margin: float = 0.0,
+) -> float:
+    """量化恢复效应中由记忆一致状态解释的比例，分母为总状态扰动幅度。"""
+    memory_effect = abs(memory_restoration_effect(memory_consistent_margin, baseline_margin))
+    random_effect = abs(memory_restoration_effect(randomized_margin, baseline_margin))
+    total = memory_effect + random_effect
+    return memory_effect / total if total > 0.0 else 0.0
+
+
+def behavior_recovery_gap(
+    memory_consistent_margin: float, randomized_margin: float
+) -> float:
+    """返回正确记忆状态与随机状态的行为恢复差距。"""
+    return memory_restoration_effect(memory_consistent_margin, randomized_margin)
+
+
+def classify_recurrent_state_causality(
+    *,
+    memory_consistent_recovers: bool,
+    randomized_recovers_equally: bool,
+    replicated: bool,
+) -> str:
+    """按预注册条件给出保守的循环状态因果结论。"""
+    if memory_consistent_recovers and not randomized_recovers_equally and replicated:
+        return "recurrent_state_causal_candidate_confirmed"
+    if memory_consistent_recovers:
+        return "recurrent_state_intervention_effect_but_not_memory_specific"
+    return "intervention_inconclusive"

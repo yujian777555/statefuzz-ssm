@@ -509,7 +509,11 @@ class MambaRunner:
         return cache
 
     def run_with_state_override(
-        self, prompt: str, state_override: dict[str, list[Any]] | None = None
+        self,
+        prompt: str,
+        state_override: dict[str, list[Any]] | None = None,
+        *,
+        state_source: str | None = None,
     ) -> dict[str, Any]:
         """在显式复制的循环cache上执行一次行为forward。
 
@@ -518,6 +522,16 @@ class MambaRunner:
         """
         if self._model is None or self._tokenizer is None:
             raise RuntimeError("run_with_state_override需要model-backed runner")
+        allowed_sources = {
+            "short_context_correct",
+            "long_context_failed",
+            "value_a_short",
+            "value_b_short",
+            "randomized_matched",
+            "override_recurrent_cache",
+        }
+        if state_source is not None and state_source not in allowed_sources:
+            raise ValueError("state_source不是受支持的干预模式")
         import torch
 
         encoded = self._tokenizer(prompt, return_tensors="pt", add_special_tokens=False)
@@ -563,9 +577,12 @@ class MambaRunner:
             "logits": logits,
             "input_token_count": int(inputs["input_ids"].shape[-1]),
             "state_source": (
-                "override_recurrent_cache"
+                state_source or "override_recurrent_cache"
                 if state_override is not None
                 else self._state_source
+            ),
+            "intervention_changes_token_processing": bool(
+                cache is not None and int(inputs["input_ids"].shape[-1]) > 1
             ),
             "recurrent_state": self.capture_recurrent_state(),
         }

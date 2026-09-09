@@ -105,7 +105,30 @@ def test_run_with_state_override_has_explicit_default_and_invalid_paths() -> Non
     runner = MambaRunner(model=FakeModel(), tokenizer=FakeTokenizer())
     normal = runner.run_with_state_override("prompt")
     assert normal["state_source"] == "unavailable"
+    assert normal["intervention_changes_token_processing"] is False
     with pytest.raises(ValueError, match="层数"):
         runner.run_with_state_override(
             "prompt", {"conv_states": [], "ssm_states": []}
         )
+
+
+def test_state_intervention_modes_are_explicitly_validated() -> None:
+    import torch
+
+    from statefuzz.runner.mamba_runner import MambaRunner
+
+    class FakeTokenizer:
+        def __call__(self, prompt, return_tensors="pt", **kwargs):
+            return {"input_ids": torch.tensor([[1]])}
+
+    class FakeModel(torch.nn.Module):
+        device = torch.device("cpu")
+
+        def forward(self, input_ids, **kwargs):
+            logits = torch.zeros(1, input_ids.shape[-1], 4)
+            hidden = torch.ones(1, input_ids.shape[-1], 2)
+            return type("Output", (), {"logits": logits, "hidden_states": (hidden,)})()
+
+    runner = MambaRunner(model=FakeModel(), tokenizer=FakeTokenizer())
+    with pytest.raises(ValueError, match="干预模式"):
+        runner.run_with_state_override("prompt", state_source="unknown")
