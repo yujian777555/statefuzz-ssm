@@ -1,23 +1,26 @@
 # Latest Plan
 
-See `plans/plan_022.md`.
+See `plans/plan_023.md`.
 
-# Round 021 Review
+# Round 022 Review
 
-Round 021 strengthened the causal mechanism evidence.
+Round 022 consolidated the mechanism package.
 
-Findings:
-
-- Fresh seeds `[53..60]` replicated Round 020 on red/blue.
-- Correct memory-consistent state recovered 8/8 failed cases.
-- Wrong-memory state recovered 0/8.
-- Randomized state recovered 0/8.
-- An additional frozen pair (`cat/dog`) showed state-content specificity, although it was not a failure-recovery case because the original long context already succeeded.
+Evidence:
+- Frozen claim:
+  "Under structured-repetition remote-memory stress conditions, Mamba-130M recurrent state content causally influences remote-memory behavior."
+- red/blue showed complete memory-specific recovery separation:
+  - failure risk: 1.0
+  - correct memory recovery: 1.0
+  - wrong-memory rejection: 1.0
+  - random rejection: 1.0
+- cat/dog provided additional state-content specificity, but is not a failure recovery case because original long context succeeds.
+- paper artifacts generated:
+  - docs/paper_claims.md
+  - results/paper_figures_round_022.json
+- tests: 156/156 passed.
 
 Scientific interpretation:
-
-The evidence supports that recurrent state content, rather than arbitrary perturbation, influences remote-memory behavior under the tested Mamba-130M stress condition.
-
-Round 022 should consolidate evidence, generate paper artifacts, and avoid expanding claims beyond the tested scope.
+The project has moved from failure discovery into a scoped mechanism paper. The next risk is not lack of evidence, but overclaiming. Round 023 performs reviewer attack analysis, artifact validation, and final experiment packaging.
 
 Next executor: codex
