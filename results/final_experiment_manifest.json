@@ -1,0 +1,11 @@
+{
+  "project": "StateFuzz-SSM",
+  "model_names": ["state-spaces/mamba-130m-hf"],
+  "seeds": {"risk_rounds": [29,44], "causal_round_020": [45,52], "replication_round_021": [53,60]},
+  "frozen_conditions": {"template_id": 1, "filler_style": "structured_repetitive", "primary_pair": ["red", "blue"], "support_pair": ["cat", "dog"], "target_position": 0.0},
+  "interventions": ["long_context_failed", "value_a_short_wrong_memory", "value_b_short_correct_memory", "randomized_matched"],
+  "metrics": ["failure_rate", "recovery_rate", "wrong_memory_rejection", "random_perturbation_rejection", "memory_specificity_gap", "signed_margin"],
+  "artifacts": ["results/result_round_020.json", "results/result_round_021.json", "results/paper_figures_round_022.json", "docs/paper_claims.md", "docs/reviewer_attack.md"],
+  "excluded_claims": ["all SSMs", "universal memory length", "all long-context failures", "SSM stores all memories in recurrent state"],
+  "reproducibility": {"test_command": "python -m pytest -q -o addopts=''", "cuda_fast_kernels": "unavailable; sequential Transformers path used", "randomization": "matched per-state mean and standard deviation"}
+}

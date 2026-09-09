@@ -125,4 +125,3 @@ def test_update_status_surfaces_invalid_transition(tmp_path) -> None:
     write_status(target, _valid_status())
     with pytest.raises(ValueError, match="执行者转换非法"):
         update_status(target, next="planner")
-

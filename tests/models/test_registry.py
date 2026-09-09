@@ -87,4 +87,3 @@ def test_load_registry_enforces_trust_remote_code_policy(tmp_path, value: str) -
     )
     with pytest.raises(ValueError, match="trust_remote_code"):
         load_registry(config)
-

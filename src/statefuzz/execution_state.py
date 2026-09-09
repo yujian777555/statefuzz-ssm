@@ -81,4 +81,3 @@ def update_status(path: Path, **updates: Any) -> dict[str, Any]:
         current.update(updates)
         write_status(target, current)
         return current
-

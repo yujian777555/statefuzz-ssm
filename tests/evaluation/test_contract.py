@@ -59,4 +59,3 @@ def test_evaluation_outcome_is_immutable() -> None:
     outcome = evaluate_probe_spec(ProbeSpec(seed=21), "wrong")
     with pytest.raises(AttributeError):
         outcome.score = 1.0
-

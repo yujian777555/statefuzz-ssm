@@ -16,4 +16,3 @@ def generate_long_range_retrieval_probe(
     )
     prompt = f"NEEDLE = {probe.answer}\n" + probe.prompt
     return _rebuild_probe(probe, prompt, stress_pattern="long_range_retrieval")
-

@@ -90,4 +90,3 @@ def test_failure_evidence_aggregation_reports_mean_metrics() -> None:
     assert summary["count"] == 2
     assert summary["mean_state_norm_change"] == 0.3
     assert summary["mean_state_similarity"] == 0.95
-

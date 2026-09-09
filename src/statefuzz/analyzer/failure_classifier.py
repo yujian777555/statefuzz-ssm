@@ -97,4 +97,3 @@ def diagnose_failure(
         "category": category,
         "evidence": evidence,
     }
-

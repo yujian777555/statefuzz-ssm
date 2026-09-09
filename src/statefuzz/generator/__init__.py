@@ -44,4 +44,3 @@ def _rebuild_probe(
         provenance=provenance,
         probe_hash=hashlib.sha256(payload.encode("utf-8")).hexdigest(),
     )
-

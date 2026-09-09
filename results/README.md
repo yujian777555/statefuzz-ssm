@@ -21,4 +21,3 @@
   "metrics": {"atomic_write": 1.0}
 }
 ```
-

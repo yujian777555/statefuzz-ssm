@@ -70,4 +70,3 @@ def generate_pollution_recovery_probe(
         stress_pattern="state_pollution_recovery",
         recovery_protocol="explicit_marker",
     )
-

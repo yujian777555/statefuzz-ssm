@@ -1,0 +1,13 @@
+{
+  "round": 23,
+  "plan": "plans/plan_023.md",
+  "goal": "paper_validation_and_reviewer_attack",
+  "completed": ["reviewer_attack_checklist", "model_scope_robustness_plan", "figure_artifact_validation", "final_experiment_manifest"],
+  "artifacts": ["docs/reviewer_attack.md", "docs/paper_claims.md", "results/paper_figures_round_022.json", "results/final_experiment_manifest.json"],
+  "claim_scope_verified": true,
+  "universal_ssm_claim": false,
+  "additional_model_run": "not performed; future validation is explicitly documented",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 158, "total": 158, "status": "passed"},
+  "failures": [],
+  "status": "submission_ready_scoped_evidence_package"
+}

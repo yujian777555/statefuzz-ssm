@@ -60,4 +60,3 @@ def generate_length_matched_interference_pair(
     prefix = "StateFuzz calibration sequence: "
     suffix = " The next symbol is"
     return prefix + " ".join(control_slots) + suffix, prefix + " ".join(stressed_slots) + suffix
-
