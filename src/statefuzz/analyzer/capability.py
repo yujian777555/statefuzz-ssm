@@ -168,3 +168,4 @@ def aggregate_failure_evidence(
         "mean_state_norm_change": mean_field("state_norm_change"),
         "mean_state_similarity": mean_field("state_similarity"),
     }
+

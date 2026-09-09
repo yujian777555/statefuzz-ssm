@@ -16,3 +16,4 @@ def test_calibrated_prompt_instances_are_deterministic_and_distinct() -> None:
     assert prompts == generate_calibrated_prompts(context_tokens=64, seed=7, instances=3)
     assert len(prompts) == 3
     assert len(set(prompts)) == 3
+

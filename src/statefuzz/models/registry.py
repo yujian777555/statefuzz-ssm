@@ -57,3 +57,4 @@ def load_registry(path: Path) -> list[ModelSpec]:
     if len(ids) != len(set(ids)):
         raise ValueError("模型ID重复")
     return specs
+

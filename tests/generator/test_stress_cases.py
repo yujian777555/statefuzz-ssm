@@ -109,3 +109,4 @@ def test_pollution_recovery_probe_contains_recovery_instruction() -> None:
     probe = generate_pollution_recovery_probe(seed=7)
     assert "RECOVER" in probe.prompt
     assert probe.provenance["recovery_protocol"] == "explicit_marker"
+

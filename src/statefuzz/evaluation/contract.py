@@ -53,3 +53,4 @@ def evaluate_probe_spec(spec: ProbeSpec, prediction: str) -> EvaluationOutcome:
     if not isinstance(spec, ProbeSpec):
         raise TypeError("spec必须是ProbeSpec")
     return evaluate_compiled_probe(compile_probe(spec), prediction)
+

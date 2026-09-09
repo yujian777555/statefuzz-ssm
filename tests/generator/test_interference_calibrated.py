@@ -20,3 +20,4 @@ def test_length_matched_pair_replaces_slots_without_appending() -> None:
     assert len(control.split()) == len(stressed.split())
     assert control.endswith("The next symbol is")
     assert stressed.endswith("The next symbol is")
+

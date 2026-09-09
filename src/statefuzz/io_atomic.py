@@ -47,3 +47,4 @@ def atomic_write_json(path: Path, payload: Any) -> None:
         except FileNotFoundError:
             pass
         raise
+
