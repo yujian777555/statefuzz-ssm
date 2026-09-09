@@ -84,3 +84,28 @@ def test_model_backed_path_collects_hidden_states() -> None:
     assert tuple(captured.shape) == (1, 3, 4)
     assert runner.experiment_config.to_dict()["model_id"] == "fake/mamba"
 
+
+def test_run_with_state_override_has_explicit_default_and_invalid_paths() -> None:
+    import torch
+
+    from statefuzz.runner.mamba_runner import MambaRunner
+
+    class FakeTokenizer:
+        def __call__(self, prompt, return_tensors="pt", **kwargs):
+            return {"input_ids": torch.tensor([[1, 2]])}
+
+    class FakeModel(torch.nn.Module):
+        device = torch.device("cpu")
+
+        def forward(self, input_ids, **kwargs):
+            logits = torch.zeros(1, input_ids.shape[-1], 4)
+            hidden = torch.ones(1, input_ids.shape[-1], 2)
+            return type("Output", (), {"logits": logits, "hidden_states": (hidden,)})()
+
+    runner = MambaRunner(model=FakeModel(), tokenizer=FakeTokenizer())
+    normal = runner.run_with_state_override("prompt")
+    assert normal["state_source"] == "unavailable"
+    with pytest.raises(ValueError, match="层数"):
+        runner.run_with_state_override(
+            "prompt", {"conv_states": [], "ssm_states": []}
+        )

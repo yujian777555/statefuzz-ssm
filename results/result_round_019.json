@@ -1,0 +1,171 @@
+{
+  "causal_status": "intervention_inconclusive",
+  "changed_files": [
+    "src/statefuzz/runner/mamba_runner.py",
+    "src/statefuzz/analyzer/failure_risk.py",
+    "tests/runner/test_mamba_runner.py",
+    "tests/analyzer/test_failure_risk.py",
+    "results/result_round_019.json",
+    "status.json"
+  ],
+  "failures": [
+    {
+      "error": "未设置HF_HOME导致LocalEntryNotFoundError",
+      "resolution": "指向共享盘/202532803004/hf_cache后成功加载",
+      "step": "首次干预加载"
+    },
+    {
+      "error": "短状态与随机状态产生相同margin，说明多token输入触发了cache重置/不适配",
+      "resolution": "改为body状态加单token query逐步推进，并显式初始化DynamicCache",
+      "step": "首次全prompt cache override"
+    },
+    {
+      "error": "LinearAttentionLayer缺少conv_kernel_size",
+      "resolution": "调用early_initialization并设置初始化标志后override实际生效",
+      "step": "DynamicCache初始化"
+    },
+    {
+      "error": "kernel不可用",
+      "resolution": "使用顺序实现完成干预",
+      "step": "Mamba CUDA快速路径"
+    }
+  ],
+  "frozen_condition": {
+    "filler_style": "structured_repetitive",
+    "model": "state-spaces/mamba-130m-hf",
+    "target_position": 0.0,
+    "template_id": 1,
+    "value_pair": [
+      " red",
+      " blue"
+    ]
+  },
+  "layer_localization": {
+    "normal_vs_swapped_conv_strongest_layer": 18,
+    "normal_vs_swapped_ssm_strongest_layer": 14,
+    "overlap": false,
+    "short_vs_long_conv_strongest_layer": 13,
+    "short_vs_long_ssm_strongest_layer": 15
+  },
+  "risk_summary": {
+    "historical_status": "architecture_risk_gap_confirmed",
+    "mamba_failure_count": 12,
+    "mamba_failure_rate": 0.75,
+    "mcnemar": {
+      "direction": "mamba_higher",
+      "discordant_pairs": 12,
+      "exact_two_sided_p": 0.00048828125,
+      "mamba_only_fail": 12,
+      "transformer_only_fail": 0
+    },
+    "primary_endpoint_actual_tokens": 1791,
+    "source_round": 18,
+    "transformer_failure_count": 0,
+    "transformer_failure_rate": 0.0
+  },
+  "round": 19,
+  "scientific_interpretation": "短状态替换使长上下文失败方向恢复正margin，说明循环状态干预能够改变行为；但随机化状态也恢复为正margin，单次swap/shuffle实验不能把恢复唯一归因于正确记忆内容，因此尚不足以确证特定SSM机制。",
+  "state_intervention": {
+    "candidate_token_ids": [
+      2502,
+      4797
+    ],
+    "long_context_actual_tokens": 3884,
+    "normal": {
+      "failure": true,
+      "margin_b_minus_a": -1.373291015625,
+      "pairwise_memory_score": 0.20208865369460055,
+      "state_source": "override_recurrent_cache"
+    },
+    "normal_vs_randomized_state": {
+      "conv_states": {
+        "maximum_relative_l2_distance": 1.3929242385831766,
+        "maximum_similarity": 0.2664620669550331,
+        "median_relative_l2_distance": 1.3591564577684787,
+        "median_similarity": 0.07653669750113978,
+        "minimum_relative_l2_distance": 1.2125657590701115,
+        "minimum_similarity": 0.031041835302014324,
+        "strongest_divergent_layer": 10,
+        "strongest_l2_divergent_layer": 10
+      },
+      "ssm_states": {
+        "maximum_relative_l2_distance": 1.6673390349042159,
+        "maximum_similarity": 0.7518490603506622,
+        "median_relative_l2_distance": 1.3419072813496098,
+        "median_similarity": 0.11573884727881706,
+        "minimum_relative_l2_distance": 0.7642753356777584,
+        "minimum_similarity": 0.0020324236753990975,
+        "strongest_divergent_layer": 3,
+        "strongest_l2_divergent_layer": 19
+      },
+      "state_source": "direct_recurrent_cache"
+    },
+    "normal_vs_swapped_state": {
+      "conv_states": {
+        "maximum_relative_l2_distance": 0.47766826141929614,
+        "maximum_similarity": 1.0,
+        "median_relative_l2_distance": 0.21846677603643658,
+        "median_similarity": 0.9760407441721547,
+        "minimum_relative_l2_distance": 0.0,
+        "minimum_similarity": 0.8859715734145215,
+        "strongest_divergent_layer": 18,
+        "strongest_l2_divergent_layer": 18
+      },
+      "ssm_states": {
+        "maximum_relative_l2_distance": 0.6516430499632169,
+        "maximum_similarity": 0.9994856065443423,
+        "median_relative_l2_distance": 0.3636161961447567,
+        "median_similarity": 0.9393579354350746,
+        "minimum_relative_l2_distance": 0.03207605592032116,
+        "minimum_similarity": 0.7881671780689063,
+        "strongest_divergent_layer": 14,
+        "strongest_l2_divergent_layer": 14
+      },
+      "state_source": "direct_recurrent_cache"
+    },
+    "randomized_state": {
+      "behavioral_recovery": true,
+      "margin_b_minus_a": 0.59375,
+      "margin_effect_vs_normal": 1.967041015625,
+      "pairwise_memory_score": 0.6442251064863697,
+      "state_source": "override_recurrent_cache"
+    },
+    "short_context_actual_tokens": 556,
+    "short_vs_long_state": {
+      "conv_states": {
+        "maximum_relative_l2_distance": 0.40934438456143574,
+        "maximum_similarity": 0.9999999999999998,
+        "median_relative_l2_distance": 0.25432524026131614,
+        "median_similarity": 0.9677779893431223,
+        "minimum_relative_l2_distance": 0.0,
+        "minimum_similarity": 0.9185236634703998,
+        "strongest_divergent_layer": 13,
+        "strongest_l2_divergent_layer": 16
+      },
+      "ssm_states": {
+        "maximum_relative_l2_distance": 0.7615733399473822,
+        "maximum_similarity": 0.9994874033670103,
+        "median_relative_l2_distance": 0.36388940310615775,
+        "median_similarity": 0.9348667265633614,
+        "minimum_relative_l2_distance": 0.032020183335159734,
+        "minimum_similarity": 0.713137152655688,
+        "strongest_divergent_layer": 15,
+        "strongest_l2_divergent_layer": 15
+      },
+      "state_source": "direct_recurrent_cache"
+    },
+    "swapped_state": {
+      "behavioral_recovery": true,
+      "margin_b_minus_a": 1.875,
+      "margin_effect_vs_normal": 3.248291015625,
+      "pairwise_memory_score": 0.8670357598021706,
+      "state_source": "override_recurrent_cache"
+    }
+  },
+  "tests": {
+    "command": "python -m pytest -q -o addopts=''",
+    "passed": 152,
+    "status": "passed",
+    "total": 152
+  }
+}

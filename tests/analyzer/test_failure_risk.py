@@ -85,6 +85,24 @@ def test_shared_paired_failures_do_not_establish_architecture_gap():
     assert classify_prospective_architecture_risk(result, {}, {}) == "shared_failure_risk"
 
 
+def test_round018_validation_wrappers_preserve_risk_and_transition_outputs():
+    from statefuzz.analyzer.failure_risk import (
+        compare_paired_architecture_risk,
+        summarize_seed_transition,
+    )
+
+    rows = [
+        {"seed": seed, "target_budget_tokens": 1792, "actual_input_tokens": 1792,
+         "min_signed_margin": -1.0 if seed == 1 else 1.0, "matched": True, "candidate_valid": True}
+        for seed in (1, 2)
+    ]
+    transition = summarize_seed_transition(rows)
+    assert transition["transition"]["per_seed"]
+    comparison = compare_paired_architecture_risk(rows, rows)
+    assert comparison["valid"] is True
+    assert comparison["mcnemar"]["discordant_pairs"] == 0
+
+
 def test_architecture_failure_risk_rejects_incomplete_or_mismatched_records() -> None:
     from statefuzz.analyzer.failure_risk import compare_architecture_failure_risk
 

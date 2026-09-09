@@ -465,6 +465,111 @@ class MambaRunner:
         )
         return result
 
+    def _state_dict_to_cache(self, state_override: dict[str, list[Any]]) -> Any:
+        """把安全复制的循环状态装入新的DynamicCache，不修改调用方对象。"""
+        if not isinstance(state_override, dict):
+            raise TypeError("state_override必须是循环状态对象")
+        import torch
+        from transformers import DynamicCache
+
+        cache = DynamicCache(config=getattr(self._model, "config", None))
+        conv_states = state_override.get("conv_states", [])
+        ssm_states = state_override.get("ssm_states", [])
+        if not conv_states or not ssm_states:
+            raise ValueError("state_override层数不能为空")
+        if len(conv_states) != len(ssm_states) or len(conv_states) != len(cache.layers):
+            raise ValueError("state_override层数与模型cache不一致")
+        first_conv = conv_states[0]
+        first_ssm = ssm_states[0]
+        cache.early_initialization(
+            batch_size=int(first_conv.shape[0]),
+            num_heads=int(first_conv.shape[1]),
+            head_dim=int(first_ssm.shape[-1]),
+            dtype=first_ssm.dtype if hasattr(first_ssm, "dtype") else torch.float16,
+            device=self._model.device,
+        )
+        for layer, conv_state, ssm_state in zip(
+            cache.layers, conv_states, ssm_states, strict=True
+        ):
+            layer.conv_states = (
+                conv_state.detach().clone().to(self._model.device)
+                if hasattr(conv_state, "detach")
+                else torch.as_tensor(conv_state, device=self._model.device).clone()
+            )
+            layer.recurrent_states = (
+                ssm_state.detach().clone().to(self._model.device)
+                if hasattr(ssm_state, "detach")
+                else torch.as_tensor(ssm_state, device=self._model.device).clone()
+            )
+            # DynamicCache layer在forward中会依据这些标志决定是否重置状态；
+            # 仅赋值张量而不显式标记会导致所谓override被静默清零。
+            layer.is_conv_states_initialized = True
+            layer.is_recurrent_states_initialized = True
+            layer.has_previous_state = True
+        return cache
+
+    def run_with_state_override(
+        self, prompt: str, state_override: dict[str, list[Any]] | None = None
+    ) -> dict[str, Any]:
+        """在显式复制的循环cache上执行一次行为forward。
+
+        默认路径不传cache；干预路径创建全新DynamicCache并记录来源，避免
+        静默修改runner内部最近状态或调用方传入的张量。
+        """
+        if self._model is None or self._tokenizer is None:
+            raise RuntimeError("run_with_state_override需要model-backed runner")
+        import torch
+
+        encoded = self._tokenizer(prompt, return_tensors="pt", add_special_tokens=False)
+        device = getattr(self._model, "device", "cpu")
+        inputs = {
+            key: value.to(device) if hasattr(value, "to") else value
+            for key, value in encoded.items()
+        }
+        cache = self._state_dict_to_cache(state_override) if state_override is not None else None
+        with torch.inference_mode():
+            if cache is not None and int(inputs["input_ids"].shape[-1]) > 1:
+                # DynamicCache已有历史时，Mamba slow path只接受单步decode；
+                # 逐token推进，确保override真的参与每一步状态更新。
+                outputs = None
+                for index in range(int(inputs["input_ids"].shape[-1])):
+                    step_inputs = {
+                        key: value[:, index : index + 1]
+                        if hasattr(value, "shape") and value.ndim >= 2
+                        else value
+                        for key, value in inputs.items()
+                    }
+                    outputs = self._model(
+                        **step_inputs,
+                        cache_params=cache,
+                        output_hidden_states=True,
+                        use_cache=True,
+                        return_dict=True,
+                    )
+                    cache = getattr(outputs, "cache_params", cache)
+            else:
+                kwargs = {
+                    **inputs,
+                    "output_hidden_states": True,
+                    "use_cache": True,
+                    "return_dict": True,
+                }
+                if cache is not None:
+                    kwargs["cache_params"] = cache
+                outputs = self._model(**kwargs)
+            self._record_outputs(outputs)
+            logits = outputs.logits[0, -1].float().detach().cpu()
+        return {
+            "logits": logits,
+            "input_token_count": int(inputs["input_ids"].shape[-1]),
+            "state_source": (
+                "override_recurrent_cache"
+                if state_override is not None
+                else self._state_source
+            ),
+            "recurrent_state": self.capture_recurrent_state(),
+        }
+
     @staticmethod
     def _summarize_recurrent_state(state: dict[str, list[Any]] | None) -> dict[str, Any]:
         """为实验产物提供不含完整张量的循环状态摘要。"""

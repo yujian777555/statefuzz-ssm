@@ -133,6 +133,16 @@ def summarize_seed_transition_intervals(
     }
 
 
+def summarize_seed_transition(records: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+    """Round 018兼容入口，自动使用记录中的完整seed集合。"""
+    values = list(records)
+    seeds = sorted({int(record["seed"]) for record in values})
+    return {
+        "risk": summarize_failure_risk_curve(values, seeds),
+        "transition": summarize_seed_transition_intervals(values, seeds),
+    }
+
+
 def exact_paired_mcnemar(
     mamba_failures: Mapping[int, bool], transformer_failures: Mapping[int, bool]
 ) -> dict[str, Any]:
@@ -219,6 +229,22 @@ def compare_architecture_failure_risk(
         "transformer": summary(transformer, transformer_failures),
         "mcnemar": exact_paired_mcnemar(mamba_failures, transformer_failures),
     }
+
+
+def compare_paired_architecture_risk(
+    mamba_records: Iterable[Mapping[str, Any]],
+    transformer_records: Iterable[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Round 018兼容入口，默认冻结1792 endpoint。"""
+    mamba_values = list(mamba_records)
+    transformer_values = list(transformer_records)
+    seeds = sorted({int(record["seed"]) for record in mamba_values} | {int(record["seed"]) for record in transformer_values})
+    comparison = compare_architecture_failure_risk(
+        mamba_values, transformer_values, seeds, 1792
+    )
+    comparison["mamba_transition"] = summarize_seed_transition(mamba_values)
+    comparison["transformer_transition"] = summarize_seed_transition(transformer_values)
+    return comparison
 
 
 def classify_prospective_architecture_risk(
