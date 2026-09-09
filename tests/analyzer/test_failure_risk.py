@@ -163,3 +163,20 @@ def test_memory_specificity_metrics_and_classifier_are_conservative() -> None:
         randomized_recovers_equally=True,
         replicated=True,
     ) == "recurrent_state_intervention_effect_but_not_memory_specific"
+
+
+def test_compare_memory_state_interventions_reports_specificity_gap() -> None:
+    from statefuzz.analyzer.failure_risk import compare_memory_state_interventions
+
+    result = compare_memory_state_interventions(
+        [{"margin_b_minus_a": -1.0}] * 4,
+        [{"margin_b_minus_a": -1.0}] * 4,
+        [{"margin_b_minus_a": 2.0}] * 4,
+        [{"margin_b_minus_a": -0.5}] * 4,
+    )
+    assert result["correct_memory_recovery_rate"] == 1.0
+    assert result["wrong_memory_recovery_rate"] == 0.0
+    assert result["randomized_recovery_rate"] == 0.0
+    assert result["specificity_gap"] == 1.0
+    with pytest.raises(ValueError, match="相同"):
+        compare_memory_state_interventions([1.0], [1.0, 2.0], [1.0], [1.0])

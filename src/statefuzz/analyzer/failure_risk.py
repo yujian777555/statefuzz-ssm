@@ -308,3 +308,44 @@ def classify_recurrent_state_causality(
     if memory_consistent_recovers:
         return "recurrent_state_intervention_effect_but_not_memory_specific"
     return "intervention_inconclusive"
+
+
+def compare_memory_state_interventions(
+    failed_prompt: Iterable[Mapping[str, Any]],
+    memory_a_state: Iterable[Mapping[str, Any] | float],
+    memory_b_state: Iterable[Mapping[str, Any] | float],
+    randomized_states: Iterable[Mapping[str, Any] | float],
+) -> dict[str, Any]:
+    """比较正确/错误/随机状态的恢复率；输入记录需含margin或直接为数值。"""
+    def margins(values):
+        result = []
+        for value in values:
+            raw = value if isinstance(value, (int, float)) else value.get("margin_b_minus_a")
+            if raw is None or not math.isfinite(float(raw)):
+                raise ValueError("干预记录缺少有限margin_b_minus_a")
+            result.append(float(raw))
+        return result
+
+    baseline = margins(failed_prompt)
+    correct = margins(memory_b_state)
+    wrong = margins(memory_a_state)
+    randomized = margins(randomized_states)
+    counts = [len(baseline), len(correct), len(wrong), len(randomized)]
+    if len(set(counts)) != 1 or not baseline:
+        raise ValueError("四种干预记录必须具有相同且非空的seed数")
+
+    def recovery(values):
+        return sum(value > 0.0 for value in values) / len(values)
+
+    correct_rate = recovery(correct)
+    wrong_rate = recovery(wrong)
+    randomized_rate = recovery(randomized)
+    return {
+        "correct_memory_recovery_rate": correct_rate,
+        "wrong_memory_recovery_rate": wrong_rate,
+        "randomized_recovery_rate": randomized_rate,
+        "specificity_gap": correct_rate - randomized_rate,
+        "seed_count": len(baseline),
+        "mean_correct_minus_randomized_margin": sum(c - r for c, r in zip(correct, randomized, strict=True)) / len(correct),
+        "baseline_failure_rate": 1.0 - recovery(baseline),
+    }

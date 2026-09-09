@@ -1,0 +1,52 @@
+{
+  "round": 21,
+  "plan": "plans/plan_021.md",
+  "model": "state-spaces/mamba-130m-hf",
+  "environment": {"device": "cuda", "dtype": "float16", "implementation": "Transformers sequential Mamba path", "fast_cuda_kernels": "unavailable"},
+  "frozen_condition": {"template_id": 1, "filler_style": "structured_repetitive", "target_position": 0.0, "seeds": [53,54,55,56,57,58,59,60]},
+  "endpoint": {"long_prompt_tokens": 3884, "short_prompt_tokens": 556, "query_suffix": " is", "margin_definition": "logit(value_b)-logit(value_a)", "recovery_definition": "margin > 0"},
+  "pairs": {
+    "red/blue": {
+      "candidate_token_ids": [2502, 4797],
+      "normal_long": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -1.22382},
+      "value_a_short_wrong_memory": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -1.90625},
+      "value_b_short_correct_memory": {"recovery_count": 8, "seed_count": 8, "recovery_rate": 1.0, "mean_margin": 2.00195},
+      "randomized_matched": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -0.97559},
+      "specificity_gap": 1.0,
+      "memory_restoration_effect_mean": 2.97754,
+      "interpretation": "新种子复制Round20的记忆特异性恢复，正确状态8/8，随机状态0/8。"
+    },
+    "cat/dog": {
+      "candidate_token_ids": [5798, 4370],
+      "normal_long": {"recovery_count": 8, "seed_count": 8, "recovery_rate": 1.0, "mean_margin": 0.84747},
+      "value_a_short_wrong_memory": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -2.81073},
+      "value_b_short_correct_memory": {"recovery_count": 8, "seed_count": 8, "recovery_rate": 1.0, "mean_margin": 4.93222},
+      "randomized_matched": {"recovery_count": 5, "seed_count": 8, "recovery_rate": 0.625, "mean_margin": 0.98438},
+      "specificity_gap": 0.375,
+      "memory_restoration_effect_mean": 3.94784,
+      "interpretation": "正确状态和错误状态明显分离；但长上下文原始状态已8/8成功，因此这是状态内容特异性支持，不是失败恢复复制。"
+    }
+  },
+  "overall": {
+    "fresh_seed_replication": true,
+    "wrong_memory_separated": true,
+    "random_control_separated": true,
+    "additional_pair_support": true,
+    "causal_candidate": true,
+    "memory_specific_recovery": true,
+    "claim_scope": "仅限Mamba-130M、结构化重复压力条件及已测试值对；不外推到所有SSM或所有长上下文失败。"
+  },
+  "causal_status": "recurrent_state_causal_candidate_confirmed",
+  "scientific_interpretation": "红/蓝新种子中，记忆一致状态8/8恢复而随机状态0/8；猫/狗中正确状态8/8、错误状态0/8、随机状态5/8，支持循环状态内容而非任意扰动决定行为。由于猫/狗原始长上下文没有失败，猫/狗结果用于机制特异性支持而非失败恢复复制。",
+  "failures": [
+    {"step": "首次实验启动", "error": "VM旧版failure_risk.py缺少compare_memory_state_interventions，ImportError，未运行种子", "resolution": "同步新版分析器后完整重跑；该次不计入有效记录"},
+    {"step": "Mamba快速路径", "error": "selective_state_update/causal_conv1d等CUDA kernel不可用", "resolution": "使用顺序实现完成实验"}
+  ],
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 155, "total": 155, "status": "passed"},
+  "changed_files": [
+    "src/statefuzz/analyzer/failure_risk.py",
+    "tests/analyzer/test_failure_risk.py",
+    "results/result_round_021.json",
+    "status.json"
+  ]
+}
