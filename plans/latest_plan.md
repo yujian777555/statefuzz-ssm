@@ -1,30 +1,33 @@
 # Latest Plan
 
-See `plans/plan_024.md`.
+See `plans/plan_025.md`.
 
-# Round 023 Review
+# Round 024 Decision
 
-Round 023 completed reviewer attack analysis and converted the project into a scoped submission package.
+The project has a scoped mechanism result:
 
-Verified:
-- claim scope is controlled;
-- universal SSM claims are explicitly rejected;
-- additional model experiments are documented as future validation rather than hidden assumptions;
-- paper artifacts exist:
-  - docs/reviewer_attack.md
-  - docs/paper_claims.md
-  - results/paper_figures_round_022.json
-  - results/final_experiment_manifest.json
-- tests: 158/158 passed.
+- StateFuzz discovers remote-memory stress patterns.
+- Structured-repetition stress reveals a Mamba-130M vulnerability under the tested condition.
+- Recurrent-state content intervention provides memory-specific behavioral evidence.
 
-Current scientific position:
+The next risk is overfitting to a single stress condition.
 
-StateFuzz is no longer positioned as proving a universal SSM memory limit. The defensible contribution is:
+# Round 025 Goal
 
-1. an automated framework for discovering remote-memory stress patterns;
-2. a scoped Mamba-130M case study showing structured-repetition vulnerability;
-3. recurrent-state content intervention evidence linking state content to remote-memory behavior.
+Generalize the discovery process by evaluating multiple automatically generated stress families:
 
-Round 024 focuses on submission refinement and final reproducibility validation.
+- structured repetition;
+- periodic patterns;
+- interleaved distractors;
+- semantic distractors.
+
+The purpose is not to expand claims without evidence, but to determine whether StateFuzz identifies a broader class of memory stressors.
+
+Requirements:
+
+- preserve frozen evaluation protocols;
+- report actual tokenizer lengths;
+- keep negative controls;
+- avoid universal SSM memory claims.
 
 Next executor: codex
