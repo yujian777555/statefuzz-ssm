@@ -1,33 +1,42 @@
 # Latest Plan
 
-See `plans/plan_025.md`.
+See `plans/plan_026.md`.
 
-# Round 024 Decision
+# Round 025 Review
 
-The project has a scoped mechanism result:
+Round 025 successfully moved StateFuzz beyond a single stress case.
 
-- StateFuzz discovers remote-memory stress patterns.
-- Structured-repetition stress reveals a Mamba-130M vulnerability under the tested condition.
-- Recurrent-state content intervention provides memory-specific behavioral evidence.
+Completed:
+- stress family abstraction;
+- controlled discovery;
+- specificity comparison;
+- paper artifact generation.
 
-The next risk is overfitting to a single stress condition.
+Evaluated families:
+- structured_repetitive;
+- periodic_pattern;
+- interleaved_distractor;
+- semantic_distractor.
 
-# Round 025 Goal
+The result contains 40 valid records, no runtime failures, and all tests pass (160/160). The updated scientific position is:
 
-Generalize the discovery process by evaluating multiple automatically generated stress families:
+> StateFuzz can discover and compare multiple remote-memory stress families through a unified evaluation pipeline.
 
-- structured repetition;
-- periodic patterns;
-- interleaved distractors;
-- semantic distractors.
+The next risk is model specificity.
 
-The purpose is not to expand claims without evidence, but to determine whether StateFuzz identifies a broader class of memory stressors.
+# Round 026 Goal
+
+Expand the model axis:
+
+- Mamba variants where available;
+- Transformer control;
+- architecture-aware analysis.
 
 Requirements:
 
-- preserve frozen evaluation protocols;
-- report actual tokenizer lengths;
-- keep negative controls;
-- avoid universal SSM memory claims.
+- same stress conditions;
+- actual tokenizer lengths;
+- no KV-cache/recurrent-state equivalence claim;
+- no universal SSM claim without evidence.
 
 Next executor: codex
