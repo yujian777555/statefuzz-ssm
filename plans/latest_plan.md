@@ -1,49 +1,32 @@
 # Latest Plan
 
-See `plans/plan_028.md`.
+See `plans/plan_029.md`.
 
-# Round 027 Review
+# Round 028 Review
 
-Round 027 validated transfer from synthetic stress discovery to realistic controlled workloads.
+Round 028 moved StateFuzz toward mitigation.
 
 Completed:
-- long document retrieval;
-- code context dependency;
-- agent conversation memory;
-- cross-model behavioral evaluation;
-- stress-family transfer analysis.
+- mitigation hypotheses;
+- synthetic stress evaluation;
+- realistic workload validation;
+- mitigation artifact generation.
 
 Results:
-- 48 valid records;
-- 164/164 tests passed;
-- transfer_supported=true.
-
-The realistic workload artifact shows:
-- Mamba-130M and Pythia-160M can both be evaluated through the same workload pipeline;
-- four stress families transfer into realistic workload templates;
-- degradation exists, but architecture-level superiority is not established.
+- strategies tested: memory_reinjection, context_anchor, retrieval_reminder;
+- synthetic valid records: 16;
+- realistic valid records: 48;
+- runtime failures: 0;
+- tests: 165/165 passed.
 
 Scientific interpretation:
 
-StateFuzz has moved beyond synthetic-only analysis. The current evidence supports practical relevance of discovered stress factors, while keeping claims scoped to controlled realistic workloads.
+Context anchoring provides task-specific improvement for code context dependency on tested models. No mitigation strategy is universally beneficial.
 
-# Round 028 Goal
+The project now has:
 
-Move from:
+Discover → Diagnose → Mitigate candidate
 
-Discover → Diagnose
-
-into:
-
-Discover → Diagnose → Mitigate
-
-Evaluate lightweight interventions that can reduce discovered memory failures without changing model weights.
-
-Candidate interventions:
-- memory refresh/reinjection;
-- state/context anchoring;
-- retrieval-assisted reminder.
-
-Success requires measurable improvement on frozen stress conditions and at least one realistic workload.
+Round 029 focuses on final scientific consolidation rather than uncontrolled expansion.
 
 Next executor: codex
