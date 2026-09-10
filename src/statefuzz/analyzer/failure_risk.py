@@ -382,3 +382,27 @@ def summarize_mechanism_evidence(results: Mapping[str, Any]) -> dict[str, Any]:
         "cross_pair_support": len(summary_pairs) >= 2,
         "claim_scope": "Mamba-130M结构化重复远程记忆压力条件",
     }
+
+
+def summarize_stress_family_discovery(results: Mapping[str, Any]) -> dict[str, Any]:
+    """汇总压力族发现记录，并保留实际token范围与负控标记。"""
+    families = results.get("families") if isinstance(results, Mapping) else None
+    if not isinstance(families, Mapping) or not families:
+        raise ValueError("results必须包含families映射")
+    table = {}
+    for name, payload in families.items():
+        records = list(payload.get("records", [])) if isinstance(payload, Mapping) else []
+        if not records:
+            raise ValueError(f"{name}缺少records")
+        actual = [int(row["actual_input_tokens"]) for row in records]
+        failures = [row for row in records if float(row["min_signed_margin"]) <= 0.0]
+        separations = [abs(float(row["signed_margin_a"]) - float(row["signed_margin_b"])) for row in records]
+        table[str(name)] = {
+            "record_count": len(records),
+            "failure_rate": len(failures) / len(records),
+            "actual_token_range": [min(actual), max(actual)],
+            "first_risk_actual_tokens": min(int(row["actual_input_tokens"]) for row in failures) if failures else None,
+            "mean_recurrent_state_separation_proxy": sum(separations) / len(separations),
+            "negative_control": name == "lexically_diverse",
+        }
+    return {"families": table, "family_count": len(table), "claim_scope": "诊断框架发现统计，不等同于普适SSM机制"}

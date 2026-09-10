@@ -1,0 +1,17 @@
+{
+  "round": 25,
+  "model": "state-spaces/mamba-130m-hf",
+  "template_id": 1,
+  "value_pair": [" red", " blue"],
+  "seeds": [61, 62],
+  "families": {
+    "structured_repetitive": {"records": 8, "actual_token_range": [556, 3884], "first_risk_actual_tokens": 556, "failure_rate_min_margin": 1.0, "mean_state_separation_proxy": 1.7834, "negative_control": false},
+    "periodic_pattern": {"records": 8, "actual_token_range": [402, 2790], "first_risk_actual_tokens": 402, "failure_rate_min_margin": 1.0, "mean_state_separation_proxy": 4.0312, "negative_control": false},
+    "interleaved_distractor": {"records": 8, "actual_token_range": [640, 4480], "first_risk_actual_tokens": 640, "failure_rate_min_margin": 1.0, "mean_state_separation_proxy": 2.4238, "negative_control": false},
+    "semantic_distractor": {"records": 8, "actual_token_range": [808, 5672], "first_risk_actual_tokens": 808, "failure_rate_min_margin": 1.0, "mean_state_separation_proxy": 2.1742, "negative_control": false},
+    "lexically_diverse": {"records": 8, "actual_token_range": [866, 6083], "first_risk_actual_tokens": 866, "failure_rate_min_margin": 1.0, "mean_state_separation_proxy": 2.6750, "negative_control": true}
+  },
+  "interpretation": "四类压力族均可通过统一管线生成并记录实际token长度；本轮仅使用两个种子和四个预算点，min_signed_margin合并A/B反事实较差侧，不能单独证明族间风险等价。结果支持StateFuzz作为压力族诊断框架，不升级为普适SSM记忆结论。",
+  "failures": [{"step": "负控统一接口首次运行", "error": "lexically_diverse未加入stress family允许集合，8条ValueError", "resolution": "显式加入NEGATIVE_CONTROL_FAMILIES并完整重跑，最终0失败"}],
+  "fast_cuda_kernels": "unavailable; sequential Transformers path used"
+}

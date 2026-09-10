@@ -1,0 +1,15 @@
+{
+  "round": 25,
+  "plan": "plans/plan_025.md",
+  "completed": ["stress_family_abstraction", "controlled_discovery", "specificity_comparison", "paper_artifact_generation"],
+  "families": ["structured_repetitive", "periodic_pattern", "interleaved_distractor", "semantic_distractor"],
+  "negative_control": "lexically_diverse",
+  "seeds": [61, 62],
+  "budgets": [256, 768, 1280, 1792],
+  "records_per_family": 8,
+  "valid_records": 40,
+  "runtime_failures": 0,
+  "artifacts": ["results/stress_family_comparison_round_025.json"],
+  "claim_update": "StateFuzz可通过统一接口发现并比较多类远程记忆压力族；不声称所有族或所有SSM具有相同机制。",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 160, "total": 160, "status": "passed"}
+}

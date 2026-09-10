@@ -198,3 +198,12 @@ def test_summarize_mechanism_evidence_preserves_scope_and_cross_pair_support() -
     assert result["pairs"]["red/blue"]["behavior_failure_risk"] == 1.0
     assert result["pairs"]["cat/dog"]["memory_specificity_gap"] == 0.375
     assert "Mamba-130M" in result["claim_scope"]
+
+
+def test_summarize_stress_family_discovery_keeps_token_ranges_and_negative_control() -> None:
+    from statefuzz.analyzer.failure_risk import summarize_stress_family_discovery
+
+    row = {"actual_input_tokens": 100, "min_signed_margin": -1.0, "signed_margin_a": 1.0, "signed_margin_b": -1.0}
+    result = summarize_stress_family_discovery({"families": {"structured_repetitive": {"records": [row]}, "lexically_diverse": {"records": [{**row, "actual_input_tokens": 120}]}}})
+    assert result["families"]["structured_repetitive"]["actual_token_range"] == [100, 100]
+    assert result["families"]["lexically_diverse"]["negative_control"] is True

@@ -45,6 +45,14 @@ _TEMPLATES: dict[int, tuple[str, str]] = {
     2: ("Memory record:", "Memory record:"),
 }
 
+STRESS_FAMILIES = (
+    "structured_repetitive",
+    "periodic_pattern",
+    "interleaved_distractor",
+    "semantic_distractor",
+)
+NEGATIVE_CONTROL_FAMILIES = ("lexically_diverse",)
+
 
 def _validate_value(value: str, name: str) -> str:
     if not isinstance(value, str) or not value.strip() or "\n" in value:
@@ -79,7 +87,48 @@ def _filler_lines(
             f"{pool[(seed + index) % len(pool)]} Ref-{seed:04d}-{index:03d}.\n"
             for index in range(count)
         ]
-    raise ValueError("filler_style必须是structured_repetitive或lexically_diverse")
+    if filler_style == "periodic_pattern":
+        patterns = ("alpha beta gamma", "delta epsilon zeta", "eta theta iota")
+        return [f"Pattern {patterns[index % len(patterns)]} cycle {index % 3}.\n" for index in range(count)]
+    if filler_style == "interleaved_distractor":
+        return [
+            f"Earlier note {seed:04d}-{index:03d} is stable; distractor marker {index % 2}.\n"
+            for index in range(count)
+        ]
+    if filler_style == "semantic_distractor":
+        topics = (
+            "The archivist catalogued a brass compass beside a map.",
+            "The gardener described a shaded path behind the library.",
+            "The engineer inspected a quiet motor near the window.",
+        )
+        return [f"{topics[(seed + index) % len(topics)]} Ref-{seed:04d}-{index:03d}.\n" for index in range(count)]
+    raise ValueError("未知filler_style")
+
+
+def generate_stress_family_pair(
+    family: str,
+    *,
+    context_tokens: int = 64,
+    seed: int = 0,
+    template_id: int = 1,
+    value_a: str = " red",
+    value_b: str = " blue",
+    target_position: float = 0.0,
+    filler_slots: int | None = None,
+) -> RemoteMemoryPair:
+    """通过统一接口生成一个可复现的压力族任务。"""
+    if family not in STRESS_FAMILIES + NEGATIVE_CONTROL_FAMILIES:
+        raise ValueError(f"未知stress family: {family}")
+    return generate_remote_memory_pair(
+        context_tokens=context_tokens,
+        seed=seed,
+        template_id=template_id,
+        value_a=value_a,
+        value_b=value_b,
+        target_position=target_position,
+        filler_style=family,
+        filler_slots=filler_slots,
+    )
 
 
 def generate_remote_memory_pair(
