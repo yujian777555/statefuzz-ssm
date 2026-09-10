@@ -1,0 +1,22 @@
+{
+  "round": 28,
+  "strategies": ["baseline", "memory_reinjection", "context_anchor", "retrieval_reminder"],
+  "models": {
+    "state-spaces/mamba-130m-hf": {
+      "synthetic_aggregate": {"baseline": 1.0, "memory_reinjection": 0.5, "context_anchor": 1.0, "retrieval_reminder": 0.0},
+      "realistic_aggregate": {"baseline": 0.75, "memory_reinjection": 0.417, "context_anchor": 0.667, "retrieval_reminder": 0.667},
+      "code_context_dependency": {"baseline": 0.5, "memory_reinjection": 0.875, "context_anchor": 1.0, "retrieval_reminder": 0.75},
+      "mean_overhead_tokens": {"memory_reinjection": 21, "context_anchor": 25, "retrieval_reminder": 25}
+    },
+    "EleutherAI/pythia-160m": {
+      "synthetic_aggregate": {"baseline": 1.0, "memory_reinjection": 1.0, "context_anchor": 1.0, "retrieval_reminder": 1.0},
+      "realistic_aggregate": {"baseline": 0.667, "memory_reinjection": 0.458, "context_anchor": 0.792, "retrieval_reminder": 0.542},
+      "code_context_dependency": {"baseline": 0.625, "memory_reinjection": 0.5, "context_anchor": 0.875, "retrieval_reminder": 0.5},
+      "mean_overhead_tokens": {"memory_reinjection": 21, "context_anchor": 25, "retrieval_reminder": 25}
+    }
+  },
+  "success_case": "context_anchor improves code_context_dependency for both models; Mamba 4/8 to 8/8, Pythia 5/8 to 7/8.",
+  "negative_findings": ["memory_reinjection lowers aggregate realistic success", "retrieval_reminder is not consistently beneficial", "synthetic aggregate has no headroom at the selected seeds"],
+  "limitations": ["two models", "two seeds", "controlled realistic templates", "no weight updates", "no universal mitigation claim"],
+  "fast_cuda_kernels": "unavailable; sequential Transformers Mamba path used"
+}

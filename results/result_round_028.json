@@ -1,0 +1,13 @@
+{
+  "round": 28,
+  "plan": "plans/plan_028.md",
+  "completed": ["mitigation_hypotheses", "synthetic_stress_evaluation", "realistic_workload_validation", "mitigation_artifact"],
+  "strategies": ["memory_reinjection", "context_anchor", "retrieval_reminder"],
+  "valid_records": {"synthetic": 16, "realistic": 48},
+  "runtime_failures": 0,
+  "artifact": "results/mitigation_comparison_round_028.json",
+  "mitigation_conclusion": "context_anchor provides task-specific improvement on code context dependency for both tested models; no strategy is universally beneficial.",
+  "framework_status": "discover_diagnose_mitigate_candidate",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 165, "total": 165, "status": "passed"},
+  "failures": [{"step": "initial progress polling", "error": "one malformed SSH diagnostic command used an invalid hostname", "resolution": "ignored diagnostic failure; experiment process continued and completed normally"}]
+}
