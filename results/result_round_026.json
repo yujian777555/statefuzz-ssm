@@ -1,0 +1,17 @@
+{
+  "round": 26,
+  "plan": "plans/plan_026.md",
+  "completed": ["model_matrix_support", "cross_model_stress_evaluation", "architecture_aware_analysis", "paper_artifact_generation"],
+  "models": ["state-spaces/mamba-130m-hf", "EleutherAI/pythia-160m"],
+  "families": ["structured_repetitive", "periodic_pattern", "interleaved_distractor", "semantic_distractor"],
+  "negative_control": "lexically_diverse",
+  "seeds": [61, 62],
+  "budgets": [256, 1792],
+  "valid_records": 40,
+  "runtime_failures": 0,
+  "architecture_dependence": "candidate_risk_proximity_only_not_confirmed",
+  "artifacts": ["results/architecture_comparison_round_026.json"],
+  "transformer_cache_policy": "behavior comparison only; KV cache not treated as SSM recurrent state",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 162, "total": 162, "status": "passed"},
+  "failures": [{"step": "initial margin implementation", "error": "A/B prompts both used logit(B)-logit(A), making A prompt negative by construction", "resolution": "discarded initial result and reran with direction-specific signed margins"}]
+}

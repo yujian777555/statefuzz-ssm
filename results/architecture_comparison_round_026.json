@@ -1,0 +1,24 @@
+{
+  "round": 26,
+  "models": [
+    {"model_id": "state-spaces/mamba-130m-hf", "architecture": "Mamba", "role": "ssm_primary", "state_diagnostics": "direct recurrent cache"},
+    {"model_id": "EleutherAI/pythia-160m", "architecture": "GPT-NeoX", "role": "transformer_control", "state_diagnostics": "not_applicable; KV cache not treated as recurrent state"}
+  ],
+  "families": ["structured_repetitive", "periodic_pattern", "interleaved_distractor", "semantic_distractor", "lexically_diverse"],
+  "seeds": [61, 62],
+  "target_budgets": [256, 1792],
+  "valid_records": {"state-spaces/mamba-130m-hf": 20, "EleutherAI/pythia-160m": 20},
+  "actual_token_ranges": {
+    "mamba": {"structured_repetitive": [257, 1791], "periodic_pattern": [252, 1792], "interleaved_distractor": [250, 1795], "semantic_distractor": [256, 1796], "lexically_diverse": [253, 1803]},
+    "pythia": {"structured_repetitive": [257, 1791], "periodic_pattern": [252, 1792], "interleaved_distractor": [250, 1795], "semantic_distractor": [256, 1796], "lexically_diverse": [253, 1803]}
+  },
+  "directional_failure_counts": {"state-spaces/mamba-130m-hf": 0, "EleutherAI/pythia-160m": 0},
+  "observations": {
+    "mamba_1792_margin_proximity": "structured_repetitive minimum 0.031 and semantic_distractor minimum 0.227; positive but near decision boundary",
+    "pythia_1792_margin_proximity": "all listed family minima >= 2.5",
+    "architecture_dependence": "not_confirmed by this small held-out matrix; Mamba shows closer risk proximity, not a significant failure gap",
+    "negative_control": "lexically_diverse included for both models"
+  },
+  "claim_scope": "比较支持架构感知诊断，不支持所有SSM或普适长上下文边界结论。",
+  "fast_cuda_kernels": "unavailable; sequential Transformers Mamba path used"
+}
