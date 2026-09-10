@@ -1,32 +1,39 @@
 # Latest Plan
 
-See `plans/plan_029.md`.
+See `plans/plan_030.md`.
 
-# Round 028 Review
+# Round 029 Decision
 
-Round 028 moved StateFuzz toward mitigation.
+The project has completed:
 
-Completed:
-- mitigation hypotheses;
-- synthetic stress evaluation;
-- realistic workload validation;
-- mitigation artifact generation.
+Discover → Diagnose → Transfer → Mitigate candidate
 
-Results:
-- strategies tested: memory_reinjection, context_anchor, retrieval_reminder;
-- synthetic valid records: 16;
-- realistic valid records: 48;
-- runtime failures: 0;
-- tests: 165/165 passed.
+Round 028 showed that mitigation is task-specific rather than universal.
 
-Scientific interpretation:
+Before final paper consolidation, one remaining reviewer risk must be addressed:
 
-Context anchoring provides task-specific improvement for code context dependency on tested models. No mitigation strategy is universally beneficial.
+> Are the findings only a small-model artifact?
 
-The project now has:
+# Round 030 Goal
 
-Discover → Diagnose → Mitigate candidate
+Large-scale validation.
 
-Round 029 focuses on final scientific consolidation rather than uncontrolled expansion.
+Objectives:
+
+- test larger SSM models;
+- evaluate stress-family robustness across scale;
+- verify mechanism intervention beyond Mamba-130M;
+- keep claims scoped.
+
+Priority:
+
+1. Mamba-370M;
+2. Mamba-790M if feasible;
+3. Mamba2 if available;
+4. one Transformer scale control.
+
+Important:
+
+Do not claim universal SSM weakness. The purpose is scale robustness analysis.
 
 Next executor: codex
