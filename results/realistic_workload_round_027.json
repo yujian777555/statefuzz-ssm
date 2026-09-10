@@ -1,0 +1,21 @@
+{
+  "round": 27,
+  "models": ["state-spaces/mamba-130m-hf", "EleutherAI/pythia-160m"],
+  "task_types": ["long_document_retrieval", "code_context_dependency", "agent_conversation_memory"],
+  "families": ["structured_repetitive", "periodic_pattern", "interleaved_distractor", "semantic_distractor"],
+  "seeds": [63, 64],
+  "distractor_count": 64,
+  "records": {"state-spaces/mamba-130m-hf": 24, "EleutherAI/pythia-160m": 24},
+  "actual_token_ranges": {"mamba": [614, 1301], "pythia": [614, 1301]},
+  "behavior_success_rates": {
+    "state-spaces/mamba-130m-hf": {"long_document_retrieval": 0.75, "code_context_dependency": 0.5, "agent_conversation_memory": 0.875},
+    "EleutherAI/pythia-160m": {"long_document_retrieval": 0.625, "code_context_dependency": 0.625, "agent_conversation_memory": 0.75}
+  },
+  "family_success_rates": {
+    "state-spaces/mamba-130m-hf": {"structured_repetitive": 0.667, "periodic_pattern": 0.667, "interleaved_distractor": 0.667, "semantic_distractor": 0.833},
+    "EleutherAI/pythia-160m": {"structured_repetitive": 0.833, "periodic_pattern": 0.5, "interleaved_distractor": 0.667, "semantic_distractor": 0.667}
+  },
+  "transfer_conclusion": "四类压力族均能进入现实任务管线；现实任务中出现部分成功率下降，支持合成压力分析具有实践相关性，但未形成架构级显著差异。",
+  "limitations": ["任务为受控现实启发模板而非真实用户数据", "仅两个模型和两个种子", "只比较行为，不比较KV cache与SSM recurrent state", "不支持普适SSM记忆主张"],
+  "fast_cuda_kernels": "unavailable; sequential Transformers Mamba path used"
+}

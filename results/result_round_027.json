@@ -1,0 +1,14 @@
+{
+  "round": 27,
+  "plan": "plans/plan_027.md",
+  "completed": ["realistic_memory_tasks", "cross_model_behavior_evaluation", "stress_family_transfer", "paper_evidence_artifact"],
+  "task_types": ["long_document_retrieval", "code_context_dependency", "agent_conversation_memory"],
+  "models": ["state-spaces/mamba-130m-hf", "EleutherAI/pythia-160m"],
+  "valid_records": 48,
+  "runtime_failures": 0,
+  "artifact": "results/realistic_workload_round_027.json",
+  "transfer_supported": true,
+  "claim_scope": "现实启发受控任务中的行为迁移证据，不是所有真实长上下文任务或所有SSM的普遍结论。",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 164, "total": 164, "status": "passed"},
+  "failures": [{"step": "VM文件同步", "error": "远端缺少src/statefuzz/tasks目录，首次scp失败", "resolution": "创建目录后重新同步，评估正常完成"}]
+}
