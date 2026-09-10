@@ -1,44 +1,49 @@
 # Latest Plan
 
-See `plans/plan_027.md`.
+See `plans/plan_028.md`.
 
-# Round 026 Review
+# Round 027 Review
 
-Round 026 expanded StateFuzz along the architecture axis.
+Round 027 validated transfer from synthetic stress discovery to realistic controlled workloads.
 
 Completed:
-- model matrix support;
-- cross-model stress evaluation;
-- architecture-aware analysis;
-- paper artifact generation.
-
-Current evidence:
-
-StateFuzz evaluates the same stress families across Mamba-130M and Pythia-160M. Architecture dependence remains a candidate finding and is not yet a confirmed universal property.
-
-Important correction:
-
-- The first signed-margin implementation contained a construction artifact because both A/B prompts used the same direction.
-- Invalid results were discarded.
-- Experiments were rerun using direction-specific signed margins.
-
-Round 027 moves from controlled synthetic stress discovery toward realistic long-context workloads.
-
-Goal:
-
-Determine whether discovered stress patterns transfer to practical memory scenarios.
-
-Workloads:
-
 - long document retrieval;
 - code context dependency;
-- agent conversation memory.
+- agent conversation memory;
+- cross-model behavioral evaluation;
+- stress-family transfer analysis.
 
-Requirements:
+Results:
+- 48 valid records;
+- 164/164 tests passed;
+- transfer_supported=true.
 
-- preserve frozen evaluation protocols;
-- report actual token lengths;
-- avoid KV-cache/recurrent-state equivalence claims;
-- keep all architecture claims scoped.
+The realistic workload artifact shows:
+- Mamba-130M and Pythia-160M can both be evaluated through the same workload pipeline;
+- four stress families transfer into realistic workload templates;
+- degradation exists, but architecture-level superiority is not established.
+
+Scientific interpretation:
+
+StateFuzz has moved beyond synthetic-only analysis. The current evidence supports practical relevance of discovered stress factors, while keeping claims scoped to controlled realistic workloads.
+
+# Round 028 Goal
+
+Move from:
+
+Discover → Diagnose
+
+into:
+
+Discover → Diagnose → Mitigate
+
+Evaluate lightweight interventions that can reduce discovered memory failures without changing model weights.
+
+Candidate interventions:
+- memory refresh/reinjection;
+- state/context anchoring;
+- retrieval-assisted reminder.
+
+Success requires measurable improvement on frozen stress conditions and at least one realistic workload.
 
 Next executor: codex
