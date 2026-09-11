@@ -4,36 +4,37 @@ See `plans/plan_031.md`.
 
 # Round 030 Review
 
-Round 030 did not produce larger-model scientific results because checkpoint access was blocked.
+Round 030 did not produce larger-model scientific results because checkpoint access was blocked. That remains an infrastructure limitation, not evidence that scale removes the phenomenon.
 
-Verified blockers:
-- `state-spaces/mamba-370m-hf` download timed out;
-- no local Mamba-370M/790M/Mamba2 checkpoint was found;
-- ModelScope fallback was unavailable because package installation/DNS failed;
-- full tests still pass 165/165.
+# Round 031 Local Checkpoint Update
 
-Scientific interpretation:
+A hybrid checkpoint is now available locally on the execution VM:
 
-Round 030 is an infrastructure/checkpoint blocker, not evidence that scale removes the phenomenon. No scale law or universal SSM conclusion is supported.
+```text
+Zyphra/Zamba2-1.2B-Instruct-v2
+/202532803004/models/Zamba2-1.2B-Instruct-v2
+```
 
-# Round 031 Decision
+The user verified the directory contains:
+- `config.json`
+- `model.safetensors`
+- `tokenizer.json`
+- tokenizer metadata
+- generation/configuration files
 
-Instead of repeatedly retrying unavailable larger Mamba checkpoints, test a hybrid SSM-attention architecture using a frozen StateFuzz protocol.
+Executor requirements:
 
-Primary candidate:
-- `Zyphra/Zamba2-1.2B` (base hybrid Mamba2 + Transformer architecture)
+1. Use the exact local path above; do not download from Hugging Face or ModelScope.
+2. Prefer offline/local loading (`local_files_only=True` where supported).
+3. First perform a runtime compatibility and short forward-pass gate.
+4. Because this is an **instruction-tuned** Zamba2 variant rather than the originally planned base checkpoint, record `instruction_tuning_confound=true`.
+5. Treat Round 031 as a hybrid stress-transfer probe, not an architecture-causal comparison against base Mamba/Pythia checkpoints.
+6. Establish short-context remote-memory validity before any long-context sweep.
+7. Run the frozen stress families and negative control only after validity passes.
+8. Compare within-model normalized degradation, not raw cross-model quality.
+9. Keep Attention KV cache and Mamba2 recurrent state separate in diagnostics.
+10. If both memory paths are observable, leave causal path-localization for a possible Round 032.
 
-Round 031 priorities:
-
-1. hard checkpoint-availability gate with no infinite retries;
-2. hybrid model capability metadata;
-3. short-context remote-memory validity before stress testing;
-4. frozen stress-family fingerprint over structured repetition, periodic, interleaved distractor, semantic distractor, and lexically diverse control;
-5. compare within-model normalized degradation, not raw quality;
-6. separately inspect SSM recurrent state and attention-cache observability;
-7. optional single realistic-workload spot check;
-8. no architecture-causal claim because model scale/training data are unmatched.
-
-If the hybrid checkpoint is unavailable, record the blocker cleanly rather than fabricating or substituting a post-hoc model.
+The detailed execution contract is in `plans/plan_031.md`.
 
 Next executor: codex
