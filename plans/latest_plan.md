@@ -1,39 +1,39 @@
 # Latest Plan
 
-See `plans/plan_030.md`.
+See `plans/plan_031.md`.
 
-# Round 029 Decision
+# Round 030 Review
 
-The project has completed:
+Round 030 did not produce larger-model scientific results because checkpoint access was blocked.
 
-Discover → Diagnose → Transfer → Mitigate candidate
+Verified blockers:
+- `state-spaces/mamba-370m-hf` download timed out;
+- no local Mamba-370M/790M/Mamba2 checkpoint was found;
+- ModelScope fallback was unavailable because package installation/DNS failed;
+- full tests still pass 165/165.
 
-Round 028 showed that mitigation is task-specific rather than universal.
+Scientific interpretation:
 
-Before final paper consolidation, one remaining reviewer risk must be addressed:
+Round 030 is an infrastructure/checkpoint blocker, not evidence that scale removes the phenomenon. No scale law or universal SSM conclusion is supported.
 
-> Are the findings only a small-model artifact?
+# Round 031 Decision
 
-# Round 030 Goal
+Instead of repeatedly retrying unavailable larger Mamba checkpoints, test a hybrid SSM-attention architecture using a frozen StateFuzz protocol.
 
-Large-scale validation.
+Primary candidate:
+- `Zyphra/Zamba2-1.2B` (base hybrid Mamba2 + Transformer architecture)
 
-Objectives:
+Round 031 priorities:
 
-- test larger SSM models;
-- evaluate stress-family robustness across scale;
-- verify mechanism intervention beyond Mamba-130M;
-- keep claims scoped.
+1. hard checkpoint-availability gate with no infinite retries;
+2. hybrid model capability metadata;
+3. short-context remote-memory validity before stress testing;
+4. frozen stress-family fingerprint over structured repetition, periodic, interleaved distractor, semantic distractor, and lexically diverse control;
+5. compare within-model normalized degradation, not raw quality;
+6. separately inspect SSM recurrent state and attention-cache observability;
+7. optional single realistic-workload spot check;
+8. no architecture-causal claim because model scale/training data are unmatched.
 
-Priority:
-
-1. Mamba-370M;
-2. Mamba-790M if feasible;
-3. Mamba2 if available;
-4. one Transformer scale control.
-
-Important:
-
-Do not claim universal SSM weakness. The purpose is scale robustness analysis.
+If the hybrid checkpoint is unavailable, record the blocker cleanly rather than fabricating or substituting a post-hoc model.
 
 Next executor: codex
