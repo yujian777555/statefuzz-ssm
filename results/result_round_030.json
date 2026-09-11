@@ -1,0 +1,13 @@
+{
+  "round": 30,
+  "plan": "plans/plan_030.md",
+  "status": "blocked_by_checkpoint_availability",
+  "completed": ["checkpoint_inventory", "resource_diagnostics", "scope_limit_documentation"],
+  "not_completed": ["Mamba-370M evaluation", "Mamba-790M evaluation", "Mamba2 evaluation", "larger-scale intervention validation"],
+  "artifact": "results/scale_validation_round_030.json",
+  "tests": {"command": "python -m pytest -q -o addopts=''", "passed": 165, "total": 165, "status": "passed"},
+  "failures": [
+    {"step": "Mamba-370M download", "error": "Hugging Face connection timeout; no cache created", "resolution": "stopped download attempts and recorded blocker"},
+    {"step": "ModelScope fallback", "error": "ModelScope package unavailable; pip DNS failed for pypi.ngc.nvidia.com", "resolution": "recorded unavailable dependency path"}
+  ]
+}
