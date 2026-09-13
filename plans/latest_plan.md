@@ -2,34 +2,113 @@
 
 See `plans/plan_031.md` for the full executable plan.
 
-Also follow the persistent planning standard in:
+Also follow:
 
 ```text
 docs/PLANNER_EXECUTION_CONTRACT.md
 ```
 
-# Round 031 Execution Context - IMPORTANT
+# Round 031 - Authoritative Corrections
 
-The Executor/Codex must run the scientific experiment on the **user-provided experiment VM/container** that contains the downloaded model checkpoint.
+## 1. Metric semantics
 
-The model path:
+The canonical StateFuzz directional margins are both **direction-correct signed margins**:
+
+```text
+dA = logit(A | Prompt A) - logit(B | Prompt A)
+dB = logit(B | Prompt B) - logit(A | Prompt B)
+```
+
+Therefore:
+
+```text
+memory_signal = (dA + dB) / 2
+lexical_bias  = (dA - dB) / 2
+min_signed_margin = min(dA, dB)
+failure = min_signed_margin <= 0
+```
+
+Sanity check that must be tested:
+
+```text
+dA = +2, dB = +2
+=> memory_signal = +2
+=> lexical_bias = 0
+```
+
+The previous Round 031 plan text had these two decomposition formulas reversed. That wording is superseded. The repository's existing `src/statefuzz/analyzer/memory_dependence.py` implementation already uses the correct equivalent decomposition by first converting Prompt B back to raw A-minus-B preference.
+
+All Round 031 records must preserve the four primitive logits:
+
+```text
+logit(A | Prompt A)
+logit(B | Prompt A)
+logit(A | Prompt B)
+logit(B | Prompt B)
+```
+
+plus `dA`, `dB`, `memory_signal`, `lexical_bias`, and `min_signed_margin` so derived metrics can be independently recomputed.
+
+## 2. Short-context gate is strictly 256±8 actual tokens
+
+A previously observed ~850-token scan is **not compliant evidence** for the Round 031 short-context gate.
+
+Required gate:
+
+```text
+target_tokens = 256
+tolerance_tokens = 8
+acceptable actual tokens = 248..264 inclusive
+```
+
+Use the existing `fit_remote_memory_pair_to_token_budget()` with the **actual Zamba2 tokenizer**.
+
+For every seed `[65,66,67,68]`, the selected pair must satisfy:
+
+```text
+fit.status == "ok"
+248 <= actual_input_tokens <= 264
+Prompt A token count == Prompt B token count
+candidate A = one token
+candidate B = one token
+candidate IDs distinct
+dA > 0
+dB > 0
+all logits finite
+```
+
+If 256±8 cannot be reached, record `short_context_budget_unreachable`; do not substitute 850 or another convenient length.
+
+The old ~850-token result may be retained only as:
+
+```json
+{
+  "protocol_role": "exploratory_noncompliant_scan",
+  "counts_as_round031_short_context_gate": false
+}
+```
+
+## 3. All long-context budgets also use actual-token fitting
+
+Frozen targets:
+
+```text
+256, 768, 1280, 1792, 2560, 3584
+```
+
+Each target has tolerance `±8` actual tokenizer tokens. Any cell outside tolerance is `budget_unreachable`; do not silently accept materially different lengths.
+
+# Execution VM / checkpoint
+
+Codex must execute on the user-provided experiment VM/container where this path is visible:
 
 ```text
 /202532803004/models/Zamba2-1.2B-Instruct-v2
 ```
 
-means the filesystem path **inside that experiment VM/container**.
+This means the filesystem inside that VM/container, not Planner/ChatGPT, GitHub, or another Codex machine.
 
-It does **not** mean:
-
-- the Planner/ChatGPT runtime;
-- GitHub storage;
-- Codex cloud-local storage on another machine;
-- an arbitrary local workstation.
-
-Before any experiment, Codex must prove from its own execution shell that this exact VM path is visible.
-
-Required preflight commands:
+Before execution:
 
 ```bash
 set -e
@@ -42,177 +121,72 @@ nvidia-smi || true
 
 CHECKPOINT=/202532803004/models/Zamba2-1.2B-Instruct-v2
 ls -lah "$CHECKPOINT"
-test -d "$CHECKPOINT"
 test -f "$CHECKPOINT/config.json"
 test -f "$CHECKPOINT/model.safetensors"
 test -f "$CHECKPOINT/tokenizer.json"
 du -sh "$CHECKPOINT"
-```
 
-The user has already verified the directory is approximately `2.3G` and contains:
-
-- `config.json`
-- `configuration.json`
-- `generation_config.json`
-- `model.safetensors`
-- `tokenizer.json`
-- tokenizer metadata.
-
-If Codex cannot see this path from its actual execution process, it must stop with:
-
-```text
-vm_checkpoint_path_not_visible
-```
-
-and must **not** download another checkpoint or silently run elsewhere.
-
-# Offline Loading Requirement
-
-For the Round 031 scientific run, set:
-
-```bash
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1
 ```
 
-The primary execution path must use:
+Use `local_files_only=True` where supported. No model download or checkpoint substitution is allowed during the scientific run.
 
-```text
-/202532803004/models/Zamba2-1.2B-Instruct-v2
-```
-
-with `local_files_only=True` where supported.
-
-No Hugging Face/ModelScope model download is allowed during the experiment.
-
-# Implementation Direction
-
-Do not repurpose the existing `HFCausalLMRunner` as if Hybrid were a Transformer control. Current `HFCausalLMRunner` is explicitly a Transformer behavior-control runner and reports `architecture_role="transformer_control"`.
-
-Preferred new files:
-
-```text
-src/statefuzz/runner/hybrid_causal_lm_runner.py
-tests/runner/test_hybrid_causal_lm_runner.py
-src/statefuzz/analyzer/stress_fingerprint.py
-tests/analyzer/test_stress_fingerprint.py
-```
-
-Reuse prior remote-memory generators/scoring logic, including direction-specific signed margins.
-
-# Scientific Protocol
+# Scientific scope
 
 Checkpoint:
 
 ```text
 Zyphra/Zamba2-1.2B-Instruct-v2
-VM path: /202532803004/models/Zamba2-1.2B-Instruct-v2
 ```
 
-This is an instruction-tuned Hybrid checkpoint. Therefore:
+Because this is instruction tuned and historical Mamba/Pythia controls are unmatched base checkpoints:
 
 ```text
 instruction_tuning_confound = true
 architecture_causality_confirmed = false
+scale_confound = true
+training_data_confound = true
 ```
 
-Frozen seeds:
+Round 031 is a Hybrid stress-transfer/fingerprint experiment, not clean architecture causality.
+
+# Required execution order
 
 ```text
-65, 66, 67, 68
+VM/path visibility
+-> offline runtime compatibility
+-> metric-regression tests
+-> exact 256±8 short-context validity
+-> exact-budget frozen stress sweep
+-> normalized within-model fingerprint
+-> separate Attention-cache / SSM-state observability
+-> optional code_context_dependency spot check
+-> result JSON + full tests + handoff
 ```
 
-Frozen stress families:
+Do not continue past a failed hard gate.
 
-```text
-structured_repetitive
-periodic_pattern
-interleaved_distractor
-semantic_distractor
-lexically_diverse   # negative control
-```
-
-Frozen target budgets:
-
-```text
-256, 768, 1280, 1792, 2560, 3584 actual tokens
-```
-
-Predeclared value-pair order:
-
-```text
-(" red", " blue")
-(" one", " two")
-(" cat", " dog")
-```
-
-The first pair that passes tokenizer and short-context validity is used. Do not select based on long-context outcomes.
-
-# Execution Gates
-
-Codex must pass these gates in order:
-
-1. **VM path visibility**
-2. **offline config/tokenizer/model load**
-3. **short forward-pass runtime compatibility**
-4. **short-context remote-memory validity**
-5. **frozen stress-family sweep**
-6. **normalized fingerprint comparison**
-7. **separate Attention-cache vs SSM-state observability inspection**
-8. optional `code_context_dependency` realistic spot check
-
-Do not continue to later gates when an earlier gate fails.
-
-# Required Artifacts
-
-If evaluation completes:
+# Required artifacts
 
 ```text
 results/result_round_031.json
 results/hybrid_stress_round_031.json
 ```
 
-`results/result_round_031.json` must record at minimum:
+The result must explicitly include:
 
-- actual VM hostname;
-- Python executable/version;
-- GPU/runtime information;
-- exact checkpoint path actually used;
-- checkpoint visible from Executor: true/false;
-- offline loading status;
-- checkpoint variant;
-- instruction-tuning confound;
-- selected value pair;
-- short-context validity;
-- stress fingerprint summary;
-- comparison to historical models;
-- Attention-cache observability;
-- SSM recurrent-state observability;
-- runtime failures separately from scientific failures;
+- actual VM/runtime identity;
+- exact checkpoint path;
+- metric definitions;
+- short-gate target/tolerance/actual counts;
+- whether any old 850-token scan was excluded from compliant evidence;
+- selected pair;
+- raw logits and directional margins;
+- stress fingerprint;
+- cache/state observability;
+- runtime failures separate from scientific failures;
 - tests.
-
-# Claim Boundary
-
-Round 031 may establish that StateFuzz transfers to this Hybrid checkpoint and characterize its stress-response fingerprint.
-
-Round 031 must **not** claim that Hybrid architecture itself causes any robustness difference, because model scale, training data, and instruction tuning are unmatched.
-
-# Persistent Planner Requirement
-
-All future Planner rounds must follow `docs/PLANNER_EXECUTION_CONTRACT.md` and include, at minimum:
-
-- explicit execution machine/environment;
-- exact absolute model/data paths;
-- exact files/functions to modify;
-- exact frozen seeds/tasks/budgets/controls;
-- exact commands to execute;
-- result artifact schemas;
-- infrastructure-vs-scientific failure separation;
-- verification commands;
-- success criteria;
-- scientific claim boundaries.
-
-Future plans should not rely on vague wording such as "load locally", "run on GPU", "test larger models", or "validate Hybrid" without specifying where, how, with what path, and how success/failure is decided.
 
 Next executor: codex
