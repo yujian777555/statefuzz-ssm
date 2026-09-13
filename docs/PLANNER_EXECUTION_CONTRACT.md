@@ -132,3 +132,61 @@ Before creating the next round, Planner must read:
 5. any runtime/checkpoint metadata needed to distinguish infrastructure issues from scientific evidence.
 
 Future plans should prefer explicit, executable detail over short high-level summaries.
+
+## 11. Metric semantics must be defined from primitive quantities
+
+Whenever a plan introduces or reuses a derived scientific metric, it must define the metric from the primitive measured quantities before giving shorthand formulas.
+
+For logit-based paired probes, a plan must specify at minimum:
+
+- which prompt each logit comes from;
+- which candidate each logit refers to;
+- the sign convention of each directional margin;
+- the formula for every derived metric;
+- the interpretation of the sign;
+- at least one numeric sanity-check case;
+- which existing canonical implementation/function should be reused.
+
+Do not write ambiguous formulas such as `(dA-dB)/2` unless `dA` and `dB` are defined immediately and unambiguously.
+
+If two coordinate systems are used (for example direction-correct margins vs raw A-minus-B preferences), the plan must show the conversion explicitly.
+
+For the current StateFuzz remote-memory probe, the canonical convention is:
+
+```text
+l_AA = logit(A | Prompt A)
+l_BA = logit(B | Prompt A)
+l_AB = logit(A | Prompt B)
+l_BB = logit(B | Prompt B)
+
+dA = l_AA - l_BA
+dB = l_BB - l_AB
+
+memory_signal = (dA + dB) / 2
+lexical_bias  = (dA - dB) / 2
+```
+
+Sanity check:
+
+```text
+dA = +2, dB = +2
+=> memory_signal = +2
+=> lexical_bias = 0
+```
+
+Plans must require storage of primitive measurements when practical so derived metrics can be independently recomputed.
+
+## 12. Token-budget language must be operational, not approximate
+
+If a plan says a task runs at a target token budget, it must specify:
+
+- which tokenizer defines the count;
+- target token count;
+- allowed tolerance;
+- fitting method;
+- behavior when the target cannot be reached;
+- whether previously collected off-budget data is compliant, exploratory, or inadmissible.
+
+Avoid phrases like "about 256 tokens" without a numeric tolerance.
+
+For experiments using `fit_remote_memory_pair_to_token_budget`, the plan should give explicit `target_tokens` and `tolerance_tokens`, and store the achieved actual count in the result artifact.
