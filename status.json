@@ -3,5 +3,6 @@
   "last_result":"results/result_round_033.json",
   "next":"codex",
   "previous_actor":"gpt",
-  "round":34
+  "round":34,
+  "phase":"discovery"
 }
