@@ -4,6 +4,7 @@ from pathlib import Path
 import math
 
 from .hf_causal_lm_runner import HFCausalLMRunner
+from .hybrid_cache_intervention import clone_cache_independent
 from statefuzz.analyzer.memory_dependence import compute_pairwise_memory_metrics, decompose_pairwise_preference
 
 
@@ -47,6 +48,74 @@ class HybridCausalLMRunner(HFCausalLMRunner):
             raise ValueError('候选logits不是有限数')
         result['state_source'] = 'hybrid_behavior_only'
         return result
+
+    def encode_prompt_ids(self, prompt):
+        """返回不含特殊token的单批次CPU token IDs。"""
+        if not isinstance(prompt, str) or not prompt:
+            raise ValueError('prompt必须是非空字符串')
+        encoded = self._tokenizer(
+            prompt, return_tensors='pt', add_special_tokens=False
+        )['input_ids']
+        if encoded.ndim != 2 or encoded.shape[0] != 1:
+            raise ValueError('tokenizer必须返回单批次input_ids')
+        return encoded.detach().clone().cpu()
+
+    def run_body_to_cache(self, body_input_ids):
+        """运行body并返回与输出相互独立的混合DynamicCache。"""
+        import torch
+
+        ids = torch.as_tensor(body_input_ids)
+        if ids.ndim == 1:
+            ids = ids.unsqueeze(0)
+        if ids.ndim != 2 or ids.shape[0] != 1 or ids.shape[1] == 0:
+            raise ValueError('body_input_ids必须是非空单批次token IDs')
+        with torch.inference_mode():
+            output = self._model(
+                input_ids=ids.to(self._model.device),
+                use_cache=True,
+                return_dict=True,
+            )
+        cache = getattr(output, 'past_key_values', None)
+        if cache is None:
+            raise RuntimeError('模型输出没有past_key_values')
+        return clone_cache_independent(cache)
+
+    def score_tail_from_cache(
+        self, tail_input_ids, past_key_values, candidate_token_ids
+    ):
+        """在独立cache副本上运行共同tail并返回原始候选logits。"""
+        import torch
+
+        ids = torch.as_tensor(tail_input_ids)
+        if ids.ndim == 1:
+            ids = ids.unsqueeze(0)
+        if ids.ndim != 2 or ids.shape[0] != 1 or ids.shape[1] == 0:
+            raise ValueError('tail_input_ids必须是非空单批次token IDs')
+        if not candidate_token_ids or any(
+            isinstance(token, bool) or not isinstance(token, int)
+            for token in candidate_token_ids
+        ):
+            raise ValueError('candidate_token_ids必须是非空整数列表')
+        cache = clone_cache_independent(past_key_values)
+        with torch.inference_mode():
+            output = None
+            device_ids = ids.to(self._model.device)
+            # Zamba2的naive SSM增量路径在已有状态时采用单步解码语义；
+            # 批量传入多个tail token不会重建完整forward，必须逐token推进。
+            for index in range(device_ids.shape[1]):
+                output = self._model(
+                    input_ids=device_ids[:, index : index + 1],
+                    past_key_values=cache,
+                    use_cache=True,
+                    return_dict=True,
+                )
+                cache = getattr(output, 'past_key_values', cache)
+            assert output is not None
+            logits = output.logits[0, -1].float().detach().cpu()
+        values = {int(token): float(logits[int(token)].item()) for token in candidate_token_ids}
+        if not all(math.isfinite(value) for value in values.values()):
+            raise ValueError('候选logits不是有限数')
+        return {'candidate_logits': values, 'past_key_values': cache}
 
     def score_remote_memory_pair(self, pair, **kwargs):
         result = super().score_remote_memory_pair(pair, **kwargs)

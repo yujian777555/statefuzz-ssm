@@ -1,0 +1,222 @@
+{
+  "round": 32,
+  "status": "hybrid_path_localization_complete",
+  "checkpoint": {
+    "name": "Zyphra/Zamba2-1.2B-Instruct-v2",
+    "path": "/202532803004/models/Zamba2-1.2B-Instruct-v2",
+    "offline_loading": true
+  },
+  "seeds": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+  ],
+  "families": [
+    "structured_repetitive",
+    "lexically_diverse"
+  ],
+  "budgets": [
+    256,
+    1792,
+    3584
+  ],
+  "reconstruction_summary": [
+    {
+      "stress_family": "structured_repetitive",
+      "target_budget": 256,
+      "cell_count": 8,
+      "valid_count": 4,
+      "status_counts": {
+        "ok": 4,
+        "cache_reconstruction_invalid": 4
+      }
+    },
+    {
+      "stress_family": "structured_repetitive",
+      "target_budget": 1792,
+      "cell_count": 8,
+      "valid_count": 0,
+      "status_counts": {
+        "cache_reconstruction_invalid": 8
+      }
+    },
+    {
+      "stress_family": "structured_repetitive",
+      "target_budget": 3584,
+      "cell_count": 8,
+      "valid_count": 0,
+      "status_counts": {
+        "cache_reconstruction_invalid": 8
+      }
+    },
+    {
+      "stress_family": "lexically_diverse",
+      "target_budget": 256,
+      "cell_count": 8,
+      "valid_count": 0,
+      "status_counts": {
+        "cache_reconstruction_invalid": 8
+      }
+    },
+    {
+      "stress_family": "lexically_diverse",
+      "target_budget": 1792,
+      "cell_count": 8,
+      "valid_count": 0,
+      "status_counts": {
+        "budget_unreachable": 8
+      }
+    },
+    {
+      "stress_family": "lexically_diverse",
+      "target_budget": 3584,
+      "cell_count": 8,
+      "valid_count": 0,
+      "status_counts": {
+        "cache_reconstruction_invalid": 8
+      }
+    }
+  ],
+  "sham_full_donor_controls": {
+    "direction_record_count": 8,
+    "protocol_valid_direction_count": 8,
+    "cache_clone_invalid_count": 0,
+    "full_donor_invalid_count": 0,
+    "separation_too_small_count": 0
+  },
+  "ssm_path_summary": [
+    {
+      "stress_family": "structured_repetitive",
+      "target_budget": 256,
+      "path": "ssm",
+      "valid_seed_count": 4,
+      "mean_transfer_ratio": 0.5591319331201252,
+      "median_transfer_ratio": 0.5573303822175741,
+      "standard_deviation": 0.0056586787739454645,
+      "donor_movement_seed_count": 4,
+      "bootstrap_95_ci": [
+        0.5553236093591771,
+        0.5644401819741072
+      ],
+      "causal_influence_candidate": false,
+      "seed_level": [
+        {
+          "seed": 69,
+          "mean_transfer_ratio": 0.55863539445629,
+          "both_directions_toward_donor": true
+        },
+        {
+          "seed": 71,
+          "mean_transfer_ratio": 0.5672451193058567,
+          "both_directions_toward_donor": true
+        },
+        {
+          "seed": 73,
+          "mean_transfer_ratio": 0.5546218487394958,
+          "both_directions_toward_donor": true
+        },
+        {
+          "seed": 74,
+          "mean_transfer_ratio": 0.5560253699788584,
+          "both_directions_toward_donor": true
+        }
+      ]
+    }
+  ],
+  "attention_path_summary": [
+    {
+      "stress_family": "structured_repetitive",
+      "target_budget": 256,
+      "path": "attention",
+      "valid_seed_count": 4,
+      "mean_transfer_ratio": 0.4408680668798748,
+      "median_transfer_ratio": 0.44266961778242586,
+      "standard_deviation": 0.005658678773945552,
+      "donor_movement_seed_count": 4,
+      "bootstrap_95_ci": [
+        0.4355598180258928,
+        0.444676390640823
+      ],
+      "causal_influence_candidate": false,
+      "seed_level": [
+        {
+          "seed": 69,
+          "mean_transfer_ratio": 0.44136460554371004,
+          "both_directions_toward_donor": true
+        },
+        {
+          "seed": 71,
+          "mean_transfer_ratio": 0.43275488069414314,
+          "both_directions_toward_donor": true
+        },
+        {
+          "seed": 73,
+          "mean_transfer_ratio": 0.44537815126050423,
+          "both_directions_toward_donor": true
+        },
+        {
+          "seed": 74,
+          "mean_transfer_ratio": 0.4439746300211417,
+          "both_directions_toward_donor": true
+        }
+      ]
+    }
+  ],
+  "length_dependence": [
+    {
+      "stress_family": "structured_repetitive",
+      "path": "attention",
+      "paired_seed_count": 0,
+      "mean_3584_minus_256": null,
+      "bootstrap_95_ci": null
+    },
+    {
+      "stress_family": "structured_repetitive",
+      "path": "ssm",
+      "paired_seed_count": 0,
+      "mean_3584_minus_256": null,
+      "bootstrap_95_ci": null
+    }
+  ],
+  "classification": "path_localization_inconclusive",
+  "claim_scope": "仅说明该Zamba2检查点中合规路径干预对供体内容偏好的影响；不证明混合架构优越、唯一存储路径或自然失败机制。",
+  "known_confounds": {
+    "scale": true,
+    "training_data": true,
+    "instruction_tuning": true,
+    "architecture_causality_confirmed": false
+  },
+  "failures": [
+    {
+      "step": "首次批量tail重建",
+      "error": "已有cache加8-token批量tail与直接forward不一致",
+      "resolution": "逐token推进后structured部分单元精确重建；其余不合规单元保留并排除"
+    },
+    {
+      "step": "重建协议",
+      "error": "部分单元在逐token和float32下仍超过1e-3",
+      "resolution": "标记cache_reconstruction_invalid，不执行干预"
+    },
+    {
+      "step": "GPU快速路径",
+      "error": "缺少Zamba2快速kernel",
+      "resolution": "使用naive实现"
+    }
+  ],
+  "tests": {
+    "cache_intervention": "3 passed",
+    "hybrid_runner": "4 passed",
+    "path_localization": "7 passed",
+    "artifact_validation": "1 passed",
+    "command": "python -m pytest -q -o addopts=''",
+    "passed": 185,
+    "total": 185,
+    "status": "passed"
+  },
+  "artifact": "results/hybrid_path_round_032.json"
+}
