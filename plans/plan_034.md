@@ -1,68 +1,178 @@
-# Round 34 Plan: Cross-architecture Stress Generalization
+# Round 34 Plan: Cross-architecture Stress Generalization (Executable Version)
 
-## Motivation
+## Objective
 
-Round32 attempted Hybrid SSM-Attention causal path localization. Round33 showed that the current cache replay intervention protocol is invalid for Hybrid generation state manipulation. This finding should be treated as a protocol limitation, not the main research direction.
+Return to the core StateFuzz contribution:
 
-The paper focus returns to the original StateFuzz objective:
+Automatically discover and diagnose memory failure modes in stateful sequence models.
 
-> Automatically discover and diagnose memory failure modes in stateful sequence models.
+Round33 showed that Hybrid cache replay intervention is invalid. Do not perform cache swap or claim Hybrid causal attribution in this round.
 
-Hybrid models remain an extension case, not the central mechanism claim.
+## Execution Environment
 
-## Goal
+All experiments must run on the experiment VM where checkpoints are stored.
 
-Evaluate whether StateFuzz discovers consistent but architecture-specific memory stress surfaces across SSM and Hybrid architectures.
+Before execution verify:
+
+```bash
+hostname
+python --version
+nvidia-smi
+```
+
+If a checkpoint path is unavailable, stop and report infrastructure failure.
 
 ## Models
 
-Primary:
-- Mamba family
-- Mamba2 family
+### Mamba baseline
 
-Extension:
-- Zamba2-1.2B-Instruct-v2
+Checkpoint: MUST use the exact VM path recorded in `model_paths.json` before execution.
 
-Do not claim Hybrid internal causal attribution in this round.
+Required fields:
+- model_id
+- checkpoint_path
+- sha/version if available
 
-## Experiments
+### Mamba2 baseline
 
-Use identical stress families:
-- structured repetition
-- periodic interference
-- distractor injection
-- lexically diverse long context
+Checkpoint: MUST use the exact VM path recorded in `model_paths.json` before execution.
 
-Measure:
-- signed margin degradation
-- failure probability
-- first failure boundary
-- stress sensitivity curve
+### Hybrid extension
 
-## Required analysis
+Checkpoint:
+
+```
+/202532803004/models/Zamba2-1.2B-Instruct-v2
+```
+
+Role: extension only. No internal memory attribution.
+
+## Fixed Evaluation Protocol
+
+Seeds:
+
+```
+69,70,71,72
+```
+
+If additional seeds are needed, add them before execution and record them.
+
+Stress families:
+
+1. structured_repetitive
+2. periodic_interference
+3. distractor_injection
+4. lexically_diverse
+
+Each stress family must map explicitly to:
+
+```
+stress_name -> generator_function -> output_file
+```
+
+## Token Budgets
+
+Required budgets:
+
+```
+256
+768
+1792
+3584
+```
+
+Tolerance:
+
+```
++/- 8 tokens
+```
+
+Actual token count must be recorded. No approximate lengths accepted.
+
+## Candidate Selection
+
+For each stress family:
+
+- Keep candidate generation deterministic.
+- Record candidate pair IDs.
+- Preserve red/blue candidate values.
+- Do not manually select successful examples after observing results.
+
+## Required Raw Evidence
+
+Every evaluation record must contain:
+
+```json
+{
+  "seed": int,
+  "model_id": string,
+  "stress_family": string,
+  "token_budget": int,
+  "actual_tokens": int,
+  "candidate_a": string,
+  "candidate_b": string,
+  "logits": {
+    "a": float,
+    "b": float
+  },
+  "signed_margin": float
+}
+```
+
+Derived metrics must be recomputable from raw logits.
+
+## Output Files
+
+Required:
+
+```
+results/result_round_034.json
+results/stress_generalization_round_034.json
+```
+
+## Verify Commands
+
+Before reporting completion:
+
+```bash
+python -m pytest
+python scripts/round034_stress_generalization.py --verify
+```
+
+Verify:
+
+- all seeds present
+- all models present
+- all stress families present
+- token budgets within tolerance
+- raw logits preserved
+- no cache intervention used
+
+## Analysis
 
 Compare:
 
-architecture -> stress fingerprint -> failure boundary
+```
+architecture
+    -> stress fingerprint
+    -> failure boundary
+    -> memory weakness pattern
+```
 
-Do not only report accuracy. Report the discovered failure mechanism pattern.
+Do not only report accuracy.
 
-## Constraints
+## Success Criteria
 
-- Keep seeds explicit.
-- Preserve raw logits.
-- Preserve token budgets.
-- Do not use invalid cache intervention.
-- Separate infrastructure failure from scientific failure.
-
-## Success criteria
-
-A successful round should answer:
+Answer:
 
 1. Does StateFuzz transfer across architectures?
 2. Are failure surfaces architecture dependent?
-3. Can the same stress family reveal different memory weaknesses?
+3. Can identical stress families expose different memory weaknesses?
 
-## Stop condition
+## Stop Conditions
 
-If no stable architecture-dependent pattern is found after controlled evaluation, report negative evidence rather than extending experiments.
+If no stable pattern appears:
+
+Report negative evidence.
+
+Do not expand models, seeds, or stress families without a new plan.
