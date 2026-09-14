@@ -1,0 +1,3305 @@
+{
+  "round": 33,
+  "status": "hybrid_cache_protocol_invalid",
+  "checkpoint": {
+    "name": "Zyphra/Zamba2-1.2B-Instruct-v2",
+    "path": "/202532803004/models/Zamba2-1.2B-Instruct-v2",
+    "offline_loading": true
+  },
+  "seeds": [
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+  ],
+  "families": [
+    "structured_repetitive",
+    "lexically_diverse"
+  ],
+  "protocol_assumption": "Round33未重新列出family，因此沿用Round32冻结的structured_repetitive与lexically_diverse。",
+  "budgets": [
+    256,
+    1792,
+    3584
+  ],
+  "replay_semantics": "prefill_body_then_prepare_inputs_for_generation_tail_token_by_token",
+  "reconstruction_summary": {
+    "evaluated_count": 40,
+    "valid_count": 0,
+    "reconstruction_valid_rate": 0.0,
+    "required_valid_rate": 0.9,
+    "status": "hybrid_cache_protocol_invalid",
+    "groups": [
+      {
+        "stress_family": "structured_repetitive",
+        "target_budget": 256,
+        "cell_count": 8,
+        "evaluated_count": 8,
+        "valid_count": 0,
+        "valid_rate": 0.0,
+        "mean_max_logit_diff": 19.0166015625,
+        "maximum_logit_diff": 19.8984375,
+        "status_counts": {
+          "cache_reconstruction_invalid": 8
+        }
+      },
+      {
+        "stress_family": "structured_repetitive",
+        "target_budget": 1792,
+        "cell_count": 8,
+        "evaluated_count": 8,
+        "valid_count": 0,
+        "valid_rate": 0.0,
+        "mean_max_logit_diff": 26.802490234375,
+        "maximum_logit_diff": 27.5517578125,
+        "status_counts": {
+          "cache_reconstruction_invalid": 8
+        }
+      },
+      {
+        "stress_family": "structured_repetitive",
+        "target_budget": 3584,
+        "cell_count": 8,
+        "evaluated_count": 8,
+        "valid_count": 0,
+        "valid_rate": 0.0,
+        "mean_max_logit_diff": 25.5185546875,
+        "maximum_logit_diff": 26.21875,
+        "status_counts": {
+          "cache_reconstruction_invalid": 8
+        }
+      },
+      {
+        "stress_family": "lexically_diverse",
+        "target_budget": 256,
+        "cell_count": 8,
+        "evaluated_count": 8,
+        "valid_count": 0,
+        "valid_rate": 0.0,
+        "mean_max_logit_diff": 15.05517578125,
+        "maximum_logit_diff": 16.265625,
+        "status_counts": {
+          "cache_reconstruction_invalid": 8
+        }
+      },
+      {
+        "stress_family": "lexically_diverse",
+        "target_budget": 1792,
+        "cell_count": 8,
+        "evaluated_count": 0,
+        "valid_count": 0,
+        "valid_rate": null,
+        "mean_max_logit_diff": null,
+        "maximum_logit_diff": null,
+        "status_counts": {
+          "budget_unreachable": 8
+        }
+      },
+      {
+        "stress_family": "lexically_diverse",
+        "target_budget": 3584,
+        "cell_count": 8,
+        "evaluated_count": 8,
+        "valid_count": 0,
+        "valid_rate": 0.0,
+        "mean_max_logit_diff": 18.523681640625,
+        "maximum_logit_diff": 26.1171875,
+        "status_counts": {
+          "cache_reconstruction_invalid": 8
+        }
+      }
+    ],
+    "first_mismatch_location_counts": {
+      "0": 80
+    },
+    "top_changed_tokens": [
+      {
+        "token_id": 11311,
+        "token_text": "stable",
+        "count": 48
+      },
+      {
+        "token_id": 28723,
+        "token_text": ".",
+        "count": 13
+      },
+      {
+        "token_id": 16436,
+        "token_text": "unden",
+        "count": 4
+      },
+      {
+        "token_id": 28770,
+        "token_text": "3",
+        "count": 4
+      },
+      {
+        "token_id": 14214,
+        "token_text": "neutral",
+        "count": 2
+      },
+      {
+        "token_id": 10911,
+        "token_text": "survey",
+        "count": 2
+      },
+      {
+        "token_id": 8635,
+        "token_text": "afternoon",
+        "count": 2
+      },
+      {
+        "token_id": 24583,
+        "token_text": "laboratory",
+        "count": 2
+      },
+      {
+        "token_id": 6360,
+        "token_text": "Ref",
+        "count": 1
+      },
+      {
+        "token_id": 1707,
+        "token_text": "word",
+        "count": 1
+      }
+    ]
+  },
+  "cache_components": {
+    "ssm_fields": [
+      "conv_states",
+      "recurrent_states",
+      "ssm_states_if_present"
+    ],
+    "attention_fields": [
+      "keys",
+      "values"
+    ],
+    "signatures": {
+      "256": {
+        "cache_type": "DynamicCache",
+        "layer_count": 38,
+        "layers": [
+          {
+            "layer": 0,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 1,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 2,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 3,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 4,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 5,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 6,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 7,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 8,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 9,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 10,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 11,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 12,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 13,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 14,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 15,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 16,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 17,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 18,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 19,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 20,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 21,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 22,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 23,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 24,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 25,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 26,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 27,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 28,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 29,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 30,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 31,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 32,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 33,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 34,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 35,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  242,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 36,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 37,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          }
+        ],
+        "attention_cache_observed": true,
+        "ssm_recurrent_state_observed": true
+      },
+      "1792": {
+        "cache_type": "DynamicCache",
+        "layer_count": 38,
+        "layers": [
+          {
+            "layer": 0,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 1,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 2,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 3,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 4,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 5,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 6,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 7,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 8,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 9,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 10,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 11,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 12,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 13,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 14,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 15,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 16,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 17,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 18,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 19,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 20,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 21,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 22,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 23,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 24,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 25,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 26,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 27,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 28,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 29,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 30,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 31,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 32,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 33,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 34,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 35,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  1782,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 36,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 37,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          }
+        ],
+        "attention_cache_observed": true,
+        "ssm_recurrent_state_observed": true
+      },
+      "3584": {
+        "cache_type": "DynamicCache",
+        "layer_count": 38,
+        "layers": [
+          {
+            "layer": 0,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 1,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 2,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 3,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 4,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 5,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 6,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 7,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 8,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 9,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 10,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 11,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 12,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 13,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 14,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 15,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 16,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 17,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 18,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 19,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 20,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 21,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 22,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 23,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 24,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 25,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 26,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 27,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 28,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 29,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 30,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 31,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 32,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 33,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 34,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 35,
+            "type": "LinearAttentionAndFullAttentionLayer",
+            "attention": {
+              "keys": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              },
+              "values": {
+                "shape": [
+                  1,
+                  32,
+                  3582,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            },
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 36,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          },
+          {
+            "layer": 37,
+            "type": "LinearAttentionLayer",
+            "attention": {},
+            "ssm": {
+              "conv_states": {
+                "shape": [
+                  1,
+                  4352,
+                  4
+                ],
+                "dtype": "torch.float16"
+              },
+              "recurrent_states": {
+                "shape": [
+                  1,
+                  64,
+                  64,
+                  128
+                ],
+                "dtype": "torch.float16"
+              }
+            }
+          }
+        ],
+        "attention_cache_observed": true,
+        "ssm_recurrent_state_observed": true
+      }
+    }
+  },
+  "causal_interpretation_performed": false,
+  "round034_path_swaps_authorized_by_protocol": false,
+  "claim_scope": "本轮只验证缓存重放协议，不解释SSM或Attention记忆机制，也不比较架构优劣。",
+  "failures": [
+    {
+      "step": "Round32简化tail重放",
+      "error": "部分候选终点可重建，但全词表逐位置不等价",
+      "resolution": "Round33改用prepare_inputs_for_generation逐token流程并重新验证"
+    }
+  ],
+  "tests": {
+    "artifact_validation": "1 passed",
+    "command": "python -m pytest -q -o addopts=''",
+    "passed": 186,
+    "total": 186,
+    "status": "passed"
+  },
+  "artifact": "results/cache_reconstruction_round_033.json"
+}
