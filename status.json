@@ -4,5 +4,5 @@
   "next": "codex",
   "previous_actor": "gpt",
   "round": 34,
-  "phase": "frozen_evaluation_ready"
+  "phase": "evaluation_ready"
 }
