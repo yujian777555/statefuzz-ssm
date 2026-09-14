@@ -21,6 +21,19 @@ def _scores(a_on_a, b_on_a, a_on_b, b_on_b):
     }
 
 
+def test_round031_canonical_directional_decomposition():
+    from statefuzz.analyzer.memory_dependence import compute_pairwise_memory_metrics, decompose_pairwise_preference
+
+    for da, db, bias in [(2, 2, 0), (3, 1, 1), (1, 3, -1)]:
+        raw = _logit_record(da, 0, 0, db)
+        metrics = compute_pairwise_memory_metrics(raw)
+        assert metrics['direction_a_margin'] == da
+        assert metrics['direction_b_margin'] == db
+        for decomposition in [decompose_pairwise_preference(metrics), decompose_pairwise_preference(raw)]:
+            assert decomposition['memory_signal'] == 2
+            assert decomposition['lexical_bias'] == bias
+
+
 def test_counterfactual_memory_score_requires_both_directions() -> None:
     from statefuzz.analyzer.memory_dependence import compute_counterfactual_memory_score
 

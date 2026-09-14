@@ -1,0 +1,733 @@
+{
+  "model_matrix": [
+    {
+      "model_id": "state-spaces/mamba-130m-hf",
+      "architecture": "Mamba",
+      "role": "ssm_primary",
+      "runner_kind": "mamba"
+    },
+    {
+      "model_id": "EleutherAI/pythia-160m",
+      "architecture": "GPT-NeoX",
+      "role": "transformer_control",
+      "runner_kind": "hf_causal_lm"
+    }
+  ],
+  "families": [
+    "structured_repetitive",
+    "periodic_pattern",
+    "interleaved_distractor",
+    "semantic_distractor",
+    "lexically_diverse"
+  ],
+  "seeds": [
+    61,
+    62
+  ],
+  "budgets": [
+    256,
+    1792
+  ],
+  "models": {
+    "state-spaces/mamba-130m-hf": {
+      "metadata": {
+        "model_id": "state-spaces/mamba-130m-hf",
+        "architecture_role": "ssm_primary"
+      },
+      "records": [
+        {
+          "family": "structured_repetitive",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 257,
+          "prompt_token_counts": [
+            257,
+            257
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.005126953125,
+          "signed_margin_b": 1.9453125,
+          "min_signed_margin": 1.9453125,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "structured_repetitive",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1791,
+          "prompt_token_counts": [
+            1791,
+            1791
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.703125,
+          "signed_margin_b": 0.125,
+          "min_signed_margin": 0.125,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "structured_repetitive",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 257,
+          "prompt_token_counts": [
+            257,
+            257
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.09375,
+          "signed_margin_b": 1.880859375,
+          "min_signed_margin": 1.880859375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "structured_repetitive",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1791,
+          "prompt_token_counts": [
+            1791,
+            1791
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.890625,
+          "signed_margin_b": 0.03125,
+          "min_signed_margin": 0.03125,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 252,
+          "prompt_token_counts": [
+            252,
+            252
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.984375,
+          "signed_margin_b": 2.59765625,
+          "min_signed_margin": 1.984375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1792,
+          "prompt_token_counts": [
+            1792,
+            1792
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.75,
+          "signed_margin_b": 2.21875,
+          "min_signed_margin": 1.75,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 252,
+          "prompt_token_counts": [
+            252,
+            252
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.984375,
+          "signed_margin_b": 2.59765625,
+          "min_signed_margin": 1.984375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1792,
+          "prompt_token_counts": [
+            1792,
+            1792
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.75,
+          "signed_margin_b": 2.21875,
+          "min_signed_margin": 1.75,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 250,
+          "prompt_token_counts": [
+            250,
+            250
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.84375,
+          "signed_margin_b": 2.25,
+          "min_signed_margin": 1.84375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1795,
+          "prompt_token_counts": [
+            1795,
+            1795
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.640625,
+          "signed_margin_b": 1.5,
+          "min_signed_margin": 1.5,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 250,
+          "prompt_token_counts": [
+            250,
+            250
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.84375,
+          "signed_margin_b": 2.1875,
+          "min_signed_margin": 1.84375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1795,
+          "prompt_token_counts": [
+            1795,
+            1795
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.75,
+          "signed_margin_b": 1.53125,
+          "min_signed_margin": 1.53125,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 257,
+          "prompt_token_counts": [
+            257,
+            257
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.8359375,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1796,
+          "prompt_token_counts": [
+            1796,
+            1796
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.953125,
+          "signed_margin_b": 0.39453125,
+          "min_signed_margin": 0.39453125,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 256,
+          "prompt_token_counts": [
+            256,
+            256
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.421875,
+          "signed_margin_b": 2.3125,
+          "min_signed_margin": 2.3125,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1795,
+          "prompt_token_counts": [
+            1795,
+            1795
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.921875,
+          "signed_margin_b": 0.2265625,
+          "min_signed_margin": 0.2265625,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 255,
+          "prompt_token_counts": [
+            255,
+            255
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.521484375,
+          "signed_margin_b": 5.29248046875,
+          "min_signed_margin": 2.521484375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1803,
+          "prompt_token_counts": [
+            1803,
+            1803
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 1.80224609375,
+          "signed_margin_b": 1.1162109375,
+          "min_signed_margin": 1.1162109375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 253,
+          "prompt_token_counts": [
+            253,
+            253
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.08447265625,
+          "signed_margin_b": 3.98828125,
+          "min_signed_margin": 3.08447265625,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1782,
+          "prompt_token_counts": [
+            1782,
+            1782
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.210693359375,
+          "signed_margin_b": 0.935302734375,
+          "min_signed_margin": 0.935302734375,
+          "state_source": "direct_recurrent_cache",
+          "kv_cache_not_treated_as_recurrent_state": false
+        }
+      ]
+    },
+    "EleutherAI/pythia-160m": {
+      "metadata": {
+        "model_id": "EleutherAI/pythia-160m",
+        "model_type": "gpt_neox",
+        "num_parameters": 162322944,
+        "max_context_tokens": 2048,
+        "architecture_role": "transformer_control",
+        "state_source": "not_applicable"
+      },
+      "records": [
+        {
+          "family": "structured_repetitive",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 257,
+          "prompt_token_counts": [
+            257,
+            257
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "structured_repetitive",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1791,
+          "prompt_token_counts": [
+            1791,
+            1791
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "structured_repetitive",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 257,
+          "prompt_token_counts": [
+            257,
+            257
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "structured_repetitive",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1791,
+          "prompt_token_counts": [
+            1791,
+            1791
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 252,
+          "prompt_token_counts": [
+            252,
+            252
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1792,
+          "prompt_token_counts": [
+            1792,
+            1792
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 252,
+          "prompt_token_counts": [
+            252,
+            252
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "periodic_pattern",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1792,
+          "prompt_token_counts": [
+            1792,
+            1792
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 250,
+          "prompt_token_counts": [
+            250,
+            250
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1795,
+          "prompt_token_counts": [
+            1795,
+            1795
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.5,
+          "signed_margin_b": 4.0,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 250,
+          "prompt_token_counts": [
+            250,
+            250
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 2.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "interleaved_distractor",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1795,
+          "prompt_token_counts": [
+            1795,
+            1795
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.0,
+          "signed_margin_b": 4.0,
+          "min_signed_margin": 3.0,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 257,
+          "prompt_token_counts": [
+            257,
+            257
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.0,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1796,
+          "prompt_token_counts": [
+            1796,
+            1796
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 256,
+          "prompt_token_counts": [
+            256,
+            256
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.0,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "semantic_distractor",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1795,
+          "prompt_token_counts": [
+            1795,
+            1795
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 3.5,
+          "signed_margin_b": 2.5,
+          "min_signed_margin": 2.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 61,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 255,
+          "prompt_token_counts": [
+            255,
+            255
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 3.0,
+          "min_signed_margin": 3.0,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 61,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1803,
+          "prompt_token_counts": [
+            1803,
+            1803
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 4.0,
+          "min_signed_margin": 4.0,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 62,
+          "target_budget_tokens": 256,
+          "actual_input_tokens": 253,
+          "prompt_token_counts": [
+            253,
+            253
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 4.0,
+          "signed_margin_b": 3.0,
+          "min_signed_margin": 3.0,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        },
+        {
+          "family": "lexically_diverse",
+          "seed": 62,
+          "target_budget_tokens": 1792,
+          "actual_input_tokens": 1782,
+          "prompt_token_counts": [
+            1782,
+            1782
+          ],
+          "matched": true,
+          "candidate_valid": true,
+          "signed_margin_a": 5.0,
+          "signed_margin_b": 4.5,
+          "min_signed_margin": 4.5,
+          "state_source": "not_applicable",
+          "kv_cache_not_treated_as_recurrent_state": true
+        }
+      ]
+    }
+  }
+}

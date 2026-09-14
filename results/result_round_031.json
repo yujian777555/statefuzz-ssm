@@ -1,0 +1,2967 @@
+{
+  "round": 31,
+  "status": "hybrid_validation_complete",
+  "execution_environment": {
+    "expected_location": "user_experiment_vm",
+    "hostname": "5ttav9omnammn-0",
+    "python_executable": "/202532803004/conda_envs/amber/bin/python",
+    "python_version": "3.10.20",
+    "gpu": "NVIDIA A800 80GB PCIe"
+  },
+  "hybrid_model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+  "local_checkpoint": "/202532803004/models/Zamba2-1.2B-Instruct-v2",
+  "checkpoint_visible_from_executor": true,
+  "checkpoint_source": "user_downloaded_modelscope_directory",
+  "offline_loading": true,
+  "instruction_tuning_confound": true,
+  "architecture_causality_confirmed": false,
+  "runtime_versions": {
+    "torch": "2.5.1+cu121",
+    "transformers": "5.7.0"
+  },
+  "runtime_gate": {
+    "finite": true,
+    "deterministic": true
+  },
+  "metric_definition": {
+    "direction_a_margin": "logit(A|PromptA)-logit(B|PromptA)",
+    "direction_b_margin": "logit(B|PromptB)-logit(A|PromptB)",
+    "memory_signal": "(dA+dB)/2",
+    "lexical_bias": "(dA-dB)/2"
+  },
+  "short_context_gate": {
+    "target_tokens": 256,
+    "tolerance_tokens": 8,
+    "acceptable_interval": [
+      248,
+      264
+    ],
+    "passed": true,
+    "rows": [
+      {
+        "seed": 65,
+        "stress_family": "structured_repetitive",
+        "target_budget": 256,
+        "budget_tolerance": 8,
+        "value_pair": [
+          " red",
+          " blue"
+        ],
+        "runtime_status": "ok",
+        "actual_input_tokens": 250,
+        "candidate_token_ids": [
+          2760,
+          5045
+        ],
+        "prompt_token_counts": [
+          250,
+          250
+        ],
+        "logit_prompt_a_candidate_a": 16.484375,
+        "logit_prompt_a_candidate_b": 15.4921875,
+        "logit_prompt_b_candidate_a": 14.7265625,
+        "logit_prompt_b_candidate_b": 17.5625,
+        "direction_a_margin": 0.9921875,
+        "direction_b_margin": 2.8359375,
+        "raw_preference_prompt_a": 0.9921875,
+        "raw_preference_prompt_b": -2.8359375,
+        "memory_signal": 1.9140625,
+        "lexical_bias": -0.921875,
+        "min_signed_margin": 0.9921875,
+        "failure": false,
+        "prompt_sha256": [
+          "b279336cbe3a7cd907d932c1206e81a32065f66fe74986de388d1545c8c0c1ae",
+          "ad02010d14580a601dd192adadc6032c58884659dd6baf2be2c867d0a6b16034"
+        ]
+      },
+      {
+        "seed": 66,
+        "stress_family": "structured_repetitive",
+        "target_budget": 256,
+        "budget_tolerance": 8,
+        "value_pair": [
+          " red",
+          " blue"
+        ],
+        "runtime_status": "ok",
+        "actual_input_tokens": 250,
+        "candidate_token_ids": [
+          2760,
+          5045
+        ],
+        "prompt_token_counts": [
+          250,
+          250
+        ],
+        "logit_prompt_a_candidate_a": 16.4375,
+        "logit_prompt_a_candidate_b": 15.46875,
+        "logit_prompt_b_candidate_a": 14.78125,
+        "logit_prompt_b_candidate_b": 17.40625,
+        "direction_a_margin": 0.96875,
+        "direction_b_margin": 2.625,
+        "raw_preference_prompt_a": 0.96875,
+        "raw_preference_prompt_b": -2.625,
+        "memory_signal": 1.796875,
+        "lexical_bias": -0.828125,
+        "min_signed_margin": 0.96875,
+        "failure": false,
+        "prompt_sha256": [
+          "091f5685e36695be53bbc5597a6bdb2f799ee94783f78a23b207ab5597324dff",
+          "8e983da3aba36a95aa22ca43b847e37292cd27f47a73f261bbb7f1dca13e670f"
+        ]
+      },
+      {
+        "seed": 67,
+        "stress_family": "structured_repetitive",
+        "target_budget": 256,
+        "budget_tolerance": 8,
+        "value_pair": [
+          " red",
+          " blue"
+        ],
+        "runtime_status": "ok",
+        "actual_input_tokens": 250,
+        "candidate_token_ids": [
+          2760,
+          5045
+        ],
+        "prompt_token_counts": [
+          250,
+          250
+        ],
+        "logit_prompt_a_candidate_a": 16.34375,
+        "logit_prompt_a_candidate_b": 15.4921875,
+        "logit_prompt_b_candidate_a": 14.6953125,
+        "logit_prompt_b_candidate_b": 17.296875,
+        "direction_a_margin": 0.8515625,
+        "direction_b_margin": 2.6015625,
+        "raw_preference_prompt_a": 0.8515625,
+        "raw_preference_prompt_b": -2.6015625,
+        "memory_signal": 1.7265625,
+        "lexical_bias": -0.875,
+        "min_signed_margin": 0.8515625,
+        "failure": false,
+        "prompt_sha256": [
+          "29a79d2892cf57c260c661787ad93afb9575cbff9356ee135a1e2967e6d062b6",
+          "c65c180303b72848c6a70eb492317ca3ec12d6247262e7942c937437cddef0ef"
+        ]
+      },
+      {
+        "seed": 68,
+        "stress_family": "structured_repetitive",
+        "target_budget": 256,
+        "budget_tolerance": 8,
+        "value_pair": [
+          " red",
+          " blue"
+        ],
+        "runtime_status": "ok",
+        "actual_input_tokens": 250,
+        "candidate_token_ids": [
+          2760,
+          5045
+        ],
+        "prompt_token_counts": [
+          250,
+          250
+        ],
+        "logit_prompt_a_candidate_a": 16.375,
+        "logit_prompt_a_candidate_b": 15.3671875,
+        "logit_prompt_b_candidate_a": 14.6875,
+        "logit_prompt_b_candidate_b": 17.34375,
+        "direction_a_margin": 1.0078125,
+        "direction_b_margin": 2.65625,
+        "raw_preference_prompt_a": 1.0078125,
+        "raw_preference_prompt_b": -2.65625,
+        "memory_signal": 1.83203125,
+        "lexical_bias": -0.82421875,
+        "min_signed_margin": 1.0078125,
+        "failure": false,
+        "prompt_sha256": [
+          "3efe3a0df588447c4370affccf73da0107f4d4529a9f4b9a8be99610289c4b47",
+          "871c3a43c4a319bdc87903977fc21b02ab63f9819f8f65a162be65d15a918e93"
+        ]
+      }
+    ]
+  },
+  "selected_value_pair": [
+    " red",
+    " blue"
+  ],
+  "stress_fingerprint": {
+    "structured_repetitive": {
+      "curve": [
+        {
+          "target_budget": 256,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            250,
+            250
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 1.8173828125,
+          "median_memory_signal": 1.814453125,
+          "mean_min_signed_margin": 0.955078125,
+          "median_min_signed_margin": 0.98046875,
+          "mean_lexical_bias": -0.8623046875,
+          "normalized_memory_retention": 1.0,
+          "normalized_margin_retention": 1.0
+        },
+        {
+          "target_budget": 768,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            770,
+            770
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 1.193359375,
+          "median_memory_signal": 1.22265625,
+          "mean_min_signed_margin": 1.03125,
+          "median_min_signed_margin": 1.0546875,
+          "mean_lexical_bias": -0.162109375,
+          "normalized_memory_retention": 0.6566362170875873,
+          "normalized_margin_retention": 1.0797546012269938
+        },
+        {
+          "target_budget": 1280,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "structured_repetitive",
+              "target_budget": 1280,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "structured_repetitive",
+              "target_budget": 1280,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "structured_repetitive",
+              "target_budget": 1280,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "structured_repetitive",
+              "target_budget": 1280,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 1792,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1790,
+            1790
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 3.1416015625,
+          "median_memory_signal": 3.134765625,
+          "mean_min_signed_margin": 2.671875,
+          "median_min_signed_margin": 2.69140625,
+          "mean_lexical_bias": -0.4697265625,
+          "normalized_memory_retention": 1.7286405158516926,
+          "normalized_margin_retention": 2.7975460122699385
+        },
+        {
+          "target_budget": 2560,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "structured_repetitive",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "structured_repetitive",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "structured_repetitive",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "structured_repetitive",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 3584,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            3590,
+            3590
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 2.5673828125,
+          "median_memory_signal": 2.5625,
+          "mean_min_signed_margin": 1.46875,
+          "median_min_signed_margin": 1.4375,
+          "mean_lexical_bias": -1.0986328125,
+          "normalized_memory_retention": 1.412681354110693,
+          "normalized_margin_retention": 1.5378323108384457
+        }
+      ],
+      "short_context_valid": true,
+      "first_observed_risk_region": null,
+      "observed_all_pass_lower_bound": 3590,
+      "monotonicity_violations": [
+        {
+          "seed": 65,
+          "from_budget": 768,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 768,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 768,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 768,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        }
+      ],
+      "negative_control": false
+    },
+    "periodic_pattern": {
+      "curve": [
+        {
+          "target_budget": 256,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            251,
+            251
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 2.09375,
+          "median_memory_signal": 2.09375,
+          "mean_min_signed_margin": 0.9296875,
+          "median_min_signed_margin": 0.9296875,
+          "mean_lexical_bias": -1.1640625,
+          "normalized_memory_retention": 1.0,
+          "normalized_margin_retention": 1.0
+        },
+        {
+          "target_budget": 768,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            769,
+            769
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 0.21484375,
+          "median_memory_signal": 0.21484375,
+          "mean_min_signed_margin": 0.03125,
+          "median_min_signed_margin": 0.03125,
+          "mean_lexical_bias": -0.18359375,
+          "normalized_memory_retention": 0.10261194029850747,
+          "normalized_margin_retention": 0.03361344537815126
+        },
+        {
+          "target_budget": 1280,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1285,
+            1285
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 0.84375,
+          "median_memory_signal": 0.84375,
+          "mean_min_signed_margin": 0.15625,
+          "median_min_signed_margin": 0.15625,
+          "mean_lexical_bias": -0.6875,
+          "normalized_memory_retention": 0.40298507462686567,
+          "normalized_margin_retention": 0.16806722689075632
+        },
+        {
+          "target_budget": 1792,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1792,
+            1792
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 1.3359375,
+          "median_memory_signal": 1.3359375,
+          "mean_min_signed_margin": 0.5390625,
+          "median_min_signed_margin": 0.5390625,
+          "mean_lexical_bias": -0.796875,
+          "normalized_memory_retention": 0.6380597014925373,
+          "normalized_margin_retention": 0.5798319327731093
+        },
+        {
+          "target_budget": 2560,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            2561,
+            2561
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 3.25,
+          "median_memory_signal": 3.25,
+          "mean_min_signed_margin": 2.796875,
+          "median_min_signed_margin": 2.796875,
+          "mean_lexical_bias": -0.453125,
+          "normalized_memory_retention": 1.5522388059701493,
+          "normalized_margin_retention": 3.008403361344538
+        },
+        {
+          "target_budget": 3584,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            3584,
+            3584
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 6.40234375,
+          "median_memory_signal": 6.40234375,
+          "mean_min_signed_margin": 5.484375,
+          "median_min_signed_margin": 5.484375,
+          "mean_lexical_bias": -0.91796875,
+          "normalized_memory_retention": 3.0578358208955225,
+          "normalized_margin_retention": 5.899159663865547
+        }
+      ],
+      "short_context_valid": true,
+      "first_observed_risk_region": null,
+      "observed_all_pass_lower_bound": 3584,
+      "monotonicity_violations": [
+        {
+          "seed": 65,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 65,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 65,
+          "from_budget": 1792,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 65,
+          "from_budget": 2560,
+          "to_budget": 3584,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 1792,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 2560,
+          "to_budget": 3584,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 1792,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 2560,
+          "to_budget": 3584,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 1792,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 2560,
+          "to_budget": 3584,
+          "kind": "signal_increase"
+        }
+      ],
+      "negative_control": false
+    },
+    "interleaved_distractor": {
+      "curve": [
+        {
+          "target_budget": 256,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            263,
+            263
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 2.849609375,
+          "median_memory_signal": 2.84765625,
+          "mean_min_signed_margin": 1.857421875,
+          "median_min_signed_margin": 1.84765625,
+          "mean_lexical_bias": -0.9921875,
+          "normalized_memory_retention": 1.0,
+          "normalized_margin_retention": 1.0
+        },
+        {
+          "target_budget": 768,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            769,
+            769
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 1.1328125,
+          "median_memory_signal": 1.1328125,
+          "mean_min_signed_margin": 1.03515625,
+          "median_min_signed_margin": 1.03125,
+          "mean_lexical_bias": -0.09765625,
+          "normalized_memory_retention": 0.3975325565455792,
+          "normalized_margin_retention": 0.5573080967402734
+        },
+        {
+          "target_budget": 1280,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1275,
+            1275
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 1.310546875,
+          "median_memory_signal": 1.32421875,
+          "mean_min_signed_margin": 0.666015625,
+          "median_min_signed_margin": 0.67578125,
+          "mean_lexical_bias": -0.64453125,
+          "normalized_memory_retention": 0.4599040438656614,
+          "normalized_margin_retention": 0.35856992639327023
+        },
+        {
+          "target_budget": 1792,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 2560,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            2563,
+            2563
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 4.91796875,
+          "median_memory_signal": 4.9140625,
+          "mean_min_signed_margin": 4.78515625,
+          "median_min_signed_margin": 4.7578125,
+          "mean_lexical_bias": -0.1328125,
+          "normalized_memory_retention": 1.7258396161754626,
+          "normalized_margin_retention": 2.576235541535226
+        },
+        {
+          "target_budget": 3584,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 3584,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 3584,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 3584,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "interleaved_distractor",
+              "target_budget": 3584,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        }
+      ],
+      "short_context_valid": true,
+      "first_observed_risk_region": null,
+      "observed_all_pass_lower_bound": 2563,
+      "monotonicity_violations": [
+        {
+          "seed": 65,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 65,
+          "from_budget": 1280,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 1280,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 1280,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 768,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 1280,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        }
+      ],
+      "negative_control": false
+    },
+    "semantic_distractor": {
+      "curve": [
+        {
+          "target_budget": 256,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            249,
+            251
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 4.2861328125,
+          "median_memory_signal": 4.33203125,
+          "mean_min_signed_margin": 3.65234375,
+          "median_min_signed_margin": 3.81640625,
+          "mean_lexical_bias": -0.6337890625,
+          "normalized_memory_retention": 1.0,
+          "normalized_margin_retention": 1.0
+        },
+        {
+          "target_budget": 768,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "semantic_distractor",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "semantic_distractor",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "semantic_distractor",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "semantic_distractor",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 1280,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1281,
+            1283
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 2.806640625,
+          "median_memory_signal": 2.8046875,
+          "mean_min_signed_margin": 1.505859375,
+          "median_min_signed_margin": 1.5078125,
+          "mean_lexical_bias": -1.30078125,
+          "normalized_memory_retention": 0.6548188653451812,
+          "normalized_margin_retention": 0.4122994652406417
+        },
+        {
+          "target_budget": 1792,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1785,
+            1787
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 3.412109375,
+          "median_memory_signal": 3.42578125,
+          "mean_min_signed_margin": 2.505859375,
+          "median_min_signed_margin": 2.6015625,
+          "mean_lexical_bias": -0.90625,
+          "normalized_memory_retention": 0.7960811118705855,
+          "normalized_margin_retention": 0.686096256684492
+        },
+        {
+          "target_budget": 2560,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            2553,
+            2555
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 3.4921875,
+          "median_memory_signal": 3.533203125,
+          "mean_min_signed_margin": 2.703125,
+          "median_min_signed_margin": 2.7265625,
+          "mean_lexical_bias": -0.7890625,
+          "normalized_memory_retention": 0.8147641831852358,
+          "normalized_margin_retention": 0.7401069518716578
+        },
+        {
+          "target_budget": 3584,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            3585,
+            3587
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 3.044921875,
+          "median_memory_signal": 3.00390625,
+          "mean_min_signed_margin": 1.849609375,
+          "median_min_signed_margin": 1.85546875,
+          "mean_lexical_bias": -1.1953125,
+          "normalized_memory_retention": 0.7104123946229209,
+          "normalized_margin_retention": 0.5064171122994653
+        }
+      ],
+      "short_context_valid": true,
+      "first_observed_risk_region": null,
+      "observed_all_pass_lower_bound": 3585,
+      "monotonicity_violations": [
+        {
+          "seed": 65,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 66,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 67,
+          "from_budget": 1792,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 1280,
+          "to_budget": 1792,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 1792,
+          "to_budget": 2560,
+          "kind": "signal_increase"
+        }
+      ],
+      "negative_control": false
+    },
+    "lexically_diverse": {
+      "curve": [
+        {
+          "target_budget": 256,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            257,
+            261
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 4.515625,
+          "median_memory_signal": 4.533203125,
+          "mean_min_signed_margin": 3.91796875,
+          "median_min_signed_margin": 3.921875,
+          "mean_lexical_bias": -0.59765625,
+          "normalized_memory_retention": 1.0,
+          "normalized_margin_retention": 1.0
+        },
+        {
+          "target_budget": 768,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "lexically_diverse",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "lexically_diverse",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "lexically_diverse",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "lexically_diverse",
+              "target_budget": 768,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 1280,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            1277,
+            1281
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 4.0859375,
+          "median_memory_signal": 4.09765625,
+          "mean_min_signed_margin": 3.296875,
+          "median_min_signed_margin": 3.4375,
+          "mean_lexical_bias": -0.7890625,
+          "normalized_memory_retention": 0.9048442906574394,
+          "normalized_margin_retention": 0.8414755732801595
+        },
+        {
+          "target_budget": 1792,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "lexically_diverse",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "lexically_diverse",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "lexically_diverse",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "lexically_diverse",
+              "target_budget": 1792,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 2560,
+          "valid_count": 0,
+          "expected_seed_count": 4,
+          "complete_seed_set": false,
+          "unavailable_cells": [
+            {
+              "seed": 65,
+              "stress_family": "lexically_diverse",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 66,
+              "stress_family": "lexically_diverse",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 67,
+              "stress_family": "lexically_diverse",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            },
+            {
+              "seed": 68,
+              "stress_family": "lexically_diverse",
+              "target_budget": 2560,
+              "budget_tolerance": 8,
+              "value_pair": [
+                " red",
+                " blue"
+              ],
+              "runtime_status": "budget_unreachable",
+              "actual_input_tokens": null
+            }
+          ]
+        },
+        {
+          "target_budget": 3584,
+          "valid_count": 4,
+          "expected_seed_count": 4,
+          "complete_seed_set": true,
+          "unavailable_cells": [],
+          "actual_token_range": [
+            3592,
+            3592
+          ],
+          "failure_count": 0,
+          "failure_rate": 0.0,
+          "mean_memory_signal": 3.7744140625,
+          "median_memory_signal": 3.880859375,
+          "mean_min_signed_margin": 2.11328125,
+          "median_min_signed_margin": 2.12109375,
+          "mean_lexical_bias": -1.6611328125,
+          "normalized_memory_retention": 0.835856401384083,
+          "normalized_margin_retention": 0.53938185443669
+        }
+      ],
+      "short_context_valid": true,
+      "first_observed_risk_region": null,
+      "observed_all_pass_lower_bound": 3592,
+      "monotonicity_violations": [
+        {
+          "seed": 65,
+          "from_budget": 1280,
+          "to_budget": 3584,
+          "kind": "signal_increase"
+        },
+        {
+          "seed": 68,
+          "from_budget": 256,
+          "to_budget": 1280,
+          "kind": "signal_increase"
+        }
+      ],
+      "negative_control": true
+    }
+  },
+  "comparison_to_existing_models": {
+    "state-spaces/mamba-130m-hf": {
+      "classification": "inconclusive_due_to_scale_training_tuning_confounds",
+      "normalized_comparisons": [
+        {
+          "family": "interleaved_distractor",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "lexically_diverse",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "periodic_pattern",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "periodic_pattern",
+          "target_budget": 1792,
+          "reference_retention": 0.86615515771526,
+          "candidate_retention": 0.6380597014925373
+        },
+        {
+          "family": "semantic_distractor",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "semantic_distractor",
+          "target_budget": 1792,
+          "reference_retention": 0.6450737005430567,
+          "candidate_retention": 0.7960811118705855
+        },
+        {
+          "family": "structured_repetitive",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "structured_repetitive",
+          "target_budget": 1792,
+          "reference_retention": 0.4731832044607375,
+          "candidate_retention": 1.7286405158516926
+        }
+      ],
+      "architecture_causality_confirmed": false,
+      "scale_confound": true,
+      "training_data_confound": true,
+      "instruction_tuning_confound": true,
+      "limitations": [
+        "历史Round26使用种子61/62和±16 token容差；本轮使用65—68和±8。周期族本身不随种子变化，四个种子不是四个独立文本。"
+      ]
+    },
+    "EleutherAI/pythia-160m": {
+      "classification": "inconclusive_due_to_scale_training_tuning_confounds",
+      "normalized_comparisons": [
+        {
+          "family": "interleaved_distractor",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "lexically_diverse",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "periodic_pattern",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "periodic_pattern",
+          "target_budget": 1792,
+          "reference_retention": 1.0,
+          "candidate_retention": 0.6380597014925373
+        },
+        {
+          "family": "semantic_distractor",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "semantic_distractor",
+          "target_budget": 1792,
+          "reference_retention": 1.1818181818181819,
+          "candidate_retention": 0.7960811118705855
+        },
+        {
+          "family": "structured_repetitive",
+          "target_budget": 256,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.0
+        },
+        {
+          "family": "structured_repetitive",
+          "target_budget": 1792,
+          "reference_retention": 1.0,
+          "candidate_retention": 1.7286405158516926
+        }
+      ],
+      "architecture_causality_confirmed": false,
+      "scale_confound": true,
+      "training_data_confound": true,
+      "instruction_tuning_confound": true,
+      "limitations": [
+        "历史Round26使用种子61/62和±16 token容差；本轮使用65—68和±8。周期族本身不随种子变化，四个种子不是四个独立文本。"
+      ]
+    }
+  },
+  "cache_state_observability": {
+    "256": {
+      "actual_input_tokens": 250,
+      "cache_type": "DynamicCache",
+      "layers": [
+        {
+          "layer": 0,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 1,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 2,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 3,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 4,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 5,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 6,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 7,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 8,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 9,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 10,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 11,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 12,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 13,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 14,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 15,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 16,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 17,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 18,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 19,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 20,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 21,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 22,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 23,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 24,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 25,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 26,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 27,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 28,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 29,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 30,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 31,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 32,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 33,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 34,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 35,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              250,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 36,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 37,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        }
+      ],
+      "attention_cache_observed": true,
+      "ssm_recurrent_state_observed": true
+    },
+    "3584": {
+      "actual_input_tokens": 3590,
+      "cache_type": "DynamicCache",
+      "layers": [
+        {
+          "layer": 0,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 1,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 2,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 3,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 4,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 5,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 6,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 7,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 8,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 9,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 10,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 11,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 12,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 13,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 14,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 15,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 16,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 17,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 18,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 19,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 20,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 21,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 22,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 23,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 24,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 25,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 26,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 27,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 28,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 29,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 30,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 31,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 32,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 33,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 34,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 35,
+          "type": "LinearAttentionAndFullAttentionLayer",
+          "shapes": {
+            "keys": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "values": [
+              1,
+              32,
+              3590,
+              128
+            ],
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 36,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        },
+        {
+          "layer": 37,
+          "type": "LinearAttentionLayer",
+          "shapes": {
+            "conv_states": [
+              1,
+              4352,
+              4
+            ],
+            "recurrent_states": [
+              1,
+              64,
+              64,
+              128
+            ]
+          }
+        }
+      ],
+      "attention_cache_observed": true,
+      "ssm_recurrent_state_observed": true
+    }
+  },
+  "realistic_spot_check": {
+    "status": "not_run_optional",
+    "reason": "本轮完成冻结合成指纹；现实任务生成器不支持负控参数，未扩展任务模板。"
+  },
+  "claim_scope": "仅支持指定指令微调混合检查点的描述性压力指纹；规模、训练数据和微调混杂均未控制。",
+  "prior_scan": {
+    "protocol_role": "exploratory_noncompliant_scan",
+    "counts_as_round031_short_context_gate": false,
+    "reason": "旧版短门禁850 tokens、长扫描±16且派生公式不合规，未并入本轮。"
+  },
+  "failures": [
+    {
+      "step": "旧版实施",
+      "error": "850-token门禁与错误派生公式；已废弃并全量重跑"
+    },
+    {
+      "step": "跨shell命令",
+      "error": "早期引号错误产生SyntaxError及python未找到；改用上传脚本和明确解释器"
+    },
+    {
+      "step": "GPU快速路径",
+      "error": "缺少快速kernel，使用naive实现"
+    },
+    {
+      "step": "token拟合提示",
+      "error": "搜索中间文本超4096触发tokenizer警告；只做计数，实际forward受±8预算限制"
+    }
+  ],
+  "tests": {
+    "focused_runner": "3 passed",
+    "focused_analyzer": "53 passed",
+    "command": "python -m pytest -q -o addopts=''",
+    "passed": 173,
+    "total": 173,
+    "status": "passed"
+  },
+  "artifacts": [
+    "results/hybrid_stress_round_031.json",
+    "results/reference_round026_for_round031.json"
+  ],
+  "source_hashes": {
+    "raw": "1daa9b557aa0f144e59f7c1f523b8ca23f7ded62fab945c0e846df24ae8cc8ad",
+    "reference": "03f6e76f6f9947f98a5122c154902eb660aa1f44169f5f13eb061d4a86f0cb70"
+  }
+}

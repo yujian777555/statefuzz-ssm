@@ -6,3 +6,6 @@ from statefuzz.runner.hf_causal_lm_runner import (
 )
 
 __all__ = ["HFCausalLMExperimentConfig", "HFCausalLMRunner"]
+
+from .hybrid_causal_lm_runner import HybridCausalLMExperimentConfig, HybridCausalLMRunner
+__all__ += ['HybridCausalLMExperimentConfig', 'HybridCausalLMRunner']
