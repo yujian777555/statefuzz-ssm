@@ -1,1 +1,8 @@
-{"last_plan":"plans/latest_plan.md","last_result":"results/model_inventory_round_034.json","next":"gpt","previous_actor":"codex","round":34,"phase":"discovery_complete"}
+{
+  "last_plan": "plans/latest_plan.md",
+  "last_result": "results/model_inventory_round_034.json",
+  "next": "codex",
+  "previous_actor": "gpt",
+  "round": 34,
+  "phase": "frozen_evaluation_ready"
+}
