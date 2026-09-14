@@ -1,0 +1,13 @@
+{
+  "models": {
+    "primary": {
+      "model_id": "Zyphra/Zamba2-1.2B-Instruct-v2",
+      "architecture": "Zamba2ForCausalLM",
+      "model_type": "zamba2",
+      "checkpoint_path": "/202532803004/models/Zamba2-1.2B-Instruct-v2",
+      "parameters": 1215064704,
+      "revision": null
+    }
+  },
+  "freeze_status": "frozen"
+}
