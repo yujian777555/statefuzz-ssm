@@ -1,0 +1,50 @@
+{
+  "round": 34,
+  "phase": "discovery",
+  "execution_environment": "user_experiment_vm",
+  "discovery_root": "/202532803004/models",
+  "discovery_command": "find /202532803004/models -name config.json",
+  "model_count": 1,
+  "models": [
+    {
+      "path": "/202532803004/models/Zamba2-1.2B-Instruct-v2",
+      "model_id": "Zyphra/Zamba2-1.2B-Instruct-v2",
+      "model_id_source": "checkpoint README model card and directory name",
+      "architecture": "Zamba2ForCausalLM",
+      "model_type": "zamba2",
+      "revision": null,
+      "revision_observation": "checkpoint directory has no .git metadata and config has no revision field",
+      "parameter_count": 1215064704,
+      "parameter_count_source": "model.safetensors tensor shapes",
+      "tensor_count": 406,
+      "weight_file": "model.safetensors",
+      "weight_file_bytes": 2430175896,
+      "config_file": "config.json",
+      "config_transformers_version": "4.49.0.dev0",
+      "num_hidden_layers": 38,
+      "hybrid_layer_ids": [5, 11, 17, 23, 29, 35],
+      "max_position_embeddings": 4096,
+      "tokenizer_available": true,
+      "tokenizer_files": [
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "special_tokens_map.json"
+      ],
+      "checkpoint_files_observed": [
+        "README.md",
+        "config.json",
+        "configuration.json",
+        "generation_config.json",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "selected_by_executor": false
+    }
+  ],
+  "downloads_performed": false,
+  "stress_experiments_performed": false,
+  "checkpoint_selected": false,
+  "inventory_status": "complete"
+}
