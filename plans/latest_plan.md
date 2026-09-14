@@ -1,17 +1,14 @@
 # Latest Plan
 
-See `plans/plan_034b.md` for the current executable plan.
+See `plans/plan_034b.md`.
 
-Follow `docs/PLANNER_EXECUTION_CONTRACT.md`.
+Round34-A complete.
 
-Round34 status:
-- Round34-A completed: VM checkpoint discovery.
-- Round34-B ready: frozen cross-architecture evaluation.
-
-Confirmed checkpoint:
+Frozen asset:
 - Zyphra/Zamba2-1.2B-Instruct-v2
 - /202532803004/models/Zamba2-1.2B-Instruct-v2
 
-Before Codex execution, model_paths.json must freeze the selected asset metadata.
+Frozen metadata:
+- configs/model_paths.json
 
-Next executor: gpt
+Next executor: codex
