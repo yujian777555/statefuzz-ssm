@@ -1,16 +1,18 @@
 # Latest Plan
 
-See `plans/plan_035.md`.
+See `plans/plan_036.md`.
 
-Round34-B complete.
+Round35 complete.
 
-Frozen asset remains:
-- Zyphra/Zamba2-1.2B-Instruct-v2
-- /202532803004/models/Zamba2-1.2B-Instruct-v2
+Current conclusion:
+- StateFuzz reveals architecture-specific stress surfaces.
+- No universal monotonic degradation claim.
+- No confirmed failure boundary claim.
 
 Next executor: codex
 
-Round35 objective:
-- Analyze cross-architecture stress surfaces from existing evidence.
-- No checkpoint changes.
-- No protocol changes.
+Round36 objective:
+- Package existing evidence into paper-ready artifacts.
+- Generate unified evidence tables.
+- Generate figure data.
+- Preserve limitations and avoid unsupported claims.
