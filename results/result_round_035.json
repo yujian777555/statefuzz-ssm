@@ -1,0 +1,31 @@
+{
+  "round": 35,
+  "status": "stress_surface_analysis_complete",
+  "research_answer": "StateFuzz reveals architecture-specific descriptive margin surfaces rather than a universal monotonic degradation curve, but these cohorts contain no observed failure boundary.",
+  "architecture_specific_surface_candidate": true,
+  "architecture_specific_failure_boundary_confirmed": false,
+  "observed_failure_boundary_count": 0,
+  "negative_evidence": "No evaluated architecture/stress/budget cohort produced a failure probability above zero; failure boundaries must remain null.",
+  "key_patterns": {
+    "mamba_structured": "large normalized margin loss by 1792",
+    "pythia_historical": "stable or increased normalized margin at 1792",
+    "zamba_periodic": "strong dip at 768 followed by recovery at longer budgets"
+  },
+  "limitations": [
+    "Mamba/Pythia only have 256 and 1792 historical budgets",
+    "historical cohorts use seeds 61-62 and ±16 token tolerance",
+    "Zamba2 uses seeds 69-72 and ±8 tolerance",
+    "model scale, training data and instruction tuning are unmatched",
+    "periodic_pattern ignores seed and is not four independent prompt texts"
+  ],
+  "cache_intervention_used": false,
+  "artifact": "results/stress_surface_round_035.json",
+  "tests": {
+    "command": "python -m pytest",
+    "passed": 186,
+    "total": 186,
+    "artifact_verify": "python scripts/round035_stress_surface_analysis.py --verify",
+    "artifact_verify_status": "passed",
+    "status": "passed"
+  }
+}
