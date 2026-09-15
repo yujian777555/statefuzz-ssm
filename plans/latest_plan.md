@@ -1,8 +1,8 @@
 # Latest Plan
 
-See `plans/plan_036.md`.
+See `plans/plan_037.md`.
 
-Round35 complete.
+Round36 complete.
 
 Current conclusion:
 - StateFuzz reveals architecture-specific stress surfaces.
@@ -11,8 +11,7 @@ Current conclusion:
 
 Next executor: codex
 
-Round36 objective:
-- Package existing evidence into paper-ready artifacts.
-- Generate unified evidence tables.
-- Generate figure data.
-- Preserve limitations and avoid unsupported claims.
+Round37 objective:
+- Add strategically selected architecture representatives.
+- Prioritize Mamba2 and one modern Attention baseline if available.
+- Preserve frozen protocol and avoid uncontrolled model expansion.
