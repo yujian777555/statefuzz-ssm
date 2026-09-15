@@ -1,6 +1,6 @@
 # Latest Plan
 
-See `plans/plan_037.md`.
+See `plans/plan_037a.md`.
 
 Round36 complete.
 
@@ -9,9 +9,15 @@ Current conclusion:
 - No universal monotonic degradation claim.
 - No confirmed failure boundary claim.
 
-Next executor: codex
+Round37 is split into two phases:
 
-Round37 objective:
-- Add strategically selected architecture representatives.
-- Prioritize Mamba2 and one modern Attention baseline if available.
-- Preserve frozen protocol and avoid uncontrolled model expansion.
+## Round37-A
+- Discover available model assets only.
+- Generate model inventory.
+- Do not choose checkpoints.
+
+## Round37-B
+- Starts only after Planner freezes model paths.
+- Executes the expanded architecture evaluation.
+
+Next executor: codex
