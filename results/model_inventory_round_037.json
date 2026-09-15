@@ -1,0 +1,47 @@
+{
+  "round": 37,
+  "phase": "model_inventory_discovery",
+  "execution_environment": "user_provided_experiment_vm",
+  "scan_root": "/202532803004/models",
+  "scan_root_available": true,
+  "model_count": 1,
+  "models": [
+    {
+      "model_id": "Zyphra/Zamba2-1.2B-Instruct-v2",
+      "checkpoint_path": "/202532803004/models/Zamba2-1.2B-Instruct-v2",
+      "architecture": "Zamba2ForCausalLM",
+      "model_type": "zamba2",
+      "revision": null,
+      "availability": "available_local_checkpoint",
+      "revision_observation": "config and tokenizer metadata contain no commit hash, and the checkpoint directory has no .git metadata",
+      "config_transformers_version": "4.49.0.dev0",
+      "tokenizer_class": "LlamaTokenizer",
+      "weight_file": "model.safetensors",
+      "weight_file_bytes": 2430175896
+    }
+  ],
+  "runtime_failures": [
+    {
+      "stage": "environment_probe",
+      "error": "bash: python: command not found",
+      "cause": "the system Python executable is not on PATH in the SSH login shell",
+      "resolution": "used /202532803004/conda_envs/amber/bin/python for the read-only metadata probe"
+    },
+    {
+      "stage": "metadata_probe",
+      "error": "SyntaxError: unexpected character after line continuation character",
+      "cause": "the inline Python command was corrupted by PowerShell-to-SSH quote escaping",
+      "resolution": "copied only config.json and tokenizer_config.json to a temporary local directory and parsed them locally"
+    },
+    {
+      "stage": "metadata_probe_retry",
+      "error": "The term '_name_or_path' is not recognized as a name of a cmdlet",
+      "cause": "PowerShell parsed the intended remote grep expression before SSH execution",
+      "resolution": "replaced the nested remote expression with read-only metadata file transfer and local JSON parsing"
+    }
+  ],
+  "downloads_performed": false,
+  "checkpoint_selected": false,
+  "stress_evaluation_performed": false,
+  "inventory_status": "complete"
+}
