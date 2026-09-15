@@ -1,0 +1,824 @@
+{
+  "round": 36,
+  "data_only": true,
+  "views": {
+    "architecture_stress_surface_matrix": [
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "architecture": "Mamba SSM",
+        "stress_family": "structured_repetitive",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.98126220703125
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 0.9375
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "architecture": "Mamba SSM",
+        "stress_family": "periodic_pattern",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 2.291015625
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.984375
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "architecture": "Mamba SSM",
+        "stress_family": "interleaved_distractor",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 2.03125
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.60546875
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "architecture": "Mamba SSM",
+        "stress_family": "lexically_diverse",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.7216796875
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.51611328125
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "architecture": "GPT-NeoX Transformer",
+        "stress_family": "structured_repetitive",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.0
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.0
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "architecture": "GPT-NeoX Transformer",
+        "stress_family": "periodic_pattern",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.25
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.25
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "architecture": "GPT-NeoX Transformer",
+        "stress_family": "interleaved_distractor",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 2.5
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.375
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "architecture": "GPT-NeoX Transformer",
+        "stress_family": "lexically_diverse",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.5
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 4.375
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "architecture": "Hybrid Mamba2-Attention",
+        "stress_family": "structured_repetitive",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.822265625
+          },
+          {
+            "token_budget": 768,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.3359375
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.1083984375
+          },
+          {
+            "token_budget": 3584,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 2.458984375
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "architecture": "Hybrid Mamba2-Attention",
+        "stress_family": "periodic_pattern",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 2.09375
+          },
+          {
+            "token_budget": 768,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 0.21484375
+          },
+          {
+            "token_budget": 1792,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.3359375
+          },
+          {
+            "token_budget": 3584,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 6.40234375
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "architecture": "Hybrid Mamba2-Attention",
+        "stress_family": "interleaved_distractor",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 2.9228515625
+          },
+          {
+            "token_budget": 768,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 1.1982421875
+          },
+          {
+            "token_budget": 1792,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 3584,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "architecture": "Hybrid Mamba2-Attention",
+        "stress_family": "lexically_diverse",
+        "failure_boundary": null,
+        "budgets": [
+          {
+            "token_budget": 256,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 3.935546875
+          },
+          {
+            "token_budget": 768,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 1792,
+            "available": false,
+            "failure_probability": null,
+            "mean_signed_margin": null
+          },
+          {
+            "token_budget": 3584,
+            "available": true,
+            "failure_probability": 0.0,
+            "mean_signed_margin": 4.1123046875
+          }
+        ]
+      }
+    ],
+    "margin_retention_curves": [
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "stress_family": "structured_repetitive",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 0.4731832044607375,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "stress_family": "periodic_pattern",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 0.86615515771526,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "stress_family": "interleaved_distractor",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 0.7903846153846154,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "state-spaces/mamba-130m-hf",
+        "stress_family": "lexically_diverse",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 0.407373392810286,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "stress_family": "structured_repetitive",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "stress_family": "periodic_pattern",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "stress_family": "interleaved_distractor",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 1.35,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "EleutherAI/pythia-160m",
+        "stress_family": "lexically_diverse",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 1.25,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "stress_family": "structured_repetitive",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": 0.7331189710610932,
+            "available": true
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 1.7057877813504823,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": 1.3494105037513398,
+            "available": true
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "stress_family": "periodic_pattern",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": 0.10261194029850747,
+            "available": true
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": 0.6380597014925373,
+            "available": true
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": 3.0578358208955225,
+            "available": true
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "stress_family": "interleaved_distractor",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": 0.40995656531907787,
+            "available": true
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": null,
+            "available": false
+          }
+        ]
+      },
+      {
+        "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+        "stress_family": "lexically_diverse",
+        "curve": [
+          {
+            "token_budget": 256,
+            "normalized_margin_retention": 1.0,
+            "available": true
+          },
+          {
+            "token_budget": 768,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 1792,
+            "normalized_margin_retention": null,
+            "available": false
+          },
+          {
+            "token_budget": 3584,
+            "normalized_margin_retention": 1.0449131513647643,
+            "available": true
+          }
+        ]
+      }
+    ],
+    "stress_family_comparison": [
+      {
+        "stress_family": "structured_repetitive",
+        "models": [
+          {
+            "model": "state-spaces/mamba-130m-hf",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 0.4731832044607375,
+            "mean_margin_retention": 0.7365916022303688,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          },
+          {
+            "model": "EleutherAI/pythia-160m",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 1.0,
+            "mean_margin_retention": 1.0,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          },
+          {
+            "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+            "available_budget_count": 4,
+            "minimum_margin_retention": 0.7331189710610932,
+            "mean_margin_retention": 1.1970793140407288,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 1
+          }
+        ]
+      },
+      {
+        "stress_family": "periodic_pattern",
+        "models": [
+          {
+            "model": "state-spaces/mamba-130m-hf",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 0.86615515771526,
+            "mean_margin_retention": 0.93307757885763,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          },
+          {
+            "model": "EleutherAI/pythia-160m",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 1.0,
+            "mean_margin_retention": 1.0,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          },
+          {
+            "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+            "available_budget_count": 4,
+            "minimum_margin_retention": 0.10261194029850747,
+            "mean_margin_retention": 1.1996268656716418,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 2
+          }
+        ]
+      },
+      {
+        "stress_family": "interleaved_distractor",
+        "models": [
+          {
+            "model": "state-spaces/mamba-130m-hf",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 0.7903846153846154,
+            "mean_margin_retention": 0.8951923076923076,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          },
+          {
+            "model": "EleutherAI/pythia-160m",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 1.0,
+            "mean_margin_retention": 1.175,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 1
+          },
+          {
+            "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 0.40995656531907787,
+            "mean_margin_retention": 0.704978282659539,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          }
+        ]
+      },
+      {
+        "stress_family": "lexically_diverse",
+        "models": [
+          {
+            "model": "state-spaces/mamba-130m-hf",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 0.407373392810286,
+            "mean_margin_retention": 0.703686696405143,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 0
+          },
+          {
+            "model": "EleutherAI/pythia-160m",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 1.0,
+            "mean_margin_retention": 1.125,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 1
+          },
+          {
+            "model": "Zyphra/Zamba2-1.2B-Instruct-v2",
+            "available_budget_count": 2,
+            "minimum_margin_retention": 1.0,
+            "mean_margin_retention": 1.0224565756823822,
+            "maximum_failure_probability": 0.0,
+            "nonmonotonic_increase_count": 1
+          }
+        ]
+      }
+    ]
+  }
+}

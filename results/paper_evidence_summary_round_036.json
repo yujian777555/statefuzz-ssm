@@ -1,0 +1,27 @@
+{
+  "round": 36,
+  "supported_claims": [
+    "StateFuzz produces comparable within-model stress surfaces for the tested Mamba, Pythia and Zamba2 checkpoints.",
+    "Observed signed-margin trajectories differ by checkpoint and stress family and are not uniformly monotonic.",
+    "No evaluated cohort in the packaged evidence has failure probability above zero."
+  ],
+  "unsupported_claims": [
+    "A universal long-context failure boundary exists.",
+    "Observed differences are caused solely by architecture.",
+    "Hybrid models are universally more robust than pure SSMs or Transformers.",
+    "Invalid Hybrid cache replay supports internal memory-path attribution."
+  ],
+  "limitations": [
+    "Mamba-130M and Pythia-160M have only 256 and 1792 historical budget evidence.",
+    "Historical seeds 61-62 and tolerance ±16 differ from Zamba2 seeds 69-72 and tolerance ±8.",
+    "Checkpoint scale, training data and instruction tuning are unmatched.",
+    "periodic_pattern does not vary its prompt text with seed.",
+    "Unavailable budgets are retained as null and are not interpolated."
+  ],
+  "observed_failure_boundary_count": 0,
+  "source_artifacts": [
+    "results/stress_surface_round_035.json",
+    "results/reference_round026_for_round031.json",
+    "results/hybrid_stress_round_034.json"
+  ]
+}

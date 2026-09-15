@@ -1,0 +1,35 @@
+{
+  "round": 36,
+  "status": "paper_evidence_packaging_complete",
+  "inputs": [
+    "results/stress_surface_round_035.json",
+    "results/reference_round026_for_round031.json",
+    "results/hybrid_stress_round_034.json"
+  ],
+  "outputs": [
+    "results/evidence_table_round_036.json",
+    "results/figure_data_round_036.json",
+    "results/paper_evidence_summary_round_036.json"
+  ],
+  "evidence_table": {
+    "total_rows": 180,
+    "observed_direction_rows": 160,
+    "missing_budget_rows": 20,
+    "missing_values_preserved_as_null": true
+  },
+  "figure_views": [
+    "architecture_stress_surface_matrix",
+    "margin_retention_curves",
+    "stress_family_comparison"
+  ],
+  "observed_failure_boundary_count": 0,
+  "new_models_or_protocol_changes": false,
+  "tests": {
+    "command": "python -m pytest",
+    "passed": 186,
+    "total": 186,
+    "artifact_verify": "python scripts/round036_evidence_packaging.py --verify",
+    "artifact_verify_status": "passed",
+    "status": "passed"
+  }
+}
