@@ -1,0 +1,95 @@
+{
+  "round": 38,
+  "phase": "paper_draft_preparation",
+  "status": "planned",
+  "generated_figures": false,
+  "figures": [
+    {
+      "figure_id": "figure_1",
+      "title": "StateFuzz pipeline overview",
+      "type": "method_flow_diagram",
+      "purpose": "展示 stress generation、behavioral probing、margin measurement 与 stress surface characterization 的顺序和数据接口。",
+      "source_artifacts": [
+        "results/final_scope_round_037.json"
+      ],
+      "planned_panels": [
+        "成对远程记忆提示与四类压力生成",
+        "固定候选的双方向行为探测",
+        "direction-correct signed margin 与模型内归一化",
+        "architecture role × stress family × context budget 压力表面"
+      ],
+      "claim_boundary": "方法图不得将 StateFuzz 标注为 universal failure detector。",
+      "accessibility": "使用色盲友好配色，并以形状和文字同时编码四个阶段。"
+    },
+    {
+      "figure_id": "figure_2",
+      "title": "Stress surface visualization",
+      "type": "faceted_heatmap_or_matrix",
+      "purpose": "以模型和压力家族分面展示各预算上的 mean signed margin、failure probability 与缺失状态。",
+      "source_artifacts": [
+        "results/figure_data_round_036.json#views.architecture_stress_surface_matrix",
+        "results/evidence_table_round_036.json",
+        "results/final_scope_round_037.json"
+      ],
+      "required_encodings": {
+        "x_axis": "token_budget",
+        "facet_rows": "model",
+        "facet_columns": "stress_family",
+        "cell_value": "mean_signed_margin",
+        "scale_policy": "每个模型使用独立且明确标注的色标；不得用共享原始 margin 色标进行跨模型排名",
+        "missing_value": {
+          "display": "不插值，并用不同图案区分 budget-unreachable 与 historical untested",
+          "budget_unreachable": "依据 final_scope：Zamba2 interleaved_distractor 的 1792/3584，以及 lexically_diverse 的 768/1792",
+          "historical_untested": "依据 final_scope：Mamba 与 Pythia 的 768/3584 历史预算空缺"
+        },
+        "failure_annotation": "failure_probability"
+      },
+      "claim_boundary": "failure probability 为零只描述已观测单元；缺失预算不得显示为零失败。",
+      "accessibility": "使用感知均匀的连续色标，并用独立图案表示 missing。"
+    },
+    {
+      "figure_id": "figure_3",
+      "title": "Architecture-dependent response comparison",
+      "type": "faceted_margin_retention_curves",
+      "purpose": "比较三个 checkpoint 在共享压力家族中的模型内 normalized margin retention 轨迹形状。",
+      "source_artifacts": [
+        "results/figure_data_round_036.json#views.margin_retention_curves",
+        "results/figure_data_round_036.json#views.stress_family_comparison"
+      ],
+      "required_encodings": {
+        "x_axis": "token_budget",
+        "y_axis": "normalized_margin_retention",
+        "line_group": "model",
+        "facet": "stress_family",
+        "missing_value": "不连接跨越 null 的线段"
+      },
+      "claim_boundary": "仅用于描述性曲线比较，不进行模型排名或架构因果归因；标题中的 architecture-dependent 指按架构角色分组的已评估 checkpoint。",
+      "accessibility": "颜色、线型和点形三重编码，保证灰度打印可区分。"
+    },
+    {
+      "figure_id": "figure_4",
+      "title": "Limitations and evaluation scope",
+      "type": "coverage_and_claim_boundary_diagram",
+      "purpose": "同时展示已评估模型、计划但不可用的模型、可用预算、未测试区域以及支持与禁止的 claim。",
+      "source_artifacts": [
+        "results/final_scope_round_037.json",
+        "results/result_round_037.json",
+        "results/evidence_table_round_036.json"
+      ],
+      "planned_panels": [
+        "三 checkpoint 的冻结证据角色",
+        "Mamba2 与现代 pure-Attention checkpoint 不可用",
+        "observed、budget-unreachable 与 historical untested 三态覆盖矩阵",
+        "supported descriptive claims 与 unsupported causal/universal claims"
+      ],
+      "claim_boundary": "不可用表示 frozen VM scan root 下未发现资产，不表示模型不存在或质量不足。",
+      "accessibility": "避免仅用红绿表示支持与禁止，增加文本标签和图标。"
+    }
+  ],
+  "global_rules": [
+    "所有覆盖图必须联合 evidence_table 与 final_scope，区分 observed、budget-unreachable 与 historical untested；evidence_table 单独只提供 observed/missing。",
+    "不得跨模型比较原始 logit margin 的绝对大小以形成排名。",
+    "不得将 null 插值为观测值或零失败率。",
+    "图注必须列出模型、seed、token tolerance 与可用预算差异。"
+  ]
+}
