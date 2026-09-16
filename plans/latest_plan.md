@@ -1,25 +1,19 @@
 # Latest Plan
 
-See `plans/plan_037c.md`.
+See `plans/plan_038.md`.
 
-Round37-A model discovery is complete.
+Round37 scope freeze is complete.
 
-Inventory result:
-- VM scan root: `/202532803004/models`
-- available checkpoint count: 1
-- only available checkpoint: `Zyphra/Zamba2-1.2B-Instruct-v2`
-- no Mamba2 checkpoint discovered
-- no additional modern pure-Attention checkpoint discovered
+Current phase:
+- Paper draft preparation.
+- No new model expansion.
+- No checkpoint download.
+- No new stress evaluation.
 
-Round37-B expanded evaluation is cancelled because no new Planner-frozen model asset exists.
-
-Round37-C objective:
-- freeze the final evaluated model scope;
-- record planned-but-unavailable model expansion;
-- freeze supported and unsupported paper claims;
-- produce machine-readable scope artifacts;
-- transition to paper drafting without additional unplanned experiments.
-
-Follow `docs/PLANNER_EXECUTION_CONTRACT.md` and `plans/plan_037c.md` exactly.
+Round38 objective:
+- create paper draft structure;
+- describe StateFuzz method from frozen evidence;
+- prepare figure plan;
+- preserve supported and unsupported claim boundaries.
 
 Next executor: codex
