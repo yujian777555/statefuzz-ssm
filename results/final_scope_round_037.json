@@ -1,0 +1,156 @@
+{
+  "round": 37,
+  "phase": "scope_freeze",
+  "status": "complete",
+  "evaluated_models": [
+    {
+      "model_id": "state-spaces/mamba-130m-hf",
+      "architecture_role": "historical pure-SSM reference (Mamba SSM)",
+      "checkpoint_reference": "results/stress_surface_round_035.json#model_evidence.state-spaces/mamba-130m-hf",
+      "evidence_source": [
+        "results/stress_surface_round_035.json",
+        "results/evidence_table_round_036.json",
+        "results/figure_data_round_036.json",
+        "results/paper_evidence_summary_round_036.json"
+      ],
+      "evidence_scope": {
+        "stress_families": [
+          "structured_repetitive",
+          "periodic_pattern",
+          "interleaved_distractor",
+          "lexically_diverse"
+        ],
+        "available_token_budgets": [256, 1792],
+        "seeds": [61, 62],
+        "token_tolerance": 16,
+        "observed_failure_boundary_count": 0,
+        "comparison_policy": "within-model normalized signed-margin response only"
+      },
+      "known_limitations": [
+        "Only historical 256- and 1792-token budget evidence is available.",
+        "Raw candidate logits were not retained in the historical evidence.",
+        "Seed cohort, token tolerance, model scale, training data, and tuning are unmatched with Zamba2.",
+        "Zero observed failures apply only to the evaluated ranges and do not establish a universal boundary or absence of failures elsewhere."
+      ],
+      "newly_evaluated_in_round037": false
+    },
+    {
+      "model_id": "EleutherAI/pythia-160m",
+      "architecture_role": "historical pure-Attention reference (GPT-NeoX Transformer)",
+      "checkpoint_reference": "results/stress_surface_round_035.json#model_evidence.EleutherAI/pythia-160m",
+      "evidence_source": [
+        "results/stress_surface_round_035.json",
+        "results/evidence_table_round_036.json",
+        "results/figure_data_round_036.json",
+        "results/paper_evidence_summary_round_036.json"
+      ],
+      "evidence_scope": {
+        "stress_families": [
+          "structured_repetitive",
+          "periodic_pattern",
+          "interleaved_distractor",
+          "lexically_diverse"
+        ],
+        "available_token_budgets": [256, 1792],
+        "seeds": [61, 62],
+        "token_tolerance": 16,
+        "observed_failure_boundary_count": 0,
+        "comparison_policy": "within-model normalized signed-margin response only"
+      },
+      "known_limitations": [
+        "Only historical 256- and 1792-token budget evidence is available.",
+        "Raw candidate logits were not retained in the historical evidence.",
+        "Pythia is a historical Attention reference and does not establish modern-Attention generalization.",
+        "Seed cohort, token tolerance, model scale, training data, and tuning are unmatched with Zamba2."
+      ],
+      "newly_evaluated_in_round037": false
+    },
+    {
+      "model_id": "Zyphra/Zamba2-1.2B-Instruct-v2",
+      "architecture_role": "evaluated Hybrid SSM+Attention checkpoint (Hybrid Mamba2-Attention)",
+      "checkpoint_reference": "configs/model_paths.json#models.primary",
+      "revision": null,
+      "evidence_source": [
+        "results/result_round_034.json",
+        "results/stress_surface_round_035.json",
+        "results/evidence_table_round_036.json",
+        "results/figure_data_round_036.json",
+        "results/paper_evidence_summary_round_036.json",
+        "configs/model_paths.json"
+      ],
+      "evidence_scope": {
+        "stress_families": [
+          "structured_repetitive",
+          "periodic_pattern",
+          "interleaved_distractor",
+          "lexically_diverse"
+        ],
+        "available_token_budgets_by_stress": {
+          "structured_repetitive": [256, 768, 1792, 3584],
+          "periodic_pattern": [256, 768, 1792, 3584],
+          "interleaved_distractor": [256, 768],
+          "lexically_diverse": [256, 3584]
+        },
+        "seeds": [69, 70, 71, 72],
+        "token_tolerance": 8,
+        "valid_seed_cells": 48,
+        "budget_unreachable_seed_cells": 16,
+        "observed_failure_boundary_count": 0,
+        "comparison_policy": "within-model normalized signed-margin response only"
+      },
+      "known_limitations": [
+        "The checkpoint is instruction-tuned and much larger than the historical Mamba and Pythia references.",
+        "periodic_pattern does not vary prompt text with seed, so the four seeds are not four independent prompt texts.",
+        "Unavailable budgets remain untested and are not interpolated or counted as failures.",
+        "The Hybrid Mamba2-Attention label does not establish standalone Mamba2 generalization or internal SSM-vs-Attention causal attribution."
+      ],
+      "newly_evaluated_in_round037": false
+    }
+  ],
+  "planned_but_unavailable": [
+    {
+      "requested_role": "standalone Mamba2 checkpoint",
+      "availability": "unavailable_in_round037_inventory",
+      "reason": "No standalone Mamba2 checkpoint was found under the frozen Round37-A VM scan root /202532803004/models; the available Zamba2 Hybrid checkpoint is not a substitute for Mamba2 generalization.",
+      "inventory_source": "results/model_inventory_round_037.json"
+    },
+    {
+      "requested_role": "modern pure-Attention baseline",
+      "availability": "unavailable_in_round037_inventory",
+      "reason": "No additional modern pure-Attention checkpoint was found under the frozen Round37-A VM scan root /202532803004/models; the historical Pythia reference was not reclassified as a new modern baseline.",
+      "inventory_source": "results/model_inventory_round_037.json"
+    }
+  ],
+  "principal_claim": "StateFuzz automatically characterizes architecture- and stress-dependent memory robustness surfaces in stateful sequence models, revealing non-uniform and potentially non-monotonic responses across evaluated architectures and stress families.",
+  "supported_findings": [
+    "StateFuzz transfers to the tested Hybrid Zamba2 checkpoint as a behavioral stress-surface evaluation method.",
+    "Different evaluated checkpoints grouped by architecture role show different descriptive margin-response profiles under shared stress families; this is not an architecture-causal conclusion.",
+    "The observed robustness response is not well described by a universal monotonic context-length degradation rule.",
+    "Absence of a failure boundary in an evaluated range is valid negative evidence and remains distinguishable from untested or budget-unreachable regions."
+  ],
+  "unsupported_claims": [
+    "universal failure boundaries across SSMs",
+    "general superiority or inferiority of Mamba, Pythia, or Zamba2",
+    "architecture-causal claims from cross-model comparisons",
+    "Mamba2 generalization",
+    "modern-Attention generalization beyond the historical Pythia reference",
+    "universal claims about all SSMs or all Hybrid architectures",
+    "Hybrid SSM-vs-Attention internal causal attribution",
+    "any claim that no failure exists outside evaluated token budgets"
+  ],
+  "evidence_sources": [
+    "results/model_inventory_round_037.json",
+    "results/result_round_036.json",
+    "results/evidence_table_round_036.json",
+    "results/figure_data_round_036.json",
+    "results/paper_evidence_summary_round_036.json",
+    "results/result_round_035.json",
+    "results/stress_surface_round_035.json",
+    "results/result_round_034.json",
+    "configs/model_paths.json"
+  ],
+  "paper_transition": {
+    "ready": true,
+    "next_phase": "paper_draft"
+  }
+}

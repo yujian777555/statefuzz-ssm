@@ -1,0 +1,21 @@
+{
+  "round": 37,
+  "status": "scope_frozen_paper_transition_ready",
+  "model_expansion_attempted": true,
+  "new_models_added": 0,
+  "reason_no_new_models_added": "Round37-A found no standalone Mamba2 checkpoint and no new pure-Attention checkpoint under the frozen VM scan root /202532803004/models; this is an asset-availability result, not a model-quality conclusion.",
+  "final_scope_artifact": "results/final_scope_round_037.json",
+  "next_recommended_phase": "paper_draft",
+  "tests": {
+    "verifier": {
+      "command": "python scripts/round037_scope_freeze.py --verify",
+      "status": "passed"
+    },
+    "full_suite": {
+      "command": "python -m pytest",
+      "passed": 205,
+      "total": 205,
+      "status": "passed"
+    }
+  }
+}
