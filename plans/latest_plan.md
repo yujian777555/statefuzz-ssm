@@ -1,23 +1,25 @@
 # Latest Plan
 
-See `plans/plan_037a.md`.
+See `plans/plan_037c.md`.
 
-Round36 complete.
+Round37-A model discovery is complete.
 
-Current conclusion:
-- StateFuzz reveals architecture-specific stress surfaces.
-- No universal monotonic degradation claim.
-- No confirmed failure boundary claim.
+Inventory result:
+- VM scan root: `/202532803004/models`
+- available checkpoint count: 1
+- only available checkpoint: `Zyphra/Zamba2-1.2B-Instruct-v2`
+- no Mamba2 checkpoint discovered
+- no additional modern pure-Attention checkpoint discovered
 
-Round37 is split into two phases:
+Round37-B expanded evaluation is cancelled because no new Planner-frozen model asset exists.
 
-## Round37-A
-- Discover available model assets only.
-- Generate model inventory.
-- Do not choose checkpoints.
+Round37-C objective:
+- freeze the final evaluated model scope;
+- record planned-but-unavailable model expansion;
+- freeze supported and unsupported paper claims;
+- produce machine-readable scope artifacts;
+- transition to paper drafting without additional unplanned experiments.
 
-## Round37-B
-- Starts only after Planner freezes model paths.
-- Executes the expanded architecture evaluation.
+Follow `docs/PLANNER_EXECUTION_CONTRACT.md` and `plans/plan_037c.md` exactly.
 
 Next executor: codex
