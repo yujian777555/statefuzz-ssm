@@ -1,0 +1,98 @@
+{
+  "round": 39,
+  "major_strengths": [
+    "Round18 provides a pre-specified paired failure contrast with 16 fresh seeds, exact McNemar statistics, and a lexically diverse negative control.",
+    "Round20/21 use correct-memory, wrong-memory, and matched-random recurrent-state controls, followed by fresh-seed replication.",
+    "Transfer evidence spans multiple stress families, three controlled realistic task types, and a tested Hybrid Zamba2 checkpoint.",
+    "The repository preserves negative results, missing budgets, runtime failures, and claim boundaries as machine-readable artifacts."
+  ],
+  "major_weaknesses": [
+    "The primary failure and causal claims rely on one Mamba-130M checkpoint and one frozen structured-repetition failure condition.",
+    "Pythia is a paired behavioral reference but not an architecture-causal control because checkpoints and training are unmatched.",
+    "The later transfer cohorts use different seeds, token tolerances, budgets, and checkpoint properties from Round18.",
+    "Standalone Mamba2 and an additional modern pure-Attention checkpoint were unavailable in Round37.",
+    "The periodic_pattern generator reuses identical prompt text across seeds.",
+    "Strict Zamba2 cache replay validation failed, preventing Hybrid internal path attribution.",
+    "The literature seeds have not yet undergone a dedicated full-text novelty audit against all nearby 2025-2026 work."
+  ],
+  "likely_reviewer_questions": [
+    {
+      "question": "Is StateFuzz just another long-context benchmark?",
+      "bounded_answer": "No. LongBench, RULER, and NeedleBench emphasize fixed evaluation suites or context-size diagnostics, whereas StateFuzz searches controlled stress dimensions, uses counterfactual paired margins, and can follow behavioral detection with a state intervention. The current draft does not claim priority without a separate novelty audit."
+    },
+    {
+      "question": "Is the failure effect only a single prompt or value-pair artifact?",
+      "bounded_answer": "Round18 uses 16 seeds and a lexically diverse negative control, while Round21 adds a predeclared cat/dog specificity pair. However, the validated failure-recovery replication remains red/blue under one structured template, so broader prompt/value-pair robustness remains unproven."
+    },
+    {
+      "question": "Why is Pythia a valid reference but not an architecture-causal control?",
+      "bounded_answer": "It receives the matched Round18 behavioral protocol and yields 0/16 failures versus Mamba 12/16, enabling a paired checkpoint contrast. Scale, training, architecture, and other checkpoint differences remain uncontrolled, so the contrast cannot isolate architecture causally."
+    },
+    {
+      "question": "Does the state intervention establish recurrent-state content specificity?",
+      "bounded_answer": "Within the frozen Mamba condition, correct-memory state produces 8/8 recovery while wrong-memory gives 0/8 and matched random gives 1/8 in Round20; fresh red/blue seeds reproduce 8/8, 0/8, and 0/8 in Round21. Cat/dog additionally separates correct from wrong state but is not a failure-recovery replication."
+    },
+    {
+      "question": "Why do Round35/36 show zero failures when Round18 shows failures?",
+      "bounded_answer": "They are different frozen cohorts and protocol slices. Round18 uses seeds 29-44 and a dense structured-repetition risk curve near 1792 tokens; Round35/36 package later seeds, broader stress families, sparse/different budgets, and Zamba2 transfer evidence."
+    },
+    {
+      "question": "Does invalid Zamba2 cache replay invalidate the Mamba causal evidence?",
+      "bounded_answer": "No. Round33 invalidates the Zamba2 body-cache replay protocol and blocks Hybrid SSM-vs-Attention path attribution. Round20/21 use a different model and native Mamba recurrent-state override with successful controls and replication."
+    },
+    {
+      "question": "Are periodic-pattern seeds independent?",
+      "bounded_answer": "No. The current generator does not vary periodic prompt text with seed, so repeated seed records must not be presented as independent prompt diversity."
+    },
+    {
+      "question": "Is Mamba2 required before submission?",
+      "bounded_answer": "It is required for any Mamba2 or architecture-family generalization claim, but a narrowly scoped Mamba-130M paper can proceed if the limitation is explicit. Venue competitiveness remains a strategic decision."
+    },
+    {
+      "question": "What differentiates StateFuzz from benchmarks and metamorphic testing?",
+      "bounded_answer": "The planned distinction is targeted remote-memory stress search, symmetric counterfactual margins, failure-surface localization, and optional recurrent-state intervention. This positioning is provisional until a dedicated novelty audit verifies the closest full texts."
+    },
+    {
+      "question": "Should mitigation be a main contribution?",
+      "bounded_answer": "No. Context-anchor improves the tested code-context task for both checkpoints, but aggregate realistic effects are mixed and no strategy is universal. It belongs in a secondary result, table, or appendix."
+    }
+  ],
+  "answerable_from_existing_evidence": [
+    "Exact Round18 failure counts, Wilson intervals, discordant pairs, McNemar p-value, and negative-control result.",
+    "Round20/21 recovery rates, margins, random controls, fresh-seed replication, and support-pair interpretation.",
+    "Existence of broader stress families, three controlled realistic tasks, Zamba2 transfer, and non-monotonic response curves.",
+    "Why Round18 and Round35/36 are compatible rather than contradictory.",
+    "Why invalid Hybrid cache replay blocks only Hybrid internal path attribution.",
+    "Task-specific Round28 mitigation outcomes."
+  ],
+  "requires_new_experiment": [
+    "Generalization to standalone Mamba2 or another independent SSM checkpoint.",
+    "A matched modern pure-Attention control for architecture-level causal comparison.",
+    "Independent periodic prompt templates across seeds.",
+    "Failure-recovery replication across additional templates, value pairs, and realistic tasks.",
+    "A valid Hybrid cache reconstruction protocol if internal SSM-vs-Attention attribution is pursued."
+  ],
+  "claim_rewrites": [
+    {
+      "from": "StateFuzz found zero failures across evaluated cohorts.",
+      "to": "Round18 found a frozen Mamba failure regime, while later transfer/surface cohorts had no observed failure boundary in their own evaluated ranges."
+    },
+    {
+      "from": "Architecture-specific failure surfaces were established.",
+      "to": "Evaluated checkpoints grouped by architecture role showed different descriptive responses under unmatched conditions."
+    },
+    {
+      "from": "The Hybrid cache study localizes memory to SSM and Attention paths.",
+      "to": "Strict Hybrid cache reconstruction failed, so internal path attribution remains unsupported."
+    },
+    {
+      "from": "StateFuzz is the first framework of its kind.",
+      "to": "TODO: novelty verification against long-context evaluation, Mamba recall analysis, and metamorphic testing full texts."
+    }
+  ],
+  "submission_blockers": [
+    "A dedicated full-text novelty audit is still required, especially for LongMamba, the 2026 Mamba recall study, and recent LLM metamorphic testing.",
+    "Main figures are planned but not yet rendered and checked against a target venue's formatting requirements.",
+    "The manuscript remains a Chinese evidence-grounded draft and requires venue-specific English finalization."
+  ]
+}

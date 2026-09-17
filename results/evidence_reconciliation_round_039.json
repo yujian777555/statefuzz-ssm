@@ -1,0 +1,224 @@
+{
+  "round": 39,
+  "status": "complete",
+  "tracks": {
+    "failure_discovery": {
+      "artifacts": [
+        "results/result_round_018.json",
+        "docs/reviewer_attack.md"
+      ],
+      "models": {
+        "primary": "state-spaces/mamba-130m-hf",
+        "paired_reference": "EleutherAI/pythia-160m"
+      },
+      "protocol": {
+        "seeds": [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44],
+        "filler_style": "structured_repetitive",
+        "value_pair": [" red", " blue"],
+        "primary_target_budget_tokens": 1792,
+        "actual_input_token_range": [1791, 1791],
+        "tolerance_tokens": 16,
+        "failure_event": "min_signed_margin <= 0"
+      },
+      "paired_result": {
+        "mamba_failure_count": 12,
+        "mamba_seed_count": 16,
+        "mamba_failure_rate": 0.75,
+        "mamba_wilson_95": [0.5050168346449122, 0.8981793250878696],
+        "pythia_failure_count": 0,
+        "pythia_seed_count": 16,
+        "pythia_failure_rate": 0.0,
+        "pythia_wilson_95": [0.0, 0.1936076805344365],
+        "discordant_pairs": 12,
+        "mamba_only_fail": 12,
+        "pythia_only_fail": 0,
+        "exact_two_sided_mcnemar_p": 0.00048828125
+      },
+      "risk_curve": {
+        "mamba_target_budgets": [256, 1024, 1408, 1536, 1664, 1792, 1920],
+        "mamba_failure_counts": [0, 0, 0, 0, 3, 12, 16],
+        "pythia_failure_counts": [0, 0, 0, 0, 0, 0, 0]
+      },
+      "negative_control": {
+        "filler_style": "lexically_diverse",
+        "mamba_target_budgets": [256, 1664, 1792, 1920],
+        "mamba_failure_counts": [0, 0, 0, 0],
+        "pythia_primary_failure_count": 0,
+        "classification": "structured_repetition_risk_specific"
+      },
+      "claim_scope": "可复现失败仅限冻结的 Mamba-130M checkpoint、structured_repetitive、red/blue 值对与 Round18 协议；Pythia 是配对行为参考，不是架构因果控制。"
+    },
+    "causal_diagnosis": {
+      "artifacts": [
+        "results/result_round_020.json",
+        "results/result_round_021.json",
+        "docs/paper_claims.md",
+        "results/final_experiment_manifest.json"
+      ],
+      "approved_claim": "Under structured-repetition remote-memory stress conditions, Mamba-130M recurrent state content causally influences remote-memory behavior.",
+      "round020": {
+        "seeds": [45, 46, 47, 48, 49, 50, 51, 52],
+        "value_pair": [" red", " blue"],
+        "normal_long": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -1.238905},
+        "wrong_memory": {"recovery_count": 0, "seed_count": 8, "recovery_rate": 0.0, "mean_margin": -1.848633},
+        "correct_memory": {"recovery_count": 8, "seed_count": 8, "recovery_rate": 1.0, "mean_margin": 2.155273},
+        "randomized_matched": {"recovery_count": 1, "seed_count": 8, "recovery_rate": 0.125, "mean_margin": -1.306641},
+        "memory_restoration_effect_mean": 3.461914,
+        "state_specificity_ratio": 0.980434
+      },
+      "round021_fresh_seed_replication": {
+        "seeds": [53, 54, 55, 56, 57, 58, 59, 60],
+        "red_blue": {
+          "normal_long_recovery": "0/8",
+          "wrong_memory_recovery": "0/8",
+          "correct_memory_recovery": "8/8",
+          "randomized_matched_recovery": "0/8",
+          "specificity_gap": 1.0,
+          "memory_restoration_effect_mean": 2.97754
+        },
+        "cat_dog_specificity_support": {
+          "normal_long_recovery": "8/8",
+          "wrong_memory_recovery": "0/8",
+          "correct_memory_recovery": "8/8",
+          "randomized_matched_recovery": "5/8",
+          "specificity_gap": 0.375,
+          "interpretation": "原始长上下文已成功，因此该 pair 只支持状态内容特异性，不是失败恢复复制。"
+        }
+      },
+      "implementation_limit": "Transformers sequential Mamba path; fast CUDA kernels unavailable.",
+      "claim_scope": "仅限 Mamba-130M、结构化重复远程记忆压力和已测试值对；不外推到所有 SSM、任务、值对或长上下文失败。"
+    },
+    "transfer_surface": {
+      "artifacts": [
+        "results/result_round_025.json",
+        "results/result_round_026.json",
+        "results/result_round_027.json",
+        "results/result_round_031.json",
+        "results/result_round_034.json",
+        "results/result_round_035.json",
+        "results/stress_surface_round_035.json",
+        "results/evidence_table_round_036.json",
+        "results/figure_data_round_036.json",
+        "results/paper_evidence_summary_round_036.json",
+        "results/final_scope_round_037.json"
+      ],
+      "broader_stress_families": [
+        "structured_repetitive",
+        "periodic_pattern",
+        "interleaved_distractor",
+        "semantic_distractor",
+        "lexically_diverse"
+      ],
+      "realistic_tasks": [
+        "long_document_retrieval",
+        "code_context_dependency",
+        "agent_conversation_memory"
+      ],
+      "realistic_task_valid_records": 48,
+      "hybrid_checkpoint": "Zyphra/Zamba2-1.2B-Instruct-v2",
+      "surface_evidence": {
+        "models": [
+          "state-spaces/mamba-130m-hf",
+          "EleutherAI/pythia-160m",
+          "Zyphra/Zamba2-1.2B-Instruct-v2"
+        ],
+        "evidence_table_rows": 180,
+        "observed_direction_rows": 160,
+        "missing_budget_rows": 20,
+        "observed_failure_boundary_count": 0,
+        "zamba_periodic_normalized_margin_retention": {
+          "256": 1.0,
+          "768": 0.10261194029850747,
+          "1792": 0.6380597014925373,
+          "3584": 3.0578358208955225
+        }
+      },
+      "claim_scope": "这些结果证明 StateFuzz 可迁移到更广压力族、受控现实任务和指定 Hybrid checkpoint；后期 surface cohort 零 failure boundary 仅适用于其自身协议切片。",
+      "confounds": [
+        "checkpoint scale and training data are unmatched",
+        "Zamba2 is instruction-tuned",
+        "historical seeds 61-62 and tolerance ±16 differ from Zamba2 seeds 69-72 and tolerance ±8",
+        "periodic_pattern seeds reuse identical prompt text",
+        "missing and budget-unreachable cells are not behavioral failures"
+      ]
+    },
+    "mitigation": {
+      "artifacts": [
+        "results/result_round_028.json",
+        "results/mitigation_comparison_round_028.json"
+      ],
+      "strategies": ["memory_reinjection", "context_anchor", "retrieval_reminder"],
+      "task_specific_success": {
+        "task": "code_context_dependency",
+        "mamba_baseline_to_context_anchor": "4/8 to 8/8",
+        "pythia_baseline_to_context_anchor": "5/8 to 7/8"
+      },
+      "negative_findings": [
+        "memory_reinjection lowers aggregate realistic success",
+        "retrieval_reminder is not consistently beneficial",
+        "selected synthetic cells have no headroom"
+      ],
+      "claim_scope": "context_anchor 在测试的 code-context task 上产生任务特异改进；没有策略具有普遍收益。"
+    }
+  },
+  "apparent_conflicts": [
+    {
+      "conflict_id": "R18_FAILURES_VS_R35_R36_ZERO_BOUNDARY",
+      "source_a": "results/result_round_018.json",
+      "source_b": ["results/stress_surface_round_035.json", "results/evidence_table_round_036.json"],
+      "differing_protocol_fields": {
+        "source_a": "seeds 29-44; structured_repetitive; red/blue; budgets 256-1920 including 1792; ±16; Mamba 12/16 failures at 1792",
+        "source_b": "historical seeds 61-62 and Zamba2 seeds 69-72; multiple stress families; sparse/different budgets; later packaging reports zero observed boundaries"
+      },
+      "assessment": "scientifically_compatible_different_frozen_cohorts",
+      "permitted_wording": "Round18 发现冻结 structured-repetition failure regime；后期 transfer/surface cohort 在各自观测范围内没有 failure boundary。"
+    },
+    {
+      "conflict_id": "ARCHITECTURE_LANGUAGE_VS_CONFOUNDS",
+      "source_a": ["results/result_round_026.json", "results/result_round_035.json"],
+      "source_b": "results/final_scope_round_037.json",
+      "differing_protocol_fields": {
+        "observed": "按 architecture role 分组的 checkpoint 呈现不同描述性 margin profiles",
+        "uncontrolled": "scale, training data, instruction tuning, seeds, tolerance and checkpoint identity"
+      },
+      "assessment": "compatible_only_with_descriptive_architecture_role_wording",
+      "permitted_wording": "架构角色分组的已测试 checkpoint 呈现不同响应；不声称差异由架构因果造成。"
+    },
+    {
+      "conflict_id": "MAMBA_CAUSAL_INTERVENTION_VS_INVALID_HYBRID_REPLAY",
+      "source_a": ["results/result_round_020.json", "results/result_round_021.json"],
+      "source_b": ["results/result_round_032.json", "results/result_round_033.json"],
+      "differing_protocol_fields": {
+        "source_a": "Mamba-130M native recurrent-state override under a frozen failure condition with correct/wrong/random controls",
+        "source_b": "Zamba2 Hybrid body-cache replay and path swap; Round33 reconstruction valid rate 0/40 versus required 90%"
+      },
+      "assessment": "scientifically_compatible_model_and_intervention_specificity",
+      "permitted_wording": "Mamba-130M recurrent-state causal evidence remains valid in its frozen condition; invalid Zamba2 replay blocks only Hybrid internal SSM-vs-Attention attribution."
+    }
+  ],
+  "resolved_interpretations": [
+    "Failure discovery, causal diagnosis, transfer surfaces, and mitigation answer different questions and must not be collapsed into one cohort.",
+    "Zero observed failure boundaries in Round35/36 are negative evidence for those later protocol slices, not a project-wide zero-failure result.",
+    "Cross-checkpoint contrasts are behavioral and descriptive unless scale, training, tuning, seed, and tolerance confounds are controlled.",
+    "A failed Hybrid cache reconstruction protocol does not retroactively invalidate native Mamba recurrent-state intervention evidence."
+  ],
+  "paper_mainline": [
+    "Round18 failure discovery and paired Pythia behavioral contrast",
+    "Round20/21 Mamba recurrent-state causal diagnosis and fresh-seed replication",
+    "Round25/27/31/34/35/36 transfer to broader stresses, realistic tasks, and Zamba2"
+  ],
+  "paper_secondary": [
+    "Round28 context-anchor mitigation as task-specific evidence",
+    "Round35/36 full descriptive stress surfaces and missing-budget coverage"
+  ],
+  "excluded_claims": [
+    "all SSMs have the same failure boundary",
+    "Mamba is globally worse than Pythia",
+    "cross-model differences are architecture-causal",
+    "Zamba2 proves standalone Mamba2 behavior",
+    "Hybrid SSM-vs-Attention path attribution is established",
+    "zero failures in Round35/36 imply no failures elsewhere",
+    "causal intervention results apply to all value pairs, tasks, checkpoints, or models",
+    "any mitigation strategy is universally beneficial"
+  ]
+}

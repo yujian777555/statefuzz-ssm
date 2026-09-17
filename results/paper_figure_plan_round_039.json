@@ -1,0 +1,118 @@
+{
+  "round": 39,
+  "status": "planned",
+  "narrative": "discovery -> diagnosis -> transfer",
+  "figures": [
+    {
+      "figure_id": "figure_1",
+      "title": "StateFuzz workflow",
+      "source_artifacts": [
+        "results/result_round_018.json",
+        "results/result_round_020.json",
+        "results/result_round_025.json"
+      ],
+      "panels": [
+        "counterfactual paired prompt construction",
+        "stress dimensions and budget fitting",
+        "direction-correct signed margins",
+        "failure detection and localization",
+        "optional causal recurrent-state intervention",
+        "transfer and stress-surface analysis"
+      ],
+      "claim_boundary": "工作流可以发现候选 failure regime，但不是所有模型的 universal failure detector。"
+    },
+    {
+      "figure_id": "figure_2",
+      "title": "Discovery: failure transition and paired checkpoint contrast",
+      "source_artifacts": ["results/result_round_018.json"],
+      "panels": [
+        {
+          "panel": "a",
+          "content": "Mamba structured-repetition failure curve",
+          "target_budgets": [256, 1024, 1408, 1536, 1664, 1792, 1920],
+          "failure_counts": [0, 0, 0, 0, 3, 12, 16],
+          "seed_count_per_point": 16,
+          "uncertainty": "Wilson 95% intervals"
+        },
+        {
+          "panel": "b",
+          "content": "Matched Round18 endpoint contrast at target 1792 / actual 1791 tokens",
+          "mamba": "12/16 failures (0.75; Wilson 95% 0.5050-0.8982)",
+          "pythia": "0/16 failures (0.0; Wilson 95% 0.0-0.1936)",
+          "paired_statistic": "12 Mamba-only discordant pairs; exact two-sided McNemar p=0.00048828125"
+        },
+        {
+          "panel": "c",
+          "content": "Lexically diverse negative control",
+          "result": "Mamba 0/16 failures at each tested negative-control budget; Pythia 0/16 at the primary endpoint"
+        }
+      ],
+      "claim_boundary": "不得把 Round18 的 checkpoint contrast 写成架构因果或所有 SSM 的统一边界。"
+    },
+    {
+      "figure_id": "figure_3",
+      "title": "Diagnosis: recurrent-state content intervention",
+      "source_artifacts": [
+        "results/result_round_020.json",
+        "results/result_round_021.json"
+      ],
+      "panels": [
+        {
+          "panel": "a",
+          "content": "Round20 recovery rate and seed-level margin",
+          "groups": ["normal_long_failed", "wrong_memory_short", "correct_memory_short", "randomized_matched"],
+          "recovery_counts": [0, 0, 8, 1],
+          "seed_count": 8,
+          "mean_margins": [-1.238905, -1.848633, 2.155273, -1.306641]
+        },
+        {
+          "panel": "b",
+          "content": "Round21 fresh-seed red/blue replication",
+          "recovery_counts": [0, 0, 8, 0],
+          "seed_count": 8,
+          "specificity_gap": 1.0
+        },
+        {
+          "panel": "c",
+          "content": "Cat/dog state-content specificity support",
+          "groups": "normal long 8/8, wrong 0/8, correct 8/8, random 5/8",
+          "annotation": "Not a failure-recovery replication because normal long already succeeds."
+        }
+      ],
+      "claim_boundary": "因果措辞只适用于 Mamba-130M 冻结条件；不推广到所有值对、任务或模型。"
+    },
+    {
+      "figure_id": "figure_4",
+      "title": "Transfer and evaluation scope",
+      "source_artifacts": [
+        "results/result_round_027.json",
+        "results/result_round_031.json",
+        "results/result_round_034.json",
+        "results/stress_surface_round_035.json",
+        "results/evidence_table_round_036.json",
+        "results/final_scope_round_037.json"
+      ],
+      "panels": [
+        "three controlled realistic workloads across Mamba and Pythia",
+        "broader stress-family coverage",
+        "Zamba2 non-monotonic periodic retention curve",
+        "observed, budget-unreachable, and historical-untested coverage matrix"
+      ],
+      "missing_value_policy": "Round36 observed/missing must be combined with Round37 scope; missing cells are never shown as zero failures.",
+      "claim_boundary": "Transfer establishes method applicability and descriptive heterogeneity, not architecture ranking or Hybrid internal path causality."
+    }
+  ],
+  "secondary_display": {
+    "display_id": "table_1_or_appendix",
+    "title": "Task-specific mitigation comparison",
+    "source_artifacts": ["results/result_round_028.json", "results/mitigation_comparison_round_028.json"],
+    "placement": "secondary_or_appendix",
+    "claim_boundary": "context_anchor improves the tested code-context task; no universal mitigation claim"
+  },
+  "global_rules": [
+    "Round18 and Round35/36 must never be merged as if they were the same cohort.",
+    "Show seed counts, token budgets/tolerances, uncertainty, and missing-state semantics in captions.",
+    "Use model-internal normalization for surface curves and do not rank unmatched checkpoints by raw margin.",
+    "Use color-blind-safe colors plus line/marker redundancy."
+  ]
+}

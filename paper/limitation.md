@@ -1,9 +1,11 @@
 # 局限性
 
-当前证据的首要限制是 checkpoint 覆盖不足。冻结范围只有一个历史 pure SSM、一个历史 pure-Attention 参考和一个指令微调的 Hybrid checkpoint。Round37-A 在固定 VM 扫描根目录中没有发现 standalone Mamba2 或新的现代 pure-Attention checkpoint，因此本文不能验证 Mamba2 泛化，也不能将 Pythia-160M 的结果推广到现代 Attention 模型。该不可用性是资产条件，不是模型质量结论。
+最强的 failure-discovery 与 causal-diagnosis 证据集中在一个 Mamba-130M checkpoint、一个 structured-repetition template 和一个 red/blue failure pair。虽然 Round21 使用 cat/dog 检验状态内容特异性，但该 pair 的 normal-long 已成功，因此不能作为第二个 failure-recovery replication。若要推广到其他模板、值对、任务或 SSM，需要新实验；当前稿件明确不作这种外推。
 
-不同 checkpoint 的实验条件并不匹配。Mamba 与 Pythia 使用 seed 61–62、±16 token 容差和两个预算点，Zamba2 使用 seed 69–72、±8 token 容差并具有不均匀的预算覆盖。模型规模、预训练数据和指令微调同样存在混杂。模型内 normalized margin retention 能减少绝对 logit 标度差异，但不能消除这些混杂，因此架构角色相关的曲线差异不构成架构因果证据或通用模型排名。
+Pythia-160M 是 Round18 的配对行为参考，而不是架构因果控制。Mamba 与 Pythia 的训练数据、架构和 checkpoint 属性未被逐项匹配；Zamba2 又具有更大规模和 instruction tuning。后期历史 cohort 与 Zamba2 cohort 的 seeds、token tolerance 和预算覆盖也不同。因此跨 checkpoint 曲线只能描述行为差异，不能形成模型全局排名或架构因果结论。
 
-压力生成也存在已知限制。periodic_pattern 不随 seed 改变提示文本，因此四个 seed 不是四个独立文本样本。interleaved_distractor 与 lexically_diverse 的若干 Zamba2 预算无法达到拟合容差，Mamba 与 Pythia 也缺少 768 和 3584 token 观测。这些单元被保留为 null；它们既不是失败，也不能用于支持预算外不存在失败的结论。
+后期 transfer evidence 存在覆盖和独立性限制。Mamba/Pythia surface 只有部分预算，Zamba2 的若干单元 budget-unreachable，periodic_pattern 不随 seed 变化提示文本。Round36 的 missing cells 必须联合 Round37 scope 才能区分 historical untested 与 budget-unreachable；二者都不是行为失败。后期 surface cohort 的零 observed failure boundary 只适用于自身观测范围。
 
-最后，当前所有已评估 cohort 的 failure probability 都为零。这个负结果使 StateFuzz 能排除“在已测试范围内已经观察到统一 failure boundary”的说法，却不能证明 failure boundary 永远不存在。早期 Hybrid cache replay 未通过严格重构验证，因此本文也不使用其结果进行 Hybrid 内部 SSM-versus-Attention 因果归因。后续工作需要在预注册条件下增加匹配规模与训练设置的 checkpoint、独立压力模板和更完整的预算网格，然后再检验架构因果与边界稳定性。
+机制证据也具有模型和协议边界。Round20/21 的 native Mamba recurrent-state intervention 支持冻结条件内的窄因果 claim，但不证明所有 SSM 都以相同方式存储记忆。Round33 对 Zamba2 的严格 cache replay 验证为 0/40，因而 Hybrid SSM-versus-Attention path attribution 未建立。这个失败不否定 Mamba intervention，却阻止将其机制迁移到 Hybrid 模型。
+
+Round37 没有在冻结 VM scan root 中发现 standalone Mamba2 或新的现代 pure-Attention checkpoint。缺失资产不是模型质量结论，但限制了架构覆盖。除此之外，当前 related-work positioning 只基于计划冻结的 literature seeds；LongMamba、2026 Mamba recall study 和近期 LLM metamorphic testing 仍需 dedicated full-text novelty audit。主图尚未渲染，稿件也需要目标 venue 的英文格式化，因此当前版本不应标记为可直接投稿。

@@ -1,0 +1,136 @@
+{
+  "round": 39,
+  "status": "complete",
+  "claims": [
+    {
+      "claim_id": "C1_DISCOVERY",
+      "claim_text": "StateFuzz can expose a reproducible structured-repetition remote-memory failure regime in the tested Mamba-130M checkpoint, with a paired behavioral contrast against the tested Pythia-160M reference under the Round18 frozen protocol.",
+      "claim_type": "primary",
+      "supporting_artifacts": ["results/result_round_018.json"],
+      "supporting_fields": ["primary_architecture_comparison", "structured_mamba_risk_curve", "structured_pythia_risk_curve", "diverse_filler_negative_control"],
+      "scope": "Mamba-130M and Pythia-160M; seeds 29-44; structured_repetitive; red/blue; 1792-token confirmatory endpoint; ±16 tolerance.",
+      "known_confounds": ["single checkpoint pair", "single frozen structured stressor", "Pythia is a reference rather than an architecture-causal control"],
+      "paper_sections": ["abstract", "introduction", "experiment", "results", "conclusion"]
+    },
+    {
+      "claim_id": "C2_DIAGNOSIS",
+      "claim_text": "Under structured-repetition remote-memory stress conditions, Mamba-130M recurrent state content causally influences remote-memory behavior.",
+      "claim_type": "primary",
+      "supporting_artifacts": ["results/result_round_020.json", "results/result_round_021.json", "docs/paper_claims.md", "results/final_experiment_manifest.json"],
+      "supporting_fields": ["aggregate", "pairs.red/blue", "pairs.cat/dog", "overall.fresh_seed_replication", "approved causal wording"],
+      "scope": "Mamba-130M, template 1, structured_repetitive, target_position 0.0, tested red/blue failure condition and cat/dog specificity support.",
+      "known_confounds": ["single checkpoint", "sequential Transformers Mamba implementation", "cat/dog is specificity support rather than failure recovery"],
+      "paper_sections": ["title_and_claims", "abstract", "method", "results", "limitation", "conclusion"]
+    },
+    {
+      "claim_id": "C3_TRANSFER_SURFACE",
+      "claim_text": "StateFuzz applies beyond the original discovery condition to broader stress families, controlled realistic workloads, and the tested Hybrid Zamba2 checkpoint; observed responses are heterogeneous and can be non-monotonic, while later surface cohorts may contain no failure boundary in their observed range.",
+      "claim_type": "primary",
+      "supporting_artifacts": ["results/result_round_025.json", "results/result_round_027.json", "results/result_round_031.json", "results/result_round_034.json", "results/result_round_035.json", "results/evidence_table_round_036.json", "results/figure_data_round_036.json"],
+      "supporting_fields": ["families", "task_types", "stress_fingerprint", "comparison", "rows", "views.margin_retention_curves"],
+      "scope": "Tested stress families, controlled realistic templates, and Zyphra/Zamba2-1.2B-Instruct-v2 only.",
+      "known_confounds": ["unmatched checkpoints", "different seed/tolerance cohorts", "instruction tuning", "periodic prompts ignore seed", "missing budgets"],
+      "paper_sections": ["abstract", "introduction", "experiment", "results", "limitation"]
+    },
+    {
+      "claim_id": "C4_MITIGATION",
+      "claim_text": "A context-anchor intervention provides task-specific improvement in the tested code-context setting, but no tested mitigation strategy is universally beneficial.",
+      "claim_type": "secondary",
+      "supporting_artifacts": ["results/result_round_028.json", "results/mitigation_comparison_round_028.json"],
+      "supporting_fields": ["mitigation_conclusion", "models.*.code_context_dependency", "success_case", "negative_findings"],
+      "scope": "Two tested checkpoints and controlled code_context_dependency templates.",
+      "known_confounds": ["two seeds", "controlled templates", "no weight updates", "strategy overhead differs"],
+      "paper_sections": ["results", "limitation"]
+    },
+    {
+      "claim_id": "N1_LATER_ZERO_BOUNDARY",
+      "claim_text": "The later Round35/36 packaged surface cohorts have zero observed failure boundaries in their observed ranges.",
+      "claim_type": "negative",
+      "supporting_artifacts": ["results/result_round_035.json", "results/result_round_036.json", "results/paper_evidence_summary_round_036.json"],
+      "supporting_fields": ["observed_failure_boundary_count", "negative_evidence"],
+      "scope": "Only Round35/36 packaged surface cohorts and observed cells.",
+      "known_confounds": ["does not include Round18 discovery cohort", "missing budgets are not failures", "does not exclude failures outside observed ranges"],
+      "paper_sections": ["results", "limitation"]
+    },
+    {
+      "claim_id": "L1_CHECKPOINT_SCOPE",
+      "claim_text": "The checkpoint set is small and unmatched, and Round37 found no standalone Mamba2 or new modern pure-Attention checkpoint under the frozen VM scan root.",
+      "claim_type": "limitation",
+      "supporting_artifacts": ["results/final_scope_round_037.json", "results/result_round_037.json"],
+      "supporting_fields": ["evaluated_models", "planned_but_unavailable", "reason_no_new_models_added"],
+      "scope": "Asset availability under /202532803004/models in Round37-A.",
+      "known_confounds": ["absence under one scan root is not global model unavailability or quality evidence"],
+      "paper_sections": ["limitation", "conclusion"]
+    },
+    {
+      "claim_id": "U1_UNIVERSAL_BOUNDARY",
+      "claim_text": "All SSMs have the same failure boundary.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": [],
+      "supporting_fields": [],
+      "scope": "Prohibited universalization.",
+      "known_confounds": ["only one pure Mamba checkpoint has the validated failure condition"],
+      "paper_sections": ["limitation"]
+    },
+    {
+      "claim_id": "U2_GLOBAL_RANKING",
+      "claim_text": "Mamba is globally worse than Pythia.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": [],
+      "supporting_fields": [],
+      "scope": "Prohibited ranking beyond Round18 paired behavior.",
+      "known_confounds": ["checkpoint identity, training, architecture and task scope"],
+      "paper_sections": ["results", "limitation"]
+    },
+    {
+      "claim_id": "U3_MAMBA2_GENERALIZATION",
+      "claim_text": "Zamba2 proves standalone Mamba2 behavior.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": [],
+      "supporting_fields": [],
+      "scope": "Prohibited model-family extrapolation.",
+      "known_confounds": ["Zamba2 is Hybrid and instruction-tuned; standalone Mamba2 was unavailable"],
+      "paper_sections": ["limitation"]
+    },
+    {
+      "claim_id": "U4_ARCHITECTURE_CAUSALITY",
+      "claim_text": "Cross-model differences are architecture-causal.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": [],
+      "supporting_fields": [],
+      "scope": "Prohibited causal interpretation of unmatched checkpoint comparisons.",
+      "known_confounds": ["scale", "training data", "instruction tuning", "seeds", "token tolerance"],
+      "paper_sections": ["results", "limitation"]
+    },
+    {
+      "claim_id": "U5_HYBRID_PATH_ATTRIBUTION",
+      "claim_text": "Hybrid SSM-vs-Attention path attribution is established.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": ["results/result_round_033.json"],
+      "supporting_fields": ["status", "reconstruction_summary", "causal_interpretation_performed"],
+      "scope": "Round33 invalid replay blocks this claim.",
+      "known_confounds": ["0/40 valid reconstructions under the strict protocol"],
+      "paper_sections": ["limitation"]
+    },
+    {
+      "claim_id": "U6_PROJECT_WIDE_ZERO_FAILURE",
+      "claim_text": "Zero failures in Round35/36 mean no failure exists elsewhere.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": [],
+      "supporting_fields": [],
+      "scope": "Contradicted by the distinct Round18 discovery cohort and untested regions.",
+      "known_confounds": ["different protocols and cohorts", "missing budgets"],
+      "paper_sections": ["abstract", "results", "limitation"]
+    },
+    {
+      "claim_id": "U7_CAUSAL_UNIVERSALIZATION",
+      "claim_text": "The Mamba causal intervention applies to all value pairs, tasks, checkpoints, or models.",
+      "claim_type": "unsupported",
+      "supporting_artifacts": [],
+      "supporting_fields": [],
+      "scope": "Prohibited extrapolation beyond frozen interventions.",
+      "known_confounds": ["single checkpoint", "two tested value pairs", "one failure condition"],
+      "paper_sections": ["title_and_claims", "limitation", "conclusion"]
+    }
+  ]
+}
